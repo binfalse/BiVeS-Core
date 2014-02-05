@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.binfalse.bflog.LOGGER;
-import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
 import de.unirostock.sems.bives.markup.MarkupDocument;
 import de.unirostock.sems.bives.markup.MarkupElement;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
@@ -23,14 +22,14 @@ public class BivesTools
 {
 
   /**
-   * Gen math html stats.
+   * Generate some MathML difference report for Markup Documents .
    *
-   * @param a the a
-   * @param b the b
+   * @param a the node rooting the MathML in document A
+   * @param b the node rooting the MathML in document B
    * @param markupElement the markup element
    * @param markupDocument the markup document
    */
-  public static void genMathHtmlStats (DocumentNode a, DocumentNode b, MarkupElement markupElement, MarkupDocument markupDocument)
+  public static void genMathMarkupStats (DocumentNode a, DocumentNode b, MarkupElement markupElement, MarkupDocument markupDocument)
   {
   	if (a == null && b == null)
   		return;
@@ -58,14 +57,14 @@ public class BivesTools
   }
   
   /**
-   * Gen attribute html stats.
+   * Generate some Attribute difference report for Markup Documents.
    *
-   * @param a the a
-   * @param b the b
+   * @param a the nodes carrying the attributes in document A
+   * @param b the nodes carrying the attributes in document B
    * @param markupElement the markup element
    * @param markupDocument the markup document
    */
-  public static void genAttributeHtmlStats (DocumentNode a, DocumentNode b, MarkupElement markupElement, MarkupDocument markupDocument)
+  public static void genAttributeMarkupStats (DocumentNode a, DocumentNode b, MarkupElement markupElement, MarkupDocument markupDocument)
   {
   	if (a == null || b == null)
   		return;
