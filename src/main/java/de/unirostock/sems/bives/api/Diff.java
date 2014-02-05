@@ -19,8 +19,8 @@ import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.PatchProducer;
 import de.unirostock.sems.bives.ds.graph.GraphTranslator;
 import de.unirostock.sems.bives.markup.Typesetting;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
-import de.unirostock.sems.xmltools.exception.XmlDocumentParseException;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 
 /**
  * @author Martin Scharm

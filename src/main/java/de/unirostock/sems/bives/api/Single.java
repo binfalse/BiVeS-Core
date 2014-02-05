@@ -16,9 +16,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import de.unirostock.sems.bives.ds.graph.GraphTranslator;
-import de.unirostock.sems.xmltools.alg.XyWeighter;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
-import de.unirostock.sems.xmltools.exception.XmlDocumentParseException;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 
 
 /**
@@ -37,7 +36,7 @@ public abstract class Single
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance ()
 			.newDocumentBuilder ();
 		
-		treeA = new TreeDocument (builder.parse (new FileInputStream (a)), new XyWeighter (), a.toURI ());
+		treeA = new TreeDocument (builder.parse (new FileInputStream (a)), a.toURI ());
 	}
 
 	public Single (String a) throws ParserConfigurationException, XmlDocumentParseException, FileNotFoundException, SAXException, IOException
@@ -47,7 +46,7 @@ public abstract class Single
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance ()
 			.newDocumentBuilder ();
 		
-		treeA = new TreeDocument (builder.parse (new ByteArrayInputStream(a.getBytes ())), new XyWeighter (), null);
+		treeA = new TreeDocument (builder.parse (new ByteArrayInputStream(a.getBytes ())), null);
 	}
 
 	public Single (TreeDocument a)

@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.SBOTerm;
-import de.unirostock.sems.xmltools.tools.XmlTools;
+import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
 /**

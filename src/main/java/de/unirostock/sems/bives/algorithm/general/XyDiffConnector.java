@@ -14,12 +14,13 @@ import de.binfalse.bfutils.GeneralTools;
 import de.unirostock.sems.bives.algorithm.Connector;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
-import de.unirostock.sems.xmltools.comparison.Connection;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.NodeComparer;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
-import de.unirostock.sems.xmltools.ds.TreeNode;
-import de.unirostock.sems.xmltools.ds.TreeNodeComparatorBySubtreeSize;
+import de.unirostock.sems.xmlutils.comparison.Connection;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.NodeDistance;
+import de.unirostock.sems.xmlutils.ds.NodeDistanceComparator;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
+import de.unirostock.sems.xmlutils.ds.TreeNodeComparatorBySubtreeSize;
 
 
 /**
@@ -340,15 +341,15 @@ public class XyDiffConnector
 		}
 		
 		// calculate distances between nodes
-		Vector<NodeComparer> distances = new Vector<NodeComparer> ();
+		Vector<NodeDistance> distances = new Vector<NodeDistance> ();
 		for (DocumentNode nodeA : nodesA)
 			for (DocumentNode nodeB : nodesB)
-				distances.add (new NodeComparer (nodeA, nodeB, nodeA.getAttributeDistance (nodeB)));
+				distances.add (new NodeDistance (nodeA, nodeB, nodeA.getAttributeDistance (nodeB)));
 		// sort by distance
-		Collections.sort (distances, new NodeComparer.NodeComparator (false));
+		Collections.sort (distances, new NodeDistanceComparator (false));
 		
 		// greedy connect nodes
-		for (NodeComparer comp : distances)
+		for (NodeDistance comp : distances)
 		{
 			// stop at too different nodes
 			if (comp.distance > 0.9)

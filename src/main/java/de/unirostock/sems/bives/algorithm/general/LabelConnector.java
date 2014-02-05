@@ -9,8 +9,8 @@ import java.util.Set;
 import de.unirostock.sems.bives.algorithm.Connector;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
@@ -37,7 +37,7 @@ public class LabelConnector
 	@Override
 	protected void connect () throws BivesConnectionException
 	{
-		Set<String> tags = docA.getOccuringTags ();
+		Set<String> tags = docA.getOccurringTags ();
 		
 		for (String tag : tags)
 		{

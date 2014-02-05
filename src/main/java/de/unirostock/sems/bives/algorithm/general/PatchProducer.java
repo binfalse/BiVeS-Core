@@ -13,10 +13,10 @@ import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
 import de.unirostock.sems.bives.algorithm.Producer;
 import de.unirostock.sems.bives.ds.Patch;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
-import de.unirostock.sems.xmltools.ds.TreeNode;
-import de.unirostock.sems.xmltools.tools.XmlTools;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
+import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
 /**

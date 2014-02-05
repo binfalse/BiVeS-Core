@@ -8,8 +8,8 @@ import java.util.Set;
 import de.unirostock.sems.bives.algorithm.Connector;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
@@ -43,7 +43,7 @@ public class IdConnector
 		if (!docA.uniqueIds () || !docB.uniqueIds ())
 			return;
 		
-		Set<String> ids = docA.getOccuringIds ();
+		Set<String> ids = docA.getOccurringIds ();
 		
 		for (String id : ids)
 		{

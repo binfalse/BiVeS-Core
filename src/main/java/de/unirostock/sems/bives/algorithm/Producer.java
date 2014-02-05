@@ -3,7 +3,7 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
-import de.unirostock.sems.xmltools.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
 
 
 /**

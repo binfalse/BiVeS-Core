@@ -15,8 +15,8 @@ import de.unirostock.sems.bives.algorithm.general.XyDiffConnector;
 import de.unirostock.sems.bives.ds.graph.GraphTranslator;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
 import de.unirostock.sems.bives.markup.Typesetting;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
-import de.unirostock.sems.xmltools.exception.XmlDocumentParseException;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 
 
 /**

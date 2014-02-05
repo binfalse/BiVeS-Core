@@ -5,10 +5,10 @@ package de.unirostock.sems.bives.ds;
 
 import java.util.Vector;
 
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TextNode;
-import de.unirostock.sems.xmltools.ds.TreeNode;
-import de.unirostock.sems.xmltools.tools.DocumentTools;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TextNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
+import de.unirostock.sems.xmlutils.tools.DocumentTools;
 
 
 /**

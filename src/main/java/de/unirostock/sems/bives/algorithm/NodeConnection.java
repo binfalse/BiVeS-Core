@@ -3,8 +3,8 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
-import de.unirostock.sems.xmltools.comparison.Connection;
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.comparison.Connection;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**

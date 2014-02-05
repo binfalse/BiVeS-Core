@@ -6,7 +6,7 @@ package de.unirostock.sems.bives.ds.graph;
 import java.util.Collection;
 import java.util.HashMap;
 
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**

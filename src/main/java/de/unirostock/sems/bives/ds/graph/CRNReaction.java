@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import de.unirostock.sems.bives.ds.SBOTerm;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**

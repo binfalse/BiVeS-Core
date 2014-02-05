@@ -3,8 +3,8 @@
  */
 package de.unirostock.sems.bives.ds;
 
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
 
 
 /**

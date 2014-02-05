@@ -16,10 +16,10 @@ import org.w3c.dom.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
-import de.unirostock.sems.xmltools.comparison.Connection;
-import de.unirostock.sems.xmltools.ds.DocumentNode;
-import de.unirostock.sems.xmltools.ds.TextNode;
-import de.unirostock.sems.xmltools.ds.TreeNode;
+import de.unirostock.sems.xmlutils.comparison.Connection;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TextNode;
+import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
