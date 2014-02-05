@@ -3,8 +3,9 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
@@ -19,17 +20,17 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  * @author Martin Scharm
  *
  */
-public class ClearConnectionManager implements ConnectionManager
+public class SimpleConnectionManager implements ConnectionManager
 {
-	private Vector<NodeConnection> connections;
+	private List<NodeConnection> connections;
 	private HashMap<TreeNode, Connection> conByTree1, conByTree2;
 	private TreeDocument docA, docB;
 	
-	public ClearConnectionManager (TreeDocument docA, TreeDocument docB)
+	public SimpleConnectionManager (TreeDocument docA, TreeDocument docB)
 	{
 		this.docA = docA;
 		this.docB = docB;
-		connections = new Vector<NodeConnection> ();
+		connections = new ArrayList<NodeConnection> ();
 		conByTree1 = new HashMap<TreeNode, Connection> ();
 		conByTree2 = new HashMap<TreeNode, Connection> ();
 	}
@@ -40,11 +41,11 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param toCopy the connection manager to copy
 	 * @throws BivesConnectionException 
 	 */
-	public ClearConnectionManager (ClearConnectionManager toCopy) throws BivesConnectionException
+	public SimpleConnectionManager (SimpleConnectionManager toCopy) throws BivesConnectionException
 	{
 		this.docA = toCopy.docA;
 		this.docB = toCopy.docB;
-		connections = new Vector<NodeConnection> ();
+		connections = new ArrayList<NodeConnection> ();
 		conByTree1 = new HashMap<TreeNode, Connection> ();
 		conByTree2 = new HashMap<TreeNode, Connection> ();
 		for (NodeConnection c : toCopy.connections)
@@ -108,7 +109,7 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param cmgmt the ConnectionManager to join
 	 * @return the united connection manager, containing all connections
 	 */
-	public ClearConnectionManager union (ClearConnectionManager cmgmt)
+	public SimpleConnectionManager union (SimpleConnectionManager cmgmt)
 	{
 		if (docA != cmgmt.docA || docB != cmgmt.docB)
 		{
@@ -116,7 +117,7 @@ public class ClearConnectionManager implements ConnectionManager
 			return null;
 		}
 		
-		ClearConnectionManager union = new ClearConnectionManager (docA, docB);
+		SimpleConnectionManager union = new SimpleConnectionManager (docA, docB);
 		
 		for (NodeConnection c : connections)
 		{
@@ -153,7 +154,7 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param cmgmt the cmgmt
 	 * @return the connection manager
 	 */
-	public ClearConnectionManager intersection (ClearConnectionManager cmgmt)
+	public SimpleConnectionManager intersection (SimpleConnectionManager cmgmt)
 	{
 		if (docA != cmgmt.docA || docB != cmgmt.docB)
 		{
@@ -161,7 +162,7 @@ public class ClearConnectionManager implements ConnectionManager
 			return null;
 		}
 		
-		ClearConnectionManager intersection = new ClearConnectionManager (docA, docB);
+		SimpleConnectionManager intersection = new SimpleConnectionManager (docA, docB);
 		
 		for (NodeConnection c : connections)
 		{
@@ -190,7 +191,7 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param cmgmt the cmgmt
 	 * @return the connection manager
 	 */
-	public ClearConnectionManager setDiff (ClearConnectionManager cmgmt)
+	public SimpleConnectionManager setDiff (SimpleConnectionManager cmgmt)
 	{
 		if (docA != cmgmt.docA || docB != cmgmt.docB)
 		{
@@ -198,7 +199,7 @@ public class ClearConnectionManager implements ConnectionManager
 			return null;
 		}
 		
-		ClearConnectionManager intersection = new ClearConnectionManager (docA, docB);
+		SimpleConnectionManager intersection = new SimpleConnectionManager (docA, docB);
 		
 		for (NodeConnection c : connections)
 		{
@@ -226,7 +227,7 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param cmgmt the cmgmt
 	 * @return the connection manager
 	 */
-	public ClearConnectionManager symDiff (ClearConnectionManager cmgmt)
+	public SimpleConnectionManager symDiff (SimpleConnectionManager cmgmt)
 	{
 		return setDiff (cmgmt).union (cmgmt.setDiff (this));
 	}
@@ -317,7 +318,7 @@ public class ClearConnectionManager implements ConnectionManager
 	 * @param unmatched the vector in which the unmatched nodes are collected
 	 * @return the the vector in which the unmatched nodes are collected
 	 */
-	public Vector<TreeNode> getUnmatched (TreeNode subtree, Vector<TreeNode> unmatched)
+	public List<TreeNode> getUnmatched (TreeNode subtree, List<TreeNode> unmatched)
 	{
 		Connection c = getConnectionForNode (subtree);
 		if (c == null)
@@ -337,11 +338,11 @@ public class ClearConnectionManager implements ConnectionManager
 	 *
 	 * @param vec the vector of nodes to modify
 	 */
-	public void deleteMatchedNodes (Vector<TreeNode> vec)
+	public void deleteMatchedNodes (List<TreeNode> vec)
 	{
 		for (int c = vec.size () - 1; c >= 0; c--)
 		{
-			Connection ccs = getConnectionForNode (vec.elementAt (c));
+			Connection ccs = getConnectionForNode (vec.get (c));
 			if (ccs != null)
 				vec.remove (c);
 		}

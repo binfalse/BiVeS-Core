@@ -5,7 +5,7 @@ package de.unirostock.sems.bives.ds.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -266,7 +266,7 @@ public class GraphTranslatorJson
 			//LOGGER.info ("component: " + c.getId ());
 			createCompartment (c);
 
-			Vector<HierarchyNetworkVariable> vars = c.getVariables ();
+			List<HierarchyNetworkVariable> vars = c.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				//LOGGER.info ("var: " + var.getId ());

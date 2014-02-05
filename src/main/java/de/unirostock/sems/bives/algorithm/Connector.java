@@ -16,7 +16,7 @@ public abstract class Connector
 {
 	
 	/** The connection manager, holding node-correspondences. */
-	protected ClearConnectionManager conMgmt;
+	protected SimpleConnectionManager conMgmt;
 	
 	/** The documents a and b. */
 	protected TreeDocument docA, docB;
@@ -53,7 +53,7 @@ public abstract class Connector
 	{
 		this.docA = docA;
 		this.docB = docB;
-		conMgmt = new ClearConnectionManager (docA, docB);
+		conMgmt = new SimpleConnectionManager (docA, docB);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public abstract class Connector
 	 *
 	 * @return the connections
 	 */
-	public final ClearConnectionManager getConnections ()
+	public final SimpleConnectionManager getConnections ()
 	{
 		return conMgmt;
 	}

@@ -22,7 +22,6 @@ public class HierarchyNetworkVariable
 	private boolean singleDoc;
 	private HierarchyNetworkComponent componentA, componentB;
 	private HashMap<HierarchyNetworkVariable, VarConnection> connections;
-	//private Vector<HierarchyNetworkVariable> connectionsA, connectionsB;
 	class VarConnection
 	{
 		public boolean a, b;

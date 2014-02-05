@@ -3,11 +3,11 @@
  */
 package de.unirostock.sems.bives.algorithm.general;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Vector;
 
 import de.binfalse.bflog.LOGGER;
 import de.binfalse.bfutils.GeneralTools;
@@ -118,12 +118,12 @@ public class XyDiffConnector
 			LOGGER.debug ("\n\n\n\n\n");
 		
 			LOGGER.debug ("\n\n\n\n\n");
-			Vector<TreeNode> unmatched = conMgmt.getUnmatched (docA.getRoot (), new Vector<TreeNode> ());
+			List<TreeNode> unmatched = conMgmt.getUnmatched (docA.getRoot (), new ArrayList<TreeNode> ());
 			for (TreeNode u : unmatched)
 				LOGGER.debug (u.getXPath ());
 	
 			LOGGER.debug ("\n\n\n\n\n");
-			unmatched = conMgmt.getUnmatched (docB.getRoot (), new Vector<TreeNode> ());
+			unmatched = conMgmt.getUnmatched (docB.getRoot (), new ArrayList<TreeNode> ());
 			for (TreeNode u : unmatched)
 				LOGGER.debug (u.getXPath ());
 		}
@@ -137,7 +137,7 @@ public class XyDiffConnector
 		// Apply to children
 		if (nodeB.getType () == TreeNode.DOC_NODE)
 		{
-			Vector<TreeNode> children = ((DocumentNode) nodeB).getChildren ();
+			List<TreeNode> children = ((DocumentNode) nodeB).getChildren ();
 			for (TreeNode child : children)
 			{
 				TreeNode childMatch = FullBottomUp (child);
@@ -242,7 +242,7 @@ public class XyDiffConnector
 				LOGGER.debug ("Subtree rooted at "+nodeID.getXPath ()+" not fully matched, programming children");
 				if (nodeID.getType () == TreeNode.DOC_NODE)
 				{
-					Vector<TreeNode> children = ((DocumentNode) nodeID).getChildren ();
+					List<TreeNode> children = ((DocumentNode) nodeID).getChildren ();
 					for (TreeNode child : children)
 					{
 						toMatch.add (child);
@@ -265,8 +265,8 @@ public class XyDiffConnector
 			DocumentNode nodeB = (DocumentNode) tnb;
 			
 			// Get Free nodes in v0
-			HashMap<String, Vector<DocumentNode>> kidsMapA = new HashMap<String, Vector<DocumentNode>> ();
-			Vector<TreeNode> kidsA = nodeA.getChildren ();
+			HashMap<String, ArrayList<DocumentNode>> kidsMapA = new HashMap<String, ArrayList<DocumentNode>> ();
+			List<TreeNode> kidsA = nodeA.getChildren ();
 			for (TreeNode node : kidsA)
 			{
 				if (node.getType () != TreeNode.DOC_NODE || conMgmt.getConnectionForNode (node) != null)
@@ -274,13 +274,13 @@ public class XyDiffConnector
 				DocumentNode dnode = (DocumentNode) node;
 				String tag = dnode.getTagName ();
 				if (kidsMapA.get (tag) == null)
-					kidsMapA.put (tag, new Vector<DocumentNode> ());
+					kidsMapA.put (tag, new ArrayList<DocumentNode> ());
 				kidsMapA.get (tag).add (dnode);
 			}
 			
 			// Look for similar nodes in v1
-			HashMap<String, Vector<DocumentNode>> kidsMapB = new HashMap<String, Vector<DocumentNode>> ();
-			Vector<TreeNode> kidsB = nodeB.getChildren ();
+			HashMap<String, List<DocumentNode>> kidsMapB = new HashMap<String, List<DocumentNode>> ();
+			List<TreeNode> kidsB = nodeB.getChildren ();
 			for (TreeNode node : kidsB)
 			{
 				if (node.getType () != TreeNode.DOC_NODE || conMgmt.getConnectionForNode (node) != null)
@@ -288,7 +288,7 @@ public class XyDiffConnector
 				DocumentNode dnode = (DocumentNode) node;
 				String tag = dnode.getTagName ();
 				if (kidsMapB.get (tag) == null)
-					kidsMapB.put (tag, new Vector<DocumentNode> ());
+					kidsMapB.put (tag, new ArrayList<DocumentNode> ());
 				kidsMapB.get (tag).add (dnode);
 			}
 
@@ -314,7 +314,7 @@ public class XyDiffConnector
 		} //endif
 		
 		// Apply recursivly on children
-		Vector<TreeNode> children = nodeA.getChildren ();
+		List<TreeNode> children = nodeA.getChildren ();
 		for (TreeNode child : children)
 		{
 			if (child.getType () == TreeNode.DOC_NODE)
@@ -322,7 +322,7 @@ public class XyDiffConnector
 		}
 	}// end optimize
 	
-	private void optimize (Vector<DocumentNode> nodesA, Vector<DocumentNode> nodesB) throws BivesConnectionException
+	private void optimize (List<DocumentNode> nodesA, List<DocumentNode> nodesB) throws BivesConnectionException
 	{
 		// try to find mappings of children w/ same tag name and same parents
 		if (nodesA == null || nodesB == null || nodesA.size () == 0 || nodesB.size () == 0)
@@ -331,7 +331,7 @@ public class XyDiffConnector
 		if (nodesA.size () == 1 && nodesB.size () == 1)
 		{
 			// lets match both if they are not too different
-			DocumentNode nodeA = nodesA.firstElement (), nodeB = nodesB.firstElement ();
+			DocumentNode nodeA = nodesA.get (0), nodeB = nodesB.get (0);
 			if (nodeA.getAttributeDistance (nodeB) < .9)
 			{
 				LOGGER.debug ("connect unambiguos nodes during optimization: " + nodeA.getXPath () + " --> " + nodeB.getXPath ());
@@ -341,7 +341,7 @@ public class XyDiffConnector
 		}
 		
 		// calculate distances between nodes
-		Vector<NodeDistance> distances = new Vector<NodeDistance> ();
+		List<NodeDistance> distances = new ArrayList<NodeDistance> ();
 		for (DocumentNode nodeA : nodesA)
 			for (DocumentNode nodeB : nodesB)
 				distances.add (new NodeDistance (nodeA, nodeB, nodeA.getAttributeDistance (nodeB)));
@@ -477,7 +477,7 @@ public class XyDiffConnector
 							return 0;
 						}
 					}
-					Vector<CandidateResult> candidates = new Vector<CandidateResult> ();
+					List<CandidateResult> candidates = new ArrayList<CandidateResult> ();
 					
 					//for (int i = 0; i < theList.size (); i++)
 					for (TreeNode candidate : theList)
@@ -511,7 +511,7 @@ public class XyDiffConnector
 						// sort
 						Collections.sort (candidates);
 						// get min
-						CandidateResult candidate = candidates.firstElement ();
+						CandidateResult candidate = candidates.get (0);
 						LOGGER.debug (" took candidate: " + candidate.candidate.getXPath ());
 						/*if (candidates.size () == 2)
 						{
@@ -551,15 +551,15 @@ public class XyDiffConnector
 
 		if (v0nodeID.getType () == TreeNode.DOC_NODE && v1nodeID.getType () == TreeNode.DOC_NODE)
 		{
-			Vector<TreeNode> v0children = ((DocumentNode) v0nodeID).getChildren ();
-			Vector<TreeNode> v1children = ((DocumentNode) v1nodeID).getChildren ();
+			List<TreeNode> v0children = ((DocumentNode) v0nodeID).getChildren ();
+			List<TreeNode> v1children = ((DocumentNode) v1nodeID).getChildren ();
 			if (v0children.size () != v1children.size ())
 			{
 				LOGGER.debug ("recursiveAssign::diff # children: " + v0children.size () +" -vs- "+ v1children.size ());
 			}
 			for (int i = 0; i < v0children.size (); i++)
 			{
-				recursiveAssign(v0children.elementAt (i), v1children.elementAt (i));
+				recursiveAssign(v0children.get (i), v1children.get (i));
 			}
 		}
 	}

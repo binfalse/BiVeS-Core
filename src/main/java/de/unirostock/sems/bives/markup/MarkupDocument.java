@@ -5,7 +5,6 @@ package de.unirostock.sems.bives.markup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 
@@ -22,7 +21,7 @@ public class MarkupDocument
 	private String headline;
 	
 	/** The sections. */
-	private Vector<MarkupSection> sections;
+	private List<MarkupSection> sections;
 	
 	/** The header. */
 	private List<String> header;
@@ -35,7 +34,7 @@ public class MarkupDocument
 	public MarkupDocument (String headline)
 	{
 		this.headline = headline;
-		sections = new Vector<MarkupSection> ();
+		sections = new ArrayList<MarkupSection> ();
 		header = new ArrayList<String> ();
 	}
 	
@@ -138,7 +137,7 @@ public class MarkupDocument
 	 *
 	 * @return the sections
 	 */
-	public Vector<MarkupSection> getSections ()
+	public List<MarkupSection> getSections ()
 	{
 		return sections;
 	}

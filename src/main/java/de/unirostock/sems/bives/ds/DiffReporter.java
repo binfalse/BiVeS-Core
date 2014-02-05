@@ -1,6 +1,6 @@
 package de.unirostock.sems.bives.ds;
 
-import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
+import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.markup.MarkupDocument;
 import de.unirostock.sems.bives.markup.MarkupElement;
 
@@ -19,7 +19,7 @@ public interface DiffReporter
 	public String reportInsert ();
 	public String reportDelete ();*/
 	
-	public MarkupElement reportMofification (ClearConnectionManager conMgmt, DiffReporter docA, DiffReporter docB, MarkupDocument markupDocument);
+	public MarkupElement reportMofification (SimpleConnectionManager conMgmt, DiffReporter docA, DiffReporter docB, MarkupDocument markupDocument);
 	public MarkupElement reportInsert (MarkupDocument markupDocument);
 	public MarkupElement reportDelete (MarkupDocument markupDocument);
 	

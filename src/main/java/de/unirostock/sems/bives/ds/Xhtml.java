@@ -3,7 +3,9 @@
  */
 package de.unirostock.sems.bives.ds;
 
-import java.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
@@ -18,11 +20,11 @@ import de.unirostock.sems.xmlutils.tools.DocumentTools;
 public class Xhtml
 {
 	// html is beneath
-	private Vector<TreeNode> nodes;
+	private List<TreeNode> nodes;
 	
 	public Xhtml ()
 	{
-		nodes = new Vector<TreeNode> ();
+		nodes = new ArrayList<TreeNode> ();
 	}
 	
 	public void addXhtml (TreeNode node)

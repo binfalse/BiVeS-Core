@@ -15,7 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.binfalse.bflog.LOGGER;
-import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
+import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
@@ -463,7 +463,7 @@ public class Patch
 		insert.appendChild (createTextElement (++id, null, getParentXpath (node), null, node.getXPath (), -1, getChildNo (node), null, node.getText (), chainId));
 	}
 	
-	public void updateNode (Connection c, ClearConnectionManager conMgmt)
+	public void updateNode (Connection c, SimpleConnectionManager conMgmt)
 	{
 		TreeNode a = c.getTreeA ();
 		TreeNode b = c.getTreeB ();

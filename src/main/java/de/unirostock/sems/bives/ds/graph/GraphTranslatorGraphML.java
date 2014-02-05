@@ -6,7 +6,7 @@ package de.unirostock.sems.bives.ds.graph;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,7 +56,7 @@ public class GraphTranslatorGraphML
 			node.appendChild (subtree);
 			//componentMapper.put (comp, node);
 			
-			Vector<HierarchyNetworkVariable> vars = comp.getVariables ();
+			List<HierarchyNetworkVariable> vars = comp.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				LOGGER.info ("creating var: " + var.getId ());
@@ -94,7 +94,7 @@ public class GraphTranslatorGraphML
 				}
 			}
 			
-			Vector<HierarchyNetworkVariable> vars = comp.getVariables ();
+			List<HierarchyNetworkVariable> vars = comp.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				//Element vNode = varMapper.get (var);

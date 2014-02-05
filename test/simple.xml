@@ -1,0 +1,12 @@
+<conversations>
+    <message id="messageone" priority="high">
+        <from>dagmar</from>
+        <to>martin</to>
+        <content>keep workin'!</content>
+    </message>
+    <message id="messagetwo" replies="messageone">
+        <from>martin</from>
+        <to>dagmar</to>
+        <content>aye aye, boss.</content>
+    </message>
+</conversations>

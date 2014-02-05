@@ -10,7 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import de.binfalse.bflog.LOGGER;
-import de.unirostock.sems.bives.algorithm.ClearConnectionManager;
+import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.Producer;
 import de.unirostock.sems.bives.ds.Patch;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
@@ -41,7 +41,7 @@ public class PatchProducer
 		LOGGER.info ("creating patch producer");
 	}*/
 	
-	public void init (ClearConnectionManager conMgmt, TreeDocument docA, TreeDocument docB)
+	public void init (SimpleConnectionManager conMgmt, TreeDocument docA, TreeDocument docB)
 	{
 		super.init (conMgmt, docA, docB);
 		fullDiff = true;

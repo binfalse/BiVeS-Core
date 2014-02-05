@@ -3,7 +3,9 @@
  */
 package de.unirostock.sems.bives.ds.graph;
 
-import java.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
@@ -21,20 +23,8 @@ public class HierarchyNetworkComponent
 	private HierarchyNetwork hn;
 	private boolean singleDoc;
 	private HierarchyNetworkComponent parentA, parentB;
-	private Vector<HierarchyNetworkComponent> kidsA, kidsB;
-	private Vector<HierarchyNetworkVariable> vars;
-	//private Vector<HierarchyNetworkVariable> varsA, varsB;
-	/*private HashMap<String, Var> varMapper;
-	
-	class Var
-	{
-		public HierarchyNetworkVariable varA, varB;
-		public Var (HierarchyNetworkVariable varA, HierarchyNetworkVariable varB)
-		{
-			this.varA = varA;
-			this.varB = varB;
-		}
-	}*/
+	private List<HierarchyNetworkComponent> kidsA, kidsB;
+	private List<HierarchyNetworkVariable> vars;
 
 	public HierarchyNetworkComponent (HierarchyNetwork hn, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
 	{
@@ -47,13 +37,12 @@ public class HierarchyNetworkComponent
 		singleDoc = false;
 		
 		//varMapper = new HashMap<String, Var> ();
-		kidsA = new Vector<HierarchyNetworkComponent> ();
-		kidsB = new Vector<HierarchyNetworkComponent> ();
-		vars = new Vector<HierarchyNetworkVariable> ();
-		/*varsB = new Vector<HierarchyNetworkVariable> ();*/
+		kidsA = new ArrayList<HierarchyNetworkComponent> ();
+		kidsB = new ArrayList<HierarchyNetworkComponent> ();
+		vars = new ArrayList<HierarchyNetworkVariable> ();
 	}
 	
-	public Vector<HierarchyNetworkVariable> getVariables ()
+	public List<HierarchyNetworkVariable> getVariables ()
 	{
 		return vars;
 	}

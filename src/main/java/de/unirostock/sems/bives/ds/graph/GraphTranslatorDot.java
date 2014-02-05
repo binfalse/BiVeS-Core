@@ -3,9 +3,10 @@
  */
 package de.unirostock.sems.bives.ds.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.SBOTerm;
@@ -124,11 +125,11 @@ public class GraphTranslatorDot
 	{
 		dotStr = getDotPreamble ();
 		
-		Vector<String> edges = new Vector<String> ();
-		HashMap<CRNCompartment, Vector<String>> compartments = new HashMap<CRNCompartment, Vector<String>> ();
+		List<String> edges = new ArrayList<String> ();
+		HashMap<CRNCompartment, List<String>> compartments = new HashMap<CRNCompartment, List<String>> ();
 		for (CRNCompartment c : crn.getCompartments ())
 		{
-			compartments.put (c, new Vector<String> ());
+			compartments.put (c, new ArrayList<String> ());
 		}
 		
 		
@@ -186,7 +187,7 @@ public class GraphTranslatorDot
 	}
 
 	private String createCompartment (CRNCompartment compartment,
-		Vector<String> nodeVector)
+		List<String> nodeVector)
 	{
 		String ret = "\tsubgraph cluster" + compartment.getId () + " {" + Typesetting.NL_TXT;
 		ret += "\t\tlabel = \""+compartment.getLabel ()+"\";" + Typesetting.NL_TXT;
@@ -210,7 +211,7 @@ public class GraphTranslatorDot
 			dotStr += "\t\tlabel = \""+c.getLabel ()+"\";" + Typesetting.NL_TXT;
 			dotStr += "\t\tcolor=lightgrey;" + Typesetting.NL_TXT;
 
-			Vector<HierarchyNetworkVariable> vars = c.getVariables ();
+			List<HierarchyNetworkVariable> vars = c.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				dotStr += "\t" + addNode (var.getId (), var.getLabel (), var.getModification (), true);
@@ -268,7 +269,7 @@ public class GraphTranslatorDot
 				}
 			}
 			
-			Vector<HierarchyNetworkVariable> vars = comp.getVariables ();
+			List<HierarchyNetworkVariable> vars = comp.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				//Element vNode = varMapper.get (var);

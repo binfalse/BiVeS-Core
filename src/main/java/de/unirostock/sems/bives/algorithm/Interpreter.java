@@ -12,11 +12,11 @@ import de.unirostock.sems.xmlutils.ds.TreeDocument;
  */
 public abstract class Interpreter
 {
-	protected ClearConnectionManager conMgmt;
+	protected SimpleConnectionManager conMgmt;
 	protected TreeDocument docA;
 	protected TreeDocument docB;
 	
-	public Interpreter (ClearConnectionManager conMgmt, TreeDocument docA, TreeDocument docB)
+	public Interpreter (SimpleConnectionManager conMgmt, TreeDocument docA, TreeDocument docB)
 	{
 		this.conMgmt = conMgmt;
 		this.docA = docA;
