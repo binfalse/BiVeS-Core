@@ -12,7 +12,7 @@ import de.unirostock.sems.xmlutils.tools.DocumentTools;
 
 
 /**
- * @author martin
+ * @author Martin Scharm
  *
  */
 public class Xhtml

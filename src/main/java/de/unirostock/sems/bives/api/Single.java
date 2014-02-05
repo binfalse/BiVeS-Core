@@ -21,7 +21,7 @@ import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 
 
 /**
- * @author martin
+ * @author Martin Scharm
  *
  */
 public abstract class Single

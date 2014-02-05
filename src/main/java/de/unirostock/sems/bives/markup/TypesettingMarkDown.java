@@ -3,81 +3,110 @@
  */
 package de.unirostock.sems.bives.markup;
 
-import java.util.Vector;
+import java.util.List;
 
-import de.binfalse.bflog.LOGGER;
 
 
 /**
+ * The Class TypesettingMarkDown to typeset reports in MarkDown format.
+ * 
  * @author Martin Scharm
- *
  */
 public class TypesettingMarkDown
 	extends Typesetting
 {
 	
-	/* (non-Javadoc)
-	 * @see de.unirostock.sems.bives.markup.Markup#markup(de.unirostock.sems.bives.markup.MarkupDocument)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.unirostock.sems.bives.markup.Markup#typeset(de.unirostock.sems.bives.
+	 * markup.MarkupDocument)
 	 */
 	@Override
-	public String markup (MarkupDocument doc)
+	public String typeset (MarkupDocument doc)
 	{
-		//LOGGER.debug ("typesetting doc " + doc.getHeadline ());
-		String s = doc.getHeadline () + NL_TXT + "===================" + NL_TXT + NL_TXT;
-		//String sub = "";
+		String s = doc.getHeadline () + NL_TXT + "===================" + NL_TXT
+			+ NL_TXT;
 		
-		Vector<String> headers = doc.getHeader ();
+		List<String> headers = doc.getHeader ();
 		for (String head : headers)
 			s += "* " + head + NL_TXT;
 		s += NL_TXT;
 		
-		Vector<MarkupSection> sections = doc.getSections ();
-		//LOGGER.debug ("num sections: " + sections.size ());
+		List<MarkupSection> sections = doc.getSections ();
 		for (MarkupSection sec : sections)
-			s += markupSection (sec);
+			s += typesetSection (sec);
 		
 		s = MarkupDocument.replaceHighlights (s, "*", "*");
-		s = MarkupDocument.replaceInserts (s, "<span class='bives-insert'>", "</span>");
-		s = MarkupDocument.replaceDeletes (s, "<span class='bives-delete'>", "</span>");
-		s = MarkupDocument.replaceAttributes (s, "<span class='bives-attr'>", "</span>");
+		s = MarkupDocument.replaceInserts (s, "<span class='bives-insert'>",
+			"</span>");
+		s = MarkupDocument.replaceDeletes (s, "<span class='bives-delete'>",
+			"</span>");
+		s = MarkupDocument.replaceAttributes (s, "<span class='bives-attr'>",
+			"</span>");
 		s = MarkupDocument.replaceRightArrow (s, "->");
 		s = MarkupDocument.replaceMultiplication (s, "*");
 		
 		return s;
 	}
 	
-	private String markupSection (MarkupSection section)
+	
+	/**
+	 * Typeset a section.
+	 * 
+	 * @param section
+	 *          the section
+	 * @return the section in MarkDown
+	 */
+	private String typesetSection (MarkupSection section)
 	{
-		//LOGGER.debug ("typesetting section " + section.getHeader ());
-		String s = NL_TXT + section.getHeader () + NL_TXT + "-------------------" + NL_TXT + NL_TXT;
+		String s = NL_TXT + section.getHeader () + NL_TXT + "-------------------"
+			+ NL_TXT + NL_TXT;
 		
-		Vector<MarkupElement> elements = section.getValues ();
+		List<MarkupElement> elements = section.getValues ();
 		for (MarkupElement e : elements)
-			s += markupElement (e);
+			s += typesetElement (e);
 		
 		return s + NL_TXT + NL_TXT;
 	}
 	
-	private String markupElement (MarkupElement element)
+	
+	/**
+	 * Typeset an element.
+	 * 
+	 * @param element
+	 *          the element
+	 * @return the element in MarkDown
+	 */
+	private String typesetElement (MarkupElement element)
 	{
 		String s = "* **" + element.getHeader () + "**" + NL_TXT;
 		
-		Vector<String> values = element.getValues ();
+		List<String> values = element.getValues ();
 		for (String v : values)
 			s += "    * " + v + NL_TXT;
 		
-		Vector<MarkupElement> subElements = element.getSubElements ();
+		List<MarkupElement> subElements = element.getSubElements ();
 		for (MarkupElement e : subElements)
-			s += "    * " + markupSubElement (e) + NL_TXT;
+			s += "    * " + typesetSubElement (e) + NL_TXT;
 		
 		return s;
 	}
 	
-	private String markupSubElement (MarkupElement element)
+	
+	/**
+	 * Typeset a sub-element.
+	 * 
+	 * @param element
+	 *          the element
+	 * @return the sub-element in MarkDown
+	 */
+	private String typesetSubElement (MarkupElement element)
 	{
 		String s = "**" + element.getHeader () + "**" + NL_TXT;
 		
-		Vector<String> values = element.getValues ();
+		List<String> values = element.getValues ();
 		for (String v : values)
 			s += "        * " + v + "";
 		

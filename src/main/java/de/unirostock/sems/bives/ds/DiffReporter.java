@@ -5,6 +5,10 @@ import de.unirostock.sems.bives.markup.MarkupDocument;
 import de.unirostock.sems.bives.markup.MarkupElement;
 
 
+/**
+ * @author Martin Scharm
+ *
+ */
 public interface DiffReporter
 {
 	/*public static final String CLASS_DELETED = "deleted";

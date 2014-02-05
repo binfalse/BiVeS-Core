@@ -5,7 +5,7 @@ package de.unirostock.sems.bives.exception;
 
 
 /**
- * @author martin
+ * @author Martin Scharm
  *
  */
 public class BivesDocumentConsistencyException
