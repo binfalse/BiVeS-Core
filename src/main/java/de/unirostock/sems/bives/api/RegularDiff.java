@@ -100,7 +100,7 @@ public class RegularDiff
 	 */
 	public RegularDiff (TreeDocument treeA, TreeDocument treeB)
 	{
-		super (treeB, treeB);
+		super (treeA, treeB);
 	}
 	
 	
