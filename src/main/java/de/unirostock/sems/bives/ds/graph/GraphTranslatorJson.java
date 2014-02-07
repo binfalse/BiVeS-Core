@@ -10,33 +10,115 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.SBOTerm;
+import de.unirostock.sems.bives.ds.crn.CRN;
+import de.unirostock.sems.bives.ds.crn.CRNCompartment;
+import de.unirostock.sems.bives.ds.crn.CRNReaction;
+import de.unirostock.sems.bives.ds.crn.CRNSubstance;
+import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
+
 
 
 /**
- * @author Martin Scharm
+ * The Class GraphTranslatorJson to translate internal graph structures into
+ * JSON format.
+ * (e.g. to pass the graph to CytoscapeJS)
  * 
- * TODO: compartments
- * TODO: hierarchy
- *
+ * The resulting graph will look like:
+ * 
+ * <pre>
+ * {
+ * 	"elements": {
+ * 		"edges": [
+ * 			{
+ * 				"classes": "bives-ioedge",
+ * 				"data": {
+ * 					"source": "s2",
+ * 					"target": "r3"
+ * 				}
+ * 			},
+ * 			{
+ * 				"classes": "bives-stimulator bives-deleted",
+ * 				"data": {
+ * 					"source": "s4",
+ * 					"target": "r3"
+ * 				}
+ * 			},
+ * 			[...]
+ * 		],
+ * 		"nodes": [
+ * 			{
+ * 				"classes": "compartment",
+ * 				"data": {
+ * 					"id": "c1",
+ * 					"name": "compartment"
+ * 				}
+ * 			},
+ * 			{
+ * 				"classes": "species",
+ * 				"data": {
+ * 					"id": "s2",
+ * 					"name": "sigb",
+ * 					"parent": "c1"
+ * 				}
+ * 			},
+ * 			{
+ * 				"classes": "reaction bives-modified",
+ * 				"data": {
+ * 					"id": "r3",
+ * 					"name": "sigb degr",
+ * 					"parent": "c1"
+ * 				}
+ * 			},
+ * 			[...]
+ * 		]
+ * 	}
+ * }
+ * </pre>
+ * 
+ * for more information see <a href=
+ * "https://sems.uni-rostock.de/trac/bives-core/wiki/JsonGraphFormatDescription"
+ * >JsonGraphFormatDescription</a>
+ * 
+ * @author Martin Scharm
  */
 public class GraphTranslatorJson
 	extends GraphTranslator
 {
-	private JSONArray nodes;
-	private JSONArray edges;
-	private JSONObject graph;
 	
-	public GraphTranslatorJson ()
-	{
-	}
+	/** The nodes. */
+	private JSONArray		nodes;
 	
+	/** The edges. */
+	private JSONArray		edges;
+	
+	/** The graph. */
+	private JSONObject	graph;
+	
+	
+	/**
+	 * Adds a node to the JSON graph.
+	 * 
+	 * @param parent
+	 *          the id of the parent node
+	 * @param id
+	 *          the id of the new node
+	 * @param name
+	 *          the name of the new node
+	 * @param version
+	 *          the version flag: [-1,0,1,2]
+	 * @param species
+	 *          if true : species; otherwise : reaction
+	 */
 	@SuppressWarnings("unchecked")
-	private void addNode (String parent, String id, String name, int version, boolean species)
+	private void addNode (String parent, String id, String name, int version,
+		boolean species)
 	{
 		JSONObject node = new JSONObject ();
-
+		
 		String classes = species ? "species" : "reaction";
 		switch (version)
 		{
@@ -51,7 +133,7 @@ public class GraphTranslatorJson
 				break;
 		}
 		node.put ("classes", classes);
-	
+		
 		JSONObject data = new JSONObject ();
 		data.put ("id", id);
 		data.put ("name", name);
@@ -63,14 +145,27 @@ public class GraphTranslatorJson
 		nodes.add (node);
 	}
 	
+	
+	/**
+	 * Adds an edge from <code>from</code> to <code>to</code> to the JSON graph.
+	 * 
+	 * @param from
+	 *          the id of the source node
+	 * @param to
+	 *          the id of the target node
+	 * @param version
+	 *          the version flag: [-1,0,1,2]
+	 * @param modification
+	 *          the modification property (SBOTerm.*)
+	 */
 	@SuppressWarnings("unchecked")
 	private void addEdge (String from, String to, int version, String modification)
 	{
-
+		
 		JSONObject edge = new JSONObject ();
-
+		
 		String classes = "";
-
+		
 		if (modification != null)
 		{
 			if (modification.equals (SBOTerm.MOD_INHIBITOR))
@@ -85,7 +180,6 @@ public class GraphTranslatorJson
 		else
 			classes = "bives-ioedge";
 		
-		
 		switch (version)
 		{
 			case 1:
@@ -99,7 +193,7 @@ public class GraphTranslatorJson
 				break;
 		}
 		edge.put ("classes", classes);
-	
+		
 		JSONObject data = new JSONObject ();
 		data.put ("source", from);
 		data.put ("target", to);
@@ -110,67 +204,46 @@ public class GraphTranslatorJson
 	}
 	
 	
+	/**
+	 * Creates a compartment.
+	 *
+	 * @param id the id of that compartment
+	 * @param name the name of the compartment
+	 * @param version the version flag: [-1,0,1,2]
+	 */
 	@SuppressWarnings("unchecked")
-	private void createCompartment (CRNCompartment c)
+	private void createCompartment (String id, String name, int version)
 	{
-			JSONObject node = new JSONObject ();
-
-			String classes = "compartment";
-			switch (c.getModification ())
-			{
-				case 1:
-					classes += " bives-inserted";
-					break;
-				case 2:
-					classes += " bives-modified";
-					break;
-				case -1:
-					classes += " bives-deleted";
-					break;
-			}
-			node.put ("classes", classes);
+		JSONObject node = new JSONObject ();
 		
-			JSONObject data = new JSONObject ();
-			data.put ("id", c.getId ());
-			data.put ("name", c.getLabel ());
-			
-			node.put ("data", data);
-			
-			nodes.add (node);
+		String classes = "compartment";
+		switch (version)
+		{
+			case 1:
+				classes += " bives-inserted";
+				break;
+			case 2:
+				classes += " bives-modified";
+				break;
+			case -1:
+				classes += " bives-deleted";
+				break;
+		}
+		node.put ("classes", classes);
+		
+		JSONObject data = new JSONObject ();
+		data.put ("id", id);
+		data.put ("name", name);
+		
+		node.put ("data", data);
+		
+		nodes.add (node);
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	private void createCompartment (HierarchyNetworkComponent c)
-	{
-			JSONObject node = new JSONObject ();
-
-			String classes = "compartment";
-			switch (c.getModification ())
-			{
-				case 1:
-					classes += " bives-inserted";
-					break;
-				case 2:
-					classes += " bives-modified";
-					break;
-				case -1:
-					classes += " bives-deleted";
-					break;
-			}
-			node.put ("classes", classes);
-		
-			JSONObject data = new JSONObject ();
-			data.put ("id", c.getId ());
-			data.put ("name", c.getLabel ());
-			
-			node.put ("data", data);
-			
-			nodes.add (node);
-	}
-	
-	
-	
+	/**
+	 * Start a new graph. Initializes the resources.
+	 */
 	@SuppressWarnings("unchecked")
 	private void startNewGraph ()
 	{
@@ -185,104 +258,112 @@ public class GraphTranslatorJson
 		graph.put ("elements", elements);
 	}
 	
-	public JSONObject getJsonObject ()
+	
+	/**
+	 * Gets the JSON object.
+	 * 
+	 * @return the JSON object representing the graph
+	 */
+	public JSONObject getJsonGraph ()
 	{
 		return graph;
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock.sems.bives.ds.graph.CRN)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock
+	 * .sems.bives.ds.graph.CRN)
 	 */
 	@Override
 	public String translate (CRN crn)
 	{
 		startNewGraph ();
-		//Vector<String> edges = new Vector<String> ();
-		//HashMap<CRNCompartment, Vector<String>> compartments = new HashMap<CRNCompartment, Vector<String>> ();
 		for (CRNCompartment c : crn.getCompartments ())
 		{
-			createCompartment (c);
-			//compartments.put (c, new Vector<String> ());
+			createCompartment (c.getId (), c.getLabel (), c.getModification ());
 		}
 		
-		
-		
-		//dotStr += setNodeTypeSpecies ();
 		for (CRNSubstance s : crn.getSubstances ())
 		{
-			//dotStr += addNode (s.getId (), s.getLabel (), s.getModification (), true);
-			
 			CRNCompartment compartment = s.getCompartment ();
 			if (compartment != null)
-				addNode (compartment.getId (), s.getId (), s.getLabel (), s.getModification (), true);
-				//compartments.get (compartment).add (addNode (s.getId (), s.getLabel (), s.getModification (), true));
+				addNode (compartment.getId (), s.getId (), s.getLabel (),
+					s.getModification (), true);
 			else
 				addNode (null, s.getId (), s.getLabel (), s.getModification (), true);
 		}
-
-		//dotStr += setNodeTypeReaction ();
+		
 		for (CRNReaction r : crn.getReactions ())
 		{
 			CRNCompartment compartment = r.getCompartment ();
 			if (compartment != null)
-				addNode (compartment.getId (), r.getId (), r.getLabel (), r.getModification (), false);
+				addNode (compartment.getId (), r.getId (), r.getLabel (),
+					r.getModification (), false);
 			else
 				addNode (null, r.getId (), r.getLabel (), r.getModification (), false);
 			
-			for (CRNReaction.SubstanceRef s : r.getInputs ())
-				addEdge (s.subst.getId (), r.getId (), s.getModification (), SBOTerm.MOD_NONE);
+			for (CRNSubstanceRef s : r.getInputs ())
+				addEdge (s.getSubstance ().getId (), r.getId (), s.getModification (),
+					SBOTerm.MOD_NONE);
 			
-			for (CRNReaction.SubstanceRef s : r.getOutputs ())
-				addEdge (r.getId (), s.subst.getId (), s.getModification (), SBOTerm.MOD_NONE);
+			for (CRNSubstanceRef s : r.getOutputs ())
+				addEdge (r.getId (), s.getSubstance ().getId (), s.getModification (),
+					SBOTerm.MOD_NONE);
 			
-			for (CRNReaction.ModifierRef s : r.getModifiers ())
+			for (CRNSubstanceRef s : r.getModifiers ())
 			{
 				if (s.getModification () == CRN.MODIFIED)
 				{
-					addEdge (s.subst.getId (), r.getId (), CRN.DELETE, s.getModTermA ());
-					addEdge (s.subst.getId (), r.getId (), CRN.INSERT, s.getModTermB ());
+					addEdge (s.getSubstance ().getId (), r.getId (), CRN.DELETE,
+						s.getModTermA ());
+					addEdge (s.getSubstance ().getId (), r.getId (), CRN.INSERT,
+						s.getModTermB ());
 				}
 				else
-					addEdge (s.subst.getId (), r.getId (), s.getModification (), s.getModTerm ());
+					addEdge (s.getSubstance ().getId (), r.getId (),
+						s.getModification (), s.getModTerm ());
 			}
 		}
 		
 		return graph.toJSONString ();
 	}
-
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock
+	 * .sems.bives.ds.hn.HierarchyNetwork)
+	 */
 	@Override
 	public String translate (HierarchyNetwork hn)
 	{
 		startNewGraph ();
-		//HashMap<HierarchyNetworkComponent, Vector<String>> components = new HashMap<HierarchyNetworkComponent, Vector<String>> ();
-
-		//LOGGER.info ("translating");
-		
 		
 		Collection<HierarchyNetworkComponent> components = hn.getComponents ();
 		for (HierarchyNetworkComponent c : components)
 		{
-			//LOGGER.info ("component: " + c.getId ());
-			createCompartment (c);
-
+			createCompartment (c.getId (), c.getLabel (), c.getModification ());
+			
 			List<HierarchyNetworkVariable> vars = c.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
-				//LOGGER.info ("var: " + var.getId ());
-				addNode (c.getId (), var.getId (), var.getLabel (), var.getModification (), false);
+				addNode (c.getId (), var.getId (), var.getLabel (),
+					var.getModification (), false);
 				
-				
-				//Element vNode = varMapper.get (var);
-				HashMap<HierarchyNetworkVariable, HierarchyNetworkVariable.VarConnection> cons = var.getConnections ();
+				HashMap<HierarchyNetworkVariable, HierarchyNetworkVariable.VarConnection> cons = var
+					.getConnections ();
 				
 				for (HierarchyNetworkVariable con : cons.keySet ())
 				{
-					//LOGGER.info ("connecting var: " + var.getId () + " -> " + con.getId ());
-					addEdge (con.getId (), var.getId (), cons.get (con).getModificationInt (), SBOTerm.MOD_NONE);
+					addEdge (con.getId (), var.getId (), cons.get (con)
+						.getModificationInt (), SBOTerm.MOD_NONE);
 				}
 			}
-			
 			
 			HierarchyNetworkComponent parA = c.getParentA (), parB = c.getParentB ();
 			if (parA != null || parB != null)
@@ -308,7 +389,7 @@ public class GraphTranslatorJson
 			}
 			
 		}
-
+		
 		return graph.toJSONString ();
 	}
 }

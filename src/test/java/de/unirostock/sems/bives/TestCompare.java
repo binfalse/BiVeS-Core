@@ -31,7 +31,6 @@ public class TestCompare
 {
 	
 	private static final File		SIMPLE_DOC	= new File ("test/simple.xml");
-	private static final double	EPSILON			= 0.0001;
 
 	private static TreeDocument simpleFile;
 
@@ -91,6 +90,8 @@ public class TestCompare
 			diff.mapTrees ();
 			patch = diff.getPatch ();
 			checkPatch (patch);
+			
+			// diff?
 			assertTrue ("expected at least some operations in diff", 0 < 
 				patch.getNumInsterts () + 
 				patch.getNumMoves ());

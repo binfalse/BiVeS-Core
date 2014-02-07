@@ -1,12 +1,13 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.graph;
+package de.unirostock.sems.bives.ds.hn;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 

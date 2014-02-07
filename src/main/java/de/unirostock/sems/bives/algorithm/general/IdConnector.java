@@ -12,17 +12,21 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
+
 /**
- * Connector to connect nodes with same id.
+ * Connector to connect nodes with same id. If the ids aren't unique in both
+ * documents it'll do exactly nothing.
  * 
  * @author Martin Scharm
- *
+ * 
  */
 public class IdConnector
 	extends Connector
 {
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.unirostock.sems.xmldiff.algorithm.Connector#findConnections()
 	 */
 	@Override
@@ -31,13 +35,17 @@ public class IdConnector
 		findConnections (true);
 	}
 	
+	
 	/**
 	 * Find connections.
-	 *
-	 * @param requireSameLabel if true, both id-tags need to have the same label
-	 * @throws BivesConnectionException 
+	 * 
+	 * @param requireSameLabel
+	 *          if true, both id-tags need to have the same label
+	 * @throws BivesConnectionException
+	 *           the bives connection if there was a node-connection error
 	 */
-	public void findConnections (boolean requireSameLabel) throws BivesConnectionException
+	public void findConnections (boolean requireSameLabel)
+		throws BivesConnectionException
 	{
 		// we can only map by ids if they are unique...
 		if (!docA.uniqueIds () || !docB.uniqueIds ())
@@ -52,12 +60,15 @@ public class IdConnector
 				continue;
 			
 			TreeNode nA = docA.getNodeById (id);
-
+			
 			if (!requireSameLabel)
 			{
 				conMgmt.addConnection (new NodeConnection (nA, nB));
 			}
-			else if (nB.getType () == TreeNode.DOC_NODE && nA.getType () == TreeNode.DOC_NODE && ((DocumentNode) nB).getTagName ().equals (((DocumentNode) nA).getTagName ()))
+			else if (nB.getType () == TreeNode.DOC_NODE
+				&& nA.getType () == TreeNode.DOC_NODE
+				&& ((DocumentNode) nB).getTagName ().equals (
+					((DocumentNode) nA).getTagName ()))
 			{
 				conMgmt.addConnection (new NodeConnection (nA, nB));
 			}

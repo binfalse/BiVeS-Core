@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.graph;
+package de.unirostock.sems.bives.ds.hn;
 
 import java.util.Collection;
 import java.util.HashMap;

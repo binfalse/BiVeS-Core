@@ -3,8 +3,8 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
-import de.unirostock.sems.bives.ds.graph.CRN;
-import de.unirostock.sems.bives.ds.graph.HierarchyNetwork;
+import de.unirostock.sems.bives.ds.crn.CRN;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 
 
 /**

@@ -4,7 +4,7 @@
 package de.unirostock.sems.bives.exception;
 
 /**
- * The Class BivesConnectionException signaling connection problems.
+ * The Class BivesConnectionException signaling node-connection problems.
  * 
  * @author Martin Scharm
  */

@@ -24,20 +24,35 @@ import de.unirostock.sems.xmlutils.ds.TreeNodeComparatorBySubtreeSize;
 
 
 /**
- * @author Martin Scharm
+ * TODO: implement real XYDIFF and rename this one
+ * 
+ * The Class XyDiffConnector to map nodes as described in Cobena2002.
  *
+ * @author Martin Scharm
  */
 public class XyDiffConnector
 	extends Connector
 {
+	
+	/** The level we definitely walk up (at least). */
 	private final int MIN_CANDIDATEPARENT_LEVEL = 4;
+	
+	/** The preprocessor. */
 	private Connector preprocessor;
 
+	/**
+	 * Instantiates a new XyDiffConnector. In this setting we'll run an ID mapper before we do our work.
+	 */
 	public XyDiffConnector ()
 	{
 		super ();
 	}
 	
+	/**
+	 * Instantiates a new XyDiffConnector. Here we'll use `preprocessor` to find some connections before we start.
+	 *
+	 * @param preprocessor the connector to initiate the connections
+	 */
 	public XyDiffConnector (Connector preprocessor)
 	{
 		super ();
@@ -46,15 +61,18 @@ public class XyDiffConnector
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see de.unirostock.sems.bives.algorithm.Connector#init(de.unirostock.sems.xmlutils.ds.TreeDocument, de.unirostock.sems.xmlutils.ds.TreeDocument)
+	 */
 	@Override
 	public void init (TreeDocument docA, TreeDocument docB) throws BivesConnectionException
 	{
 		super.init (docA, docB);
 		
-		// not yet initialized?
+		// connections not yet initialized?
 		if (preprocessor == null)
 		{
-			// then we'll use by default an id-connector...
+			// then we'll use an id-connector by default...
 			IdConnector id = new IdConnector ();
 			id.init (docA, docB);
 			id.findConnections (true);
@@ -63,6 +81,7 @@ public class XyDiffConnector
 		}
 		else
 		{
+			// otherwise let the preprocessor do its work
 			preprocessor.init (docA, docB);
 			preprocessor.findConnections ();
 	
@@ -77,60 +96,63 @@ public class XyDiffConnector
 	@Override
 	protected void connect () throws BivesConnectionException
 	{
+		LOGGER.info ("starting XY Diff");
 		boolean debug = LOGGER.isDebugEnabled();
 		if (debug)
+		{
+			LOGGER.debug ("pre xy diff run");
 			LOGGER.debug (conMgmt.toString ());
+		}
 		
 		// document roots always match...
 		if (conMgmt.getConnectionOfNodes (docA.getRoot (), docB.getRoot ()) == null)
 			conMgmt.addConnection (new NodeConnection (docA.getRoot (), docB.getRoot ()));
-
-		if (debug)
-			LOGGER.debug ("\n\n\n\n\n");
 		
 
-		LOGGER.debug ("doing full bottom up");
-		//System.out.println ("before full bottom up:\n" + conMgmt.toString ());
-		FullBottomUp (docB.getRoot ());
-		//System.out.println ("after full bottom up:\n" + conMgmt.toString ());
+		// doing full bottom up
+		LOGGER.info ("doing full bottom up");
+		fullBottomUp (docB.getRoot ());
 
 		if (debug)
-		{
 			LOGGER.debug (conMgmt.toString ());
-			LOGGER.debug ("\n\n\n\n\n");
-		}
-
-		LOGGER.debug ("doing top down");
+		
+		// doing top-down
+		LOGGER.info ("doing top down");
 		topdownMatch (docA.getRoot (), docB.getRoot ());
 
 		if (debug)
-		{
 			LOGGER.debug (conMgmt.toString ());
-			LOGGER.debug ("\n\n\n\n\n");
-		}
 
-		LOGGER.debug ("doing optimizations");
+		// optimize the mapping
+		LOGGER.info ("doing optimizations");
 		optimize (docA.getRoot ());
 
 		if (debug)
 		{
+			LOGGER.debug ("post xy diff run");
 			LOGGER.debug (conMgmt.toString ());
-			LOGGER.debug ("\n\n\n\n\n");
-		
-			LOGGER.debug ("\n\n\n\n\n");
+
+			LOGGER.debug ("unmatched in A:");
 			List<TreeNode> unmatched = conMgmt.getUnmatched (docA.getRoot (), new ArrayList<TreeNode> ());
 			for (TreeNode u : unmatched)
 				LOGGER.debug (u.getXPath ());
 	
-			LOGGER.debug ("\n\n\n\n\n");
+			LOGGER.debug ("unmatched in B:");
 			unmatched = conMgmt.getUnmatched (docB.getRoot (), new ArrayList<TreeNode> ());
 			for (TreeNode u : unmatched)
 				LOGGER.debug (u.getXPath ());
 		}
+		LOGGER.info ("finished XY Diff");
 	}
 	
-	// returns match in other tree
-	private TreeNode FullBottomUp (TreeNode nodeB) throws BivesConnectionException
+	/**
+	 * Full bottom up.
+	 *
+	 * @param nodeB the node in tree B
+	 * @return the tree node
+	 * @throws BivesConnectionException the bives connection exception
+	 */
+	private TreeNode fullBottomUp (TreeNode nodeB) throws BivesConnectionException
 	{
 		HashMap<TreeNode, Double> weightByCandidate = new HashMap<TreeNode, Double> ();
 		
@@ -140,7 +162,7 @@ public class XyDiffConnector
 			List<TreeNode> children = ((DocumentNode) nodeB).getChildren ();
 			for (TreeNode child : children)
 			{
-				TreeNode childMatch = FullBottomUp (child);
+				TreeNode childMatch = fullBottomUp (child);
 				if (childMatch != null)
 				{
 					// get the parent of this node
@@ -197,6 +219,13 @@ public class XyDiffConnector
 		return bestMatch;
 	}
 	
+	/**
+	 * Topdown match.
+	 *
+	 * @param rootA the root a
+	 * @param rootB the root b
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private void topdownMatch (TreeNode rootA, TreeNode rootB) throws BivesConnectionException
 	{
 		PriorityQueue<TreeNode> toMatch = new PriorityQueue<TreeNode> (100, new TreeNodeComparatorBySubtreeSize (true));
@@ -253,6 +282,12 @@ public class XyDiffConnector
 		}
 	}
 	
+	/**
+	 * Optimize.
+	 *
+	 * @param nodeA the node a
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private void optimize (DocumentNode nodeA) throws BivesConnectionException
 	{
 		// If node is matched, we can try to do some work
@@ -322,6 +357,13 @@ public class XyDiffConnector
 		}
 	}// end optimize
 	
+	/**
+	 * Optimize.
+	 *
+	 * @param nodesA the nodes a
+	 * @param nodesB the nodes b
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private void optimize (List<DocumentNode> nodesA, List<DocumentNode> nodesB) throws BivesConnectionException
 	{
 		// try to find mappings of children w/ same tag name and same parents
@@ -360,6 +402,14 @@ public class XyDiffConnector
 		}
 	}
 	
+	/**
+	 * Node assign.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return true, if successful
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private boolean nodeAssign (TreeNode a, TreeNode b) throws BivesConnectionException
 	{
 		LOGGER.debug ("Matching old: "+a.getXPath ()+" with new: " + b.getXPath ());
@@ -386,7 +436,15 @@ public class XyDiffConnector
 //Basically, the best is the old node somehow related to new node: parents are matching for example
 //If none has this property, and if hash_matching is *meaningfull* ( text length > ??? ) we may consider returning any matching node
 //Maybe on a second level parents ?
-	private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws BivesConnectionException
+	/**
+ * Gets the best candidate.
+ *
+ * @param v1nodeID the v1node id
+ * @param selfkey the selfkey
+ * @return the best candidate
+ * @throws BivesConnectionException the bives connection exception
+ */
+private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws BivesConnectionException
 	{
 
 		// nodeRange.first==nodeRange.second) return 0;
@@ -539,6 +597,13 @@ public class XyDiffConnector
 		return null;
 	}
 	
+	/**
+	 * Recursive assign.
+	 *
+	 * @param v0nodeID the v0node id
+	 * @param v1nodeID the v1node id
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private void recursiveAssign (TreeNode v0nodeID, TreeNode v1nodeID) throws BivesConnectionException
 	{
 		if (v0nodeID == null || v1nodeID == null)
@@ -564,6 +629,14 @@ public class XyDiffConnector
 		}
 	}
 	
+	/**
+	 * Force parents assign.
+	 *
+	 * @param v0nodeID the v0node id
+	 * @param v1nodeID the v1node id
+	 * @param level the level
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	private void forceParentsAssign (TreeNode v0nodeID, TreeNode v1nodeID, int level) throws BivesConnectionException
 	{
 		if (v0nodeID == null ||  v1nodeID == null)

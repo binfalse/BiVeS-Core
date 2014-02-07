@@ -18,29 +18,8 @@ public abstract class Connector
 	/** The connection manager, holding node-correspondences. */
 	protected SimpleConnectionManager conMgmt;
 	
-	/** The documents a and b. */
+	/** The documents in version a and b. */
 	protected TreeDocument docA, docB;
-	
-	/**
-	 * Instantiates a new connector.
-	 *
-	 * @param docA the document A
-	 * @param docB the document B
-	 */
-	public Connector()
-	{
-	}
-	
-	/**
-	 * Instantiates a new connector with biased connections.
-	 *
-	 * @param docA the document A
-	 * @param docB the document B
-	 */
-	/*public Connector(ConnectionManager conMgmt)
-	{
-		this.conMgmt = conMgmt;
-	}*/
 	
 	/**
 	 * Inits the connector.

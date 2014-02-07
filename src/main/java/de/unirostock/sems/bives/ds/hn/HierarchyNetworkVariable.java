@@ -1,10 +1,11 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.graph;
+package de.unirostock.sems.bives.ds.hn;
 
 import java.util.HashMap;
 
+import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
@@ -22,7 +23,7 @@ public class HierarchyNetworkVariable
 	private boolean singleDoc;
 	private HierarchyNetworkComponent componentA, componentB;
 	private HashMap<HierarchyNetworkVariable, VarConnection> connections;
-	class VarConnection
+	public class VarConnection
 	{
 		public boolean a, b;
 		public VarConnection (boolean a, boolean b)
