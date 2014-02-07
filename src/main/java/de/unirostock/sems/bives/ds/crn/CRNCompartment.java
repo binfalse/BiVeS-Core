@@ -26,7 +26,7 @@ extends CRNEntity
 	 */
 	public CRNCompartment (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
 	{
-		super (crn.getNextCompartmentID (), labelA, labelB, docA, docB);
+		super ("c" + crn.getNextCompartmentID (), labelA, labelB, docA, docB);
 	}
 	
 }

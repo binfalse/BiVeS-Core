@@ -1,52 +1,54 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.hn;
 
+import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
- * The Class CRNEntity representing an entity in a chemical reaction network.
+ * The Class HierarchyNetworkEntity.
  *
  * @author Martin Scharm
  */
-public abstract class CRNEntity
+public abstract class HierarchyNetworkEntity
 {
-	/** The id of this entity. */
-	protected String id;
 	
-	/** The labels in docs A and B. */
-	protected String labelA, labelB;
+	/** The id. */
+	private String id;
 	
-	/** The documents A and B. */
-	protected DocumentNode docA, docB;
+	/** The label in the original and modified document. */
+	private String labelA, labelB;
 	
-	/** The single doc flag if in single-doc-operation-mode. */
-	protected boolean singleDoc;
+	/** The the original and modified document. */
+	private DocumentNode docA, docB;
+	
+	/** The single document flag. */
+	private boolean singleDoc;
 
 	/**
-	 * Instantiates a new entity.
+	 * Instantiates a new hierarchy network entity.
 	 *
-	 * @param entityId the entity id
-	 * @param labelA the label of that entity in the original document
-	 * @param labelB the label of that entity in the modified document
-	 * @param docA the original document
-	 * @param docB the modified document
+	 * @param id the id of this entity
+	 * @param labelA the label a
+	 * @param labelB the label b
+	 * @param docA the doc a
+	 * @param docB the doc b
 	 */
-	public CRNEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
+	public HierarchyNetworkEntity (String id, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
 	{
-		this.id = entityId;
+		this.id = id;
 		this.labelA = labelA;
 		this.labelB = labelB;
 		this.docA = docA;
 		this.docB = docB;
-		singleDoc = false;
+		this.singleDoc = false;
 	}
 	
 	/**
-	 * Sets the original document node.
+	 * Sets the document node from the original document.
 	 *
 	 * @param docA the original document node
 	 */
@@ -56,9 +58,9 @@ public abstract class CRNEntity
 	}
 	
 	/**
-	 * Sets the original label.
-	 *
-	 * @param labelA the label in the original document
+	 * Sets the label from the original document.
+	 * 
+	 * @param labelA the original label
 	 */
 	public void setLabelA (String labelA)
 	{
@@ -66,7 +68,7 @@ public abstract class CRNEntity
 	}
 	
 	/**
-	 * Sets the modified document node.
+	 * Sets the document node from the modified document.
 	 *
 	 * @param docB the modified document node
 	 */
@@ -76,9 +78,9 @@ public abstract class CRNEntity
 	}
 	
 	/**
-	 * Sets the modified label.
+	 * Sets the label from the modified document.
 	 *
-	 * @param labelB the label in the modified document
+	 * @param labelB the modified label
 	 */
 	public void setLabelB (String labelB)
 	{
@@ -106,17 +108,17 @@ public abstract class CRNEntity
 	}
 	
 	/**
-	 * Gets the id of the entity.
+	 * Gets the id of this entity.
 	 *
 	 * @return the id
 	 */
 	public String getId ()
 	{
-		return id;
+		return "c" + id;
 	}
 	
 	/**
-	 * Gets the label.
+	 * Gets the label of this entity.
 	 *
 	 * @return the label
 	 */
@@ -145,7 +147,7 @@ public abstract class CRNEntity
 			return CRN.INSERT;
 		if (labelB == null)
 			return CRN.DELETE;
-		if (docA.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED)|| docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED))
+		if (docA.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED) || docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED))
 			return CRN.MODIFIED;
 		return CRN.UNMODIFIED;
 	}

@@ -176,7 +176,7 @@ public class GraphTranslatorGraphML
 				{
 					LOGGER.info ("connecting var: " + var.getId () + " -> "
 						+ con.getId ());
-					createEdge (graphRoot, con.getId (), var.getId (), cons.get (con)
+					createEdge (graphRoot, con.getId (), var.getId (), "" + cons.get (con)
 						.getModification (), null);
 				}
 			}

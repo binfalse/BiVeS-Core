@@ -11,6 +11,14 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 /**
  * The Class CRN representing a chemical reaction network.
+ * 
+ * <p>
+ * A CRN contains compartments, which may contain species and reactions.
+ * There may be directed connections between species and reactions representing relationships like reactants, products, modifiers etc.
+ * <br>
+ * see also <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/ChemicalReactionNetwork">ChemicalReactionNetwork</a>
+ * </p>
+ * 
  *
  * @author Martin Scharm
  */
@@ -190,7 +198,7 @@ public class CRN
 	}
 
 	/**
-	 * Sets the single document flag.
+	 * Sets the single document flag for non-comparison graphs.
 	 */
 	public void setSingleDocument ()
 	{

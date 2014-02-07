@@ -7,162 +7,146 @@ import java.util.HashMap;
 
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
-import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
- * @author Martin Scharm
+ * The Class HierarchyNetworkVariable representing a variable of a HierarchyNetwork.
  *
+ * @author Martin Scharm
  */
 public class HierarchyNetworkVariable
+extends HierarchyNetworkEntity
 {
-	private int id;
-	private String labelA, labelB;
-	private DocumentNode docA, docB;
-	private HierarchyNetwork hn;
-	private boolean singleDoc;
+	
+	/** The components containing this variable, as defined in the original and modified version, respectively. */
 	private HierarchyNetworkComponent componentA, componentB;
+	
+	/** The connections to other variables. */
 	private HashMap<HierarchyNetworkVariable, VarConnection> connections;
+	
+	/**
+	 * The Class VarConnection representing a connection of two variables.
+	 */
 	public class VarConnection
 	{
+		
+		/** The existence flags for original/modified document. */
 		public boolean a, b;
+		
+		/**
+		 * Instantiates a new connection to another variable.
+		 *
+		 * @param a if true, existent in original document
+		 * @param b if true, existent in modified document
+		 */
 		public VarConnection (boolean a, boolean b)
 		{
 			this.a = a;
 			this.b = b;
 		}
-		public int getModificationInt ()
+		
+		/**
+		 * Gets the modification.
+		 *
+		 * @return the modification
+		 */
+		public int getModification ()
 		{
 			return (a?b?CRN.UNMODIFIED:CRN.DELETE:b?CRN.INSERT:CRN.UNMODIFIED);
 		}
-		public String getModification ()
-		{
-			return "" + (a?b?CRN.UNMODIFIED:CRN.DELETE:b?CRN.INSERT:CRN.UNMODIFIED);
-		}
 	}
 
+	/**
+	 * Instantiates a new hierarchy network variable.
+	 *
+	 * @param hn the hierarchy network
+	 * @param labelA the label as defined in the original document
+	 * @param labelB the label as defined in the modified document
+	 * @param docA the original document
+	 * @param docB the modified document
+	 * @param componentA the component in the original document
+	 * @param componentB the component in the modified document
+	 */
 	public HierarchyNetworkVariable (HierarchyNetwork hn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, HierarchyNetworkComponent componentA, HierarchyNetworkComponent componentB)
 	{
-		this.hn = hn;
-		this.id = hn.getNextVariableID ();
-		this.labelA = labelA;
-		this.labelB = labelB;
-		this.docA = docA;
-		this.docB = docB;
+		super ("v" + hn.getNextVariableID(), labelA, labelB, docA, docB);
 		this.componentA = componentA;
 		this.componentB = componentB;
-		singleDoc = false;
 		connections = new HashMap<HierarchyNetworkVariable, VarConnection> ();
 	}
 	
+	/**
+	 * Gets the connections of this variable to other variables of the hierarchy network.
+	 *
+	 * @return the connections
+	 */
 	public HashMap<HierarchyNetworkVariable, VarConnection> getConnections ()
 	{
 		return connections;
 	}
 	
+	/**
+	 * Adds a connection as defined in the original document.
+	 *
+	 * @param var the variable to connect
+	 */
 	public void addConnectionA (HierarchyNetworkVariable var)
 	{
 		VarConnection v = connections.get (var);
-		//LOGGER.info ("addConnectionA: " + id + " + " + var.id + " = " + v + " -> " + componentA + " / " + componentB);
 		if (v == null)
 			connections.put (var, new VarConnection (true, false));
 		else
 			v.a = true;
 	}
 	
+	/**
+	 * Adds a connection as defined in the modified document.
+	 *
+	 * @param var the variable to connect
+	 */
 	public void addConnectionB (HierarchyNetworkVariable var)
 	{
 		VarConnection v = connections.get (var);
-		//LOGGER.info ("addConnectionB: " + id + " + " + var.id + " = " + v + " -> " + componentA + " / " + componentB);
 		if (v == null)
 			connections.put (var, new VarConnection (false, true));
 		else
 			v.b = true;
 	}
 	
+	/**
+	 * Sets the component hosting this variable as defined in the original document.
+	 *
+	 * @param component the host in the original version
+	 */
 	public void setComponentA (HierarchyNetworkComponent component)
 	{
 		this.componentA = component;
 	}
 	
+	/**
+	 * Sets the component hosting this variable as defined in the modified document.
+	 *
+	 * @param component the host in the modified version
+	 */
 	public void setComponentB (HierarchyNetworkComponent component)
 	{
 		this.componentB = component;
 	}
 	
+	/**
+	 * Gets the component. Will return:
+	 * <ul>
+	 * <li>the original component, if it's the same component as in the modified version</li>
+	 * <li>null, otherwise</li>
+	 * </ul>
+	 *
+	 * @return the component
+	 */
 	public HierarchyNetworkComponent getComponent ()
 	{
-		if (componentA == null)
-			return componentB;
-		
-		if (componentB == null || componentA == componentB)
+		if (componentA == componentB)
 			return componentA;
 		return null;
-	}
-	
-	public void setDocA (DocumentNode docA)
-	{
-		this.docA = docA;
-	}
-	
-	public void setLabelA (String labelA)
-	{
-		this.labelA = labelA;
-	}
-	
-	public void setDocB (DocumentNode docB)
-	{
-		this.docB = docB;
-	}
-	
-	public void setLabelB (String labelB)
-	{
-		this.labelB = labelB;
-	}
-	
-	public DocumentNode getA ()
-	{
-		return docA;
-	}
-	
-	public DocumentNode getB ()
-	{
-		return docB;
-	}
-	
-	public String getId ()
-	{
-		return "v" + id;
-	}
-	
-	public String getLabel ()
-	{
-		if (labelA == null)
-			return labelB;
-		if (labelB == null)
-			return labelA;
-		if (labelA.equals (labelB))
-			return labelA;
-		return labelA + " -> " + labelB;
-	}
-	
-	public int getModification ()
-	{
-		if (singleDoc)
-			return CRN.UNMODIFIED;
-		
-		if (labelA == null)
-			return CRN.INSERT;
-		if (labelB == null)
-			return CRN.DELETE;
-		if (docA.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED) || docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED) || componentA != componentB)
-			return CRN.MODIFIED;
-		return CRN.UNMODIFIED;
-	}
-
-	public void setSingleDocument ()
-	{
-		singleDoc = true;
 	}
 	
 }

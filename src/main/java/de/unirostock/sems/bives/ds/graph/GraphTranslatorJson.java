@@ -361,7 +361,7 @@ public class GraphTranslatorJson
 				for (HierarchyNetworkVariable con : cons.keySet ())
 				{
 					addEdge (con.getId (), var.getId (), cons.get (con)
-						.getModificationInt (), SBOTerm.MOD_NONE);
+						.getModification (), SBOTerm.MOD_NONE);
 				}
 			}
 			

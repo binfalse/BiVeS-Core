@@ -382,7 +382,7 @@ public class GraphTranslatorDot
 					LOGGER.info ("connecting var: " + var.getId () + " -> "
 						+ con.getId ());
 					dotStr += addEdge (con.getId (), var.getId (), cons.get (con)
-						.getModificationInt (), SBOTerm.MOD_NONE);
+						.getModification (), SBOTerm.MOD_NONE);
 				}
 			}
 		}

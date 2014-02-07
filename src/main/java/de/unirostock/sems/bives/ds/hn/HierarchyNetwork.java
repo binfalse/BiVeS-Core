@@ -10,63 +10,80 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
- * @author Martin Scharm
+ * The Class HierarchyNetwork representing a graphical hierarchy network, intended to visualize CellML hierarchical dependencies.
+ * 
+ * <p>
+ * A HierarchyNetwork contains components which may contain variables. Moreover, there may be directed connections from parent components to
+ * child components representing the hierarchy among components.
+ * In addition, variables can be connected visualizing the flow of information between them.
+ * <br>
+ * see also <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/HierarchyNetwork">HierarchyNetwork</a>
+ * </p>
+ * 
+ * 
  *
+ * @author Martin Scharm
  */
 public class HierarchyNetwork
 {
-	public static final int UNMODIFIED = 0;
-	public static final int INSERT = 1;
-	public static final int DELETE = -1;
-	public static final int MODIFIED = 2;
-	
-	
+	/** The latest component id. */
 	private int componentID;
-	private int variableID;
-	private HashMap<TreeNode, HierarchyNetworkComponent> hnC;
-	private HashMap<TreeNode, HierarchyNetworkVariable> hnV;
-	private HashMap<HierarchyNetworkComponent, HierarchyNetworkComponent> uhnC;
-	private HashMap<HierarchyNetworkVariable, HierarchyNetworkVariable> uhnV;
 	
+	/** The latest variable id. */
+	private int variableID;
+	
+	/** The component mapper. */
+	private HashMap<TreeNode, HierarchyNetworkComponent> hnC;
+	
+	/** The variable mapper. */
+	private HashMap<TreeNode, HierarchyNetworkVariable> hnV;
+	
+	/**
+	 * Instantiates a new hierarchy network.
+	 */
 	public HierarchyNetwork ()
 	{
 		componentID = 0;
 		variableID = 0;
 		hnC = new HashMap<TreeNode, HierarchyNetworkComponent> ();
 		hnV = new HashMap<TreeNode, HierarchyNetworkVariable> ();
-		uhnC = new HashMap<HierarchyNetworkComponent, HierarchyNetworkComponent> ();
-		uhnV = new HashMap<HierarchyNetworkVariable, HierarchyNetworkVariable> ();
 	}
 	
-	public static String modToString (int modification)
-	{
-		switch (modification)
-		{
-			case INSERT:
-				return "inserted";
-			case DELETE:
-				return "deleted";
-			case MODIFIED:
-				return "modified";
-		}
-		return "unmodified";
-	}
-	
+	/**
+	 * Gets the components.
+	 *
+	 * @return the components
+	 */
 	public Collection<HierarchyNetworkComponent> getComponents ()
 	{
-		return uhnC.values ();
+		return hnC.values ();
 	}
 	
+	/**
+	 * Gets the variables.
+	 *
+	 * @return the variables
+	 */
 	public Collection<HierarchyNetworkVariable> getVariables ()
 	{
-		return uhnV.values ();
+		return hnV.values ();
 	}
 	
+	/**
+	 * Gets the next component id.
+	 *
+	 * @return the next component id
+	 */
 	public int getNextComponentID ()
 	{
 		return ++componentID;
 	}
 	
+	/**
+	 * Gets the next variable id.
+	 *
+	 * @return the next variable id
+	 */
 	public int getNextVariableID ()
 	{
 		return ++variableID;
@@ -74,28 +91,53 @@ public class HierarchyNetwork
 	
 
 	
+	/**
+	 * Adds a new component to the hierarchy.
+	 *
+	 * @param node the node in the document tree
+	 * @param comp the network component
+	 */
 	public void setComponent (TreeNode node, HierarchyNetworkComponent comp)
 	{
 		hnC.put (node, comp);
-		uhnC.put (comp, comp);
 	}
 	
+	/**
+	 * Adds a new variable.
+	 *
+	 * @param node the node in the document tree
+	 * @param var the variable
+	 */
 	public void setVariable (TreeNode node, HierarchyNetworkVariable var)
 	{
 		hnV.put (node, var);
-		uhnV.put (var, var);
 	}
 	
+	/**
+	 * Gets a component.
+	 *
+	 * @param node the node from the document tree
+	 * @return the corresponding component
+	 */
 	public HierarchyNetworkComponent getComponent (TreeNode node)
 	{
 		return hnC.get (node);
 	}
 	
+	/**
+	 * Gets a variable.
+	 *
+	 * @param node the node from the document tree
+	 * @return the corresponding variable
+	 */
 	public HierarchyNetworkVariable getVariable (TreeNode node)
 	{
 		return hnV.get (node);
 	}
 
+	/**
+	 * Sets the single document flag for non-comparison graphs.
+	 */
 	public void setSingleDocument ()
 	{
 		for (HierarchyNetworkComponent c : hnC.values ())

@@ -46,7 +46,7 @@ extends CRNEntity
 	 */
 	public CRNReaction (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, CRNCompartment compartmentA, CRNCompartment compartmentB, boolean reversible)
 	{
-		super (crn.getNextReactionID (), labelA, labelB, docA, docB);
+		super ("r" + crn.getNextReactionID (), labelA, labelB, docA, docB);
 		in = new HashMap<CRNSubstance, CRNSubstanceRef> ();
 		out = new HashMap<CRNSubstance, CRNSubstanceRef> ();
 		mod = new HashMap<CRNSubstance, CRNSubstanceRef> ();

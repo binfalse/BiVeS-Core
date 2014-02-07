@@ -30,7 +30,7 @@ extends CRNEntity
 	 */
 	public CRNSubstance (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, CRNCompartment compartmentA, CRNCompartment compartmentB)
 	{
-		super (crn.getNextSubstanceID (), labelA, labelB, docA, docB);
+		super ("s" + crn.getNextSubstanceID (), labelA, labelB, docA, docB);
 		this.compartmentA = compartmentA;
 		this.compartmentB = compartmentB;
 		singleDoc = false;
