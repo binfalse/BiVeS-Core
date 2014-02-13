@@ -127,7 +127,7 @@ public class SimpleConnectionManager implements ConnectionManager
 			}
 			catch (BivesConnectionException e)
 			{
-				LOGGER.warn ("got an exception while joining connection managers", e);
+				LOGGER.warn (e, "got an exception while joining connection managers");
 			}
 		}
 		
@@ -138,7 +138,7 @@ public class SimpleConnectionManager implements ConnectionManager
 			}
 			catch (BivesConnectionException e)
 			{
-				LOGGER.info ("got an exception while joining connection managers, connection probably already included from first cmgr.", e);
+				LOGGER.info (e, "got an exception while joining connection managers, connection probably already included from first cmgr.");
 			}
 		
 		return union;
@@ -174,7 +174,7 @@ public class SimpleConnectionManager implements ConnectionManager
 				}
 				catch (BivesConnectionException e)
 				{
-					LOGGER.error ("got an exception while intersecting connection managers. this shouldn't happen!", e);
+					LOGGER.error (e, "got an exception while intersecting connection managers. this shouldn't happen!");
 				}
 		}
 		
@@ -210,7 +210,7 @@ public class SimpleConnectionManager implements ConnectionManager
 				}
 				catch (BivesConnectionException e)
 				{
-					LOGGER.error ("got an exception while ste-diffing connection managers. this shouldn't happen!", e);
+					LOGGER.error (e, "got an exception while ste-diffing connection managers. this shouldn't happen!");
 				}
 		}
 		

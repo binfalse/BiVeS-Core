@@ -15,25 +15,31 @@ import de.unirostock.sems.xmlutils.ds.TreeDocument;
 public abstract class Connector
 {
 	
-	/** The connection manager, holding node-correspondences. */
+	/** The connection manager, holding node-mappings. */
 	protected SimpleConnectionManager conMgmt;
 	
-	/** The documents in version a and b. */
+	/** The documents in versions a and b. */
 	protected TreeDocument docA, docB;
 	
 	/**
-	 * Inits the connector.
+	 * Initializes the connector.
 	 *
-	 * @param docA the document A
-	 * @param docB the document B
+	 * @param docA the original document
+	 * @param docB the modified document
 	 * @throws BivesConnectionException 
 	 */
-	public void init (TreeDocument docA, TreeDocument docB) throws BivesConnectionException
+	public final void init (TreeDocument docA, TreeDocument docB) throws BivesConnectionException
 	{
 		this.docA = docA;
 		this.docB = docB;
 		conMgmt = new SimpleConnectionManager (docA, docB);
 	}
+	
+	
+	/**
+	 * Initializes the extension.
+	 */
+	protected abstract void init () throws BivesConnectionException;
 	
 	/**
 	 * Inherit to search for connections.
@@ -41,6 +47,11 @@ public abstract class Connector
 	protected abstract void connect () throws BivesConnectionException;
 	
 	
+	/**
+	 * Find connections between nodes of both versions of your document.
+	 *
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	public final void findConnections () throws BivesConnectionException
 	{
 		connect ();

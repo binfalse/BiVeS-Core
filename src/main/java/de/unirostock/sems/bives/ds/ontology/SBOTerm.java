@@ -1,42 +1,79 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds;
+package de.unirostock.sems.bives.ds.ontology;
 
 
 /**
- * @author Martin Scharm
+ * The Class SBOTerm representing a link into the Systems Biology Ontology.
  *
+ * @author Martin Scharm
  */
 public class SBOTerm
 {
+	
+	/** The string defining a STIMULATOR. */
 	public static final String MOD_STIMULATOR = "stimulator";
+	
+	/** The string defining an UNKNOWN modifier. */
 	public static final String MOD_UNKNOWN = "unknown";
+	
+	/** The string defining an INHIBITOR. */
 	public static final String MOD_INHIBITOR = "inhibitor";
+	
+	/** The string defining no modification at all. */
 	public static final String MOD_NONE = "none";
 	
+	/** The SBO term. */
 	private String SBOTerm;
 	
+	/**
+	 * Instantiates a new SBO term.
+	 *
+	 * @param SBOTerm the SBO term of the form SBO:[0-9]+
+	 */
 	public SBOTerm (String SBOTerm)
 	{
 		this.SBOTerm = SBOTerm;
 	}
 	
+	/**
+	 * Gets the SBO term stored in here.
+	 *
+	 * @return the SBO term
+	 */
 	public String getSBOTerm ()
 	{
 		return SBOTerm;
 	}
 	
+	/**
+	 * Creates a dummy stimulator.
+	 *
+	 * @return the SBO term describing a stimulator
+	 */
 	public static SBOTerm createStimulator ()
 	{
 		return new SBOTerm ("SBO:0000459");
 	}
+	
+	/**
+	 * Creates a dummy inhibitor.
+	 *
+	 * @return the SBO term describing an inhibitor
+	 */
 	public static SBOTerm createInhibitor ()
 	{
 		return new SBOTerm ("SBO:0000020");
 	}
 	
-	public static String resolvModifier (String mod)
+	/**
+	 * Resolve a modifier.
+	 *
+	 * @param mod the SBO term of the form SBO:[0-9]+
+	 * @return the textual equivalent
+	 */
+	public static String resolveModifier (String mod)
 	{
 		try
 		{
@@ -68,10 +105,15 @@ public class SBOTerm
 		return MOD_UNKNOWN;
 	}
 	
-	public String resolvModifier ()
+	/**
+	 * Resolve this modifier.
+	 *
+	 * @return the textual equivalent
+	 */
+	public String resolveModifier ()
 	{
 		if (SBOTerm == null || !SBOTerm.startsWith ("SBO:"))
 			return MOD_UNKNOWN;
-		return resolvModifier (SBOTerm);
+		return resolveModifier (SBOTerm);
 	}
 }

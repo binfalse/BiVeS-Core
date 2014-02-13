@@ -18,13 +18,11 @@ import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.NodeDistance;
 import de.unirostock.sems.xmlutils.ds.NodeDistanceComparator;
-import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 import de.unirostock.sems.xmlutils.ds.TreeNodeComparatorBySubtreeSize;
 
 
 /**
- * TODO: implement real XYDIFF and rename this one
  * 
  * The Class XyDiffConnector to map nodes as described in Cobena2002.
  *
@@ -65,10 +63,8 @@ public class XyDiffConnector
 	 * @see de.unirostock.sems.bives.algorithm.Connector#init(de.unirostock.sems.xmlutils.ds.TreeDocument, de.unirostock.sems.xmlutils.ds.TreeDocument)
 	 */
 	@Override
-	public void init (TreeDocument docA, TreeDocument docB) throws BivesConnectionException
+	protected void init () throws BivesConnectionException
 	{
-		super.init (docA, docB);
-		
 		// connections not yet initialized?
 		if (preprocessor == null)
 		{
@@ -146,7 +142,7 @@ public class XyDiffConnector
 	}
 	
 	/**
-	 * Full bottom up.
+	 * Full-bottomUp step.
 	 *
 	 * @param nodeB the node in tree B
 	 * @return the tree node
@@ -182,7 +178,7 @@ public class XyDiffConnector
 		if (conMgmt.getConnectionForNode (nodeB) != null)
 		{
 			TreeNode match = conMgmt.getConnectionForNode (nodeB).getTreeA ();
-			LOGGER.debug ("v1 node "+nodeB.getXPath ()+" already has a match, returning " + match.getXPath ());
+			LOGGER.debug ("v1 node ", nodeB.getXPath (), " already has a match, returning ", match.getXPath ());
 			return match;
 		}
 		if (weightByCandidate.size () < 1)
@@ -191,20 +187,20 @@ public class XyDiffConnector
 			if (conMgmt.getConnectionForNode (nodeB) != null)
 			{
 				match = conMgmt.getConnectionForNode (nodeB).getTreeA ();
-				LOGGER.debug ("v1 node "+nodeB.getXPath ()+" has no matched children, returning " + match.getXPath ());
+				LOGGER.debug ("v1 node ", nodeB.getXPath (), " has no matched children, returning ", match.getXPath ());
 			}
 			else
-				LOGGER.debug ("v1 node "+nodeB.getXPath ()+" has no matched children, returning " + match);
+				LOGGER.debug ("v1 node ", nodeB.getXPath (), " has no matched children, returning ", match);
 			return match;
 		}
 		
 		// Find parent corresponding to largest part of children
-		LOGGER.debug ("v0 parents of v0 nodes matching v1 children of v1 node "+nodeB.getXPath ()+" are:");
+		LOGGER.debug ("v0 parents of v0 nodes matching v1 children of v1 node ", nodeB.getXPath (), " are:");
 		double max=-1.0;
 		TreeNode bestMatch=null;
 		for (TreeNode node : weightByCandidate.keySet ())
 		{
-			LOGGER.debug ("v0 node "+node.getXPath ()+" with total weight among children of " + weightByCandidate.get (node));
+			LOGGER.debug ("v0 node ", node.getXPath (), " with total weight among children of ", weightByCandidate.get (node));
 			if (weightByCandidate.get (node) > max)
 			{
 				bestMatch = node;
@@ -214,13 +210,13 @@ public class XyDiffConnector
 		if (bestMatch == null)
 			return null;
 		
-		LOGGER.debug ("best parent is v0 node "+bestMatch.getXPath ()+" with total weight among children of " + max);
+		LOGGER.debug ("best parent is v0 node ", bestMatch.getXPath (), " with total weight among children of ", max);
 		nodeAssign (bestMatch, nodeB);
 		return bestMatch;
 	}
 	
 	/**
-	 * Topdown match.
+	 * Top-Down step.
 	 *
 	 * @param rootA the root a
 	 * @param rootB the root b
@@ -236,7 +232,7 @@ public class XyDiffConnector
 			TreeNode nodeID = toMatch.poll ();
 			
 			String v1hash = nodeID.getSubTreeHash ();
-			LOGGER.debug ("Trying new node "+nodeID.getXPath ()+", hash=" + v1hash);
+			LOGGER.debug ("Trying new node ", nodeID.getXPath (), ", hash=", v1hash);
 			
 			TreeNode matcher = null;
 			
@@ -268,7 +264,7 @@ public class XyDiffConnector
 			else
 			{
 				// put children in the vector so they'll be taken care of later
-				LOGGER.debug ("Subtree rooted at "+nodeID.getXPath ()+" not fully matched, programming children");
+				LOGGER.debug ("Subtree rooted at ", nodeID.getXPath (), " not fully matched, programming children");
 				if (nodeID.getType () == TreeNode.DOC_NODE)
 				{
 					List<TreeNode> children = ((DocumentNode) nodeID).getChildren ();
@@ -283,7 +279,7 @@ public class XyDiffConnector
 	}
 	
 	/**
-	 * Optimize.
+	 * Optimization step.
 	 *
 	 * @param nodeA the node a
 	 * @throws BivesConnectionException the bives connection exception
@@ -358,7 +354,7 @@ public class XyDiffConnector
 	}// end optimize
 	
 	/**
-	 * Optimize.
+	 * Optimization step.
 	 *
 	 * @param nodesA the nodes a
 	 * @param nodesB the nodes b
@@ -376,7 +372,7 @@ public class XyDiffConnector
 			DocumentNode nodeA = nodesA.get (0), nodeB = nodesB.get (0);
 			if (nodeA.getAttributeDistance (nodeB) < .9)
 			{
-				LOGGER.debug ("connect unambiguos nodes during optimization: " + nodeA.getXPath () + " --> " + nodeB.getXPath ());
+				LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
 				conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
 			}
 			return;
@@ -403,16 +399,16 @@ public class XyDiffConnector
 	}
 	
 	/**
-	 * Node assign.
+	 * Assign two nodes to each other, as long as they don't have a connection.
 	 *
-	 * @param a the a
-	 * @param b the b
-	 * @return true, if successful
+	 * @param a the node from the original tree
+	 * @param b the node from the modified tree
+	 * @return true, if successfully connected
 	 * @throws BivesConnectionException the bives connection exception
 	 */
 	private boolean nodeAssign (TreeNode a, TreeNode b) throws BivesConnectionException
 	{
-		LOGGER.debug ("Matching old: "+a.getXPath ()+" with new: " + b.getXPath ());
+		LOGGER.debug ("Matching old: ", a.getXPath (), " with new: ", b.getXPath ());
 		if (conMgmt.getConnectionForNode (a) != null || conMgmt.getConnectionForNode (b) != null)
 		{
 			LOGGER.debug ("already assigned");
@@ -461,11 +457,11 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 		 * up to maximum level of ancester, depending on subtree weight
 		 */
 		
-		LOGGER.debug ("maxLevel=" + maxLevelPath);
+		LOGGER.debug ("maxLevel=", maxLevelPath);
 		
 		while ( candidateRelativeLevel <= maxLevelPath )
 		{
-			LOGGER.debug ("    pass parentLevel=" + candidateRelativeLevel);
+			LOGGER.debug ("    pass parentLevel=", candidateRelativeLevel);
 			
 			v1nodeRelative = v1nodeRelative.getParent ();
 			if (v1nodeRelative == null)
@@ -473,7 +469,7 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 				LOGGER.debug ("but node doesn't not have ancesters up to this level\n");
 				return null;
 			}
-			LOGGER.debug ("    pass v1nodeRelative=" + v1nodeRelative.getXPath ());
+			LOGGER.debug ("    pass v1nodeRelative=", v1nodeRelative.getXPath ());
 			
 			if (conMgmt.getConnectionForNode (v1nodeRelative) == null)
 			{
@@ -485,7 +481,7 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 				
 				if (false && candidateRelativeLevel<=MIN_CANDIDATEPARENT_LEVEL)
 				{
-					// no idea...
+					// TODO: no idea...
 				}
 				/* For higher levels, try every candidate and this if its ancestor is a match for us */
 				else
@@ -496,9 +492,9 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 						LOGGER.debug ("  no candidates for hash");
 						return null;
 					}
-					LOGGER.debug ("  num candidates: "+theList.size ()+"");
+					LOGGER.debug ("  num candidates: ", theList.size ());
 					if (theList.size () > 50)
-						LOGGER.warn ("it seems that there are too many candidates ("+theList.size ()+") for a match of " + v1nodeID.getXPath () + " (" + selfkey + ")");
+						LOGGER.warn ("it seems that there are too many candidates (", theList.size (), ") for a match of ", v1nodeID.getXPath (), " (", selfkey, ")");
 					
 					final String xPath = v1nodeID.getXPath ();
 					class CandidateResult implements Comparable<CandidateResult>
@@ -543,7 +539,7 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 						//TreeNode candidate = theList.get (i);
 						if (conMgmt.getConnectionForNode (candidate) == null)
 						{// Node still not assigned
-							LOGGER.debug ("("+candidate.getXPath ()+")");
+							LOGGER.debug ("(", candidate.getXPath (), ")");
 							TreeNode candidateRelative = candidate;
 							for (int j = 0; j < candidateRelativeLevel; j++)
 							{
@@ -556,7 +552,7 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 							{
 								if (conMgmt.getConnectionOfNodes (candidateRelative, v1nodeRelative) != null)
 								{
-									LOGGER.debug (" adding candidate because some relatives ( level= "+candidateRelativeLevel+" ) are matching");
+									LOGGER.debug (" adding candidate because some relatives ( level= ", candidateRelativeLevel, " ) are matching");
 									//return candidate;
 									candidates.add (new CandidateResult (candidate, candidateRelativeLevel));
 								}
@@ -570,7 +566,7 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 						Collections.sort (candidates);
 						// get min
 						CandidateResult candidate = candidates.get (0);
-						LOGGER.debug (" took candidate: " + candidate.candidate.getXPath ());
+						LOGGER.debug (" took candidate: ", candidate.candidate.getXPath ());
 						/*if (candidates.size () == 2)
 						{
 							LOGGER.debug ("    all candidates");
@@ -598,17 +594,17 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 	}
 	
 	/**
-	 * Recursive assign.
+	 * Recursively assign subtrees to each other.
 	 *
-	 * @param v0nodeID the v0node id
-	 * @param v1nodeID the v1node id
+	 * @param v0nodeID the node rooting the subtree in the original document
+	 * @param v1nodeID the node rooting the subtree in the modified document
 	 * @throws BivesConnectionException the bives connection exception
 	 */
 	private void recursiveAssign (TreeNode v0nodeID, TreeNode v1nodeID) throws BivesConnectionException
 	{
 		if (v0nodeID == null || v1nodeID == null)
 		{
-			LOGGER.debug ("recursiveAssign::bad arguments ("+v0nodeID+", "+v0nodeID+")");
+			LOGGER.debug ("recursiveAssign::bad arguments (", v0nodeID, ", ", v0nodeID, ")");
 			return;
 		}
 		
@@ -619,22 +615,18 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 			List<TreeNode> v0children = ((DocumentNode) v0nodeID).getChildren ();
 			List<TreeNode> v1children = ((DocumentNode) v1nodeID).getChildren ();
 			if (v0children.size () != v1children.size ())
-			{
-				LOGGER.debug ("recursiveAssign::diff # children: " + v0children.size () +" -vs- "+ v1children.size ());
-			}
+				LOGGER.debug ("recursiveAssign::diff # children: ", v0children.size (), " -vs- ", v1children.size ());
 			for (int i = 0; i < v0children.size (); i++)
-			{
 				recursiveAssign(v0children.get (i), v1children.get (i));
-			}
 		}
 	}
 	
 	/**
-	 * Force parents assign.
+	 * Force the connections of parents of two nodes. Recursively for #level levels
 	 *
-	 * @param v0nodeID the v0node id
-	 * @param v1nodeID the v1node id
-	 * @param level the level
+	 * @param v0nodeID the node in the original document
+	 * @param v1nodeID the node in the modified document
+	 * @param level the number of levels to climb
 	 * @throws BivesConnectionException the bives connection exception
 	 */
 	private void forceParentsAssign (TreeNode v0nodeID, TreeNode v1nodeID, int level) throws BivesConnectionException
@@ -656,18 +648,18 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 			
 			if (conMgmt.getConnectionForNode (v0ascendant) != null)
 			{
-				LOGGER.debug ("forceParentsAssign stopped at level "+i+" because v0 ascendant is already assigned");
+				LOGGER.debug ("forceParentsAssign stopped at level ", i, " because v0 ascendant is already assigned");
 				return;
 			}
 			if (conMgmt.getConnectionForNode (v1ascendant) != null)
 			{
-				LOGGER.debug ("forceParentsAssign stopped at level "+i+" because v1 ascendant is already assigned");
+				LOGGER.debug ("forceParentsAssign stopped at level ", i, " because v1 ascendant is already assigned");
 				return;
 			}
 			
 			if (!nodeAssign( v0ascendant, v1ascendant))
 			{
-				LOGGER.debug ("forceParentsAssign stopped because relatives ("+v0ascendant.getXPath ()+", "+v1ascendant.getXPath ()+") do not have the same label");
+				LOGGER.debug ("forceParentsAssign stopped because relatives (", v0ascendant.getXPath (), ", ", v1ascendant.getXPath (), ") do not have the same label");
 				return;
 			}
 			

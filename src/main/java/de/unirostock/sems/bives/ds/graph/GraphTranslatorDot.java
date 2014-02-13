@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.binfalse.bflog.LOGGER;
-import de.unirostock.sems.bives.ds.SBOTerm;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -18,6 +17,7 @@ import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 import de.unirostock.sems.bives.markup.Typesetting;
 
 
@@ -379,8 +379,8 @@ public class GraphTranslatorDot
 				
 				for (HierarchyNetworkVariable con : cons.keySet ())
 				{
-					LOGGER.info ("connecting var: " + var.getId () + " -> "
-						+ con.getId ());
+					LOGGER.info ("connecting var: ", var.getId (), " -> ",
+						con.getId ());
 					dotStr += addEdge (con.getId (), var.getId (), cons.get (con)
 						.getModification (), SBOTerm.MOD_NONE);
 				}

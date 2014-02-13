@@ -60,7 +60,7 @@ public class BivesTools
 		}
 		catch (Exception e)
 		{
-			LOGGER.error ("error generating math", e);
+			LOGGER.error (e, "error generating math");
 			markupElement.addValue ("error generating math: " + e.getMessage ());
 		}
 	}

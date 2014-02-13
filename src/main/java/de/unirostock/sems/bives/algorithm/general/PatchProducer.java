@@ -79,17 +79,17 @@ public class PatchProducer
 			}
 			catch (IOException e)
 			{
-				LOGGER.error ("error producing output", e);
+				LOGGER.error (e, "error producing output");
 			}
 			catch (TransformerException e)
 			{
-				LOGGER.error ("error producing output", e);
+				LOGGER.error (e, "error producing output");
 			}
 			return null;
 		}
 		catch (ParserConfigurationException e)
 		{
-			LOGGER.error ("error producing patch", e);
+			LOGGER.error (e, "error producing patch");
 		}
 		
 		return null;

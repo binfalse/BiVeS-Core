@@ -45,12 +45,12 @@ public class TestCompare
 			}
 			catch (Exception e)
 			{
-				LOGGER.error ("cannot read " + SIMPLE_DOC + " -> skipping tests", e);
+				LOGGER.error (e, "cannot read ", SIMPLE_DOC, " -> skipping tests");
 			}
 		}
 		else
 		{
-			LOGGER.error ("cannot read " + SIMPLE_DOC + " -> skipping tests");
+			LOGGER.error ("cannot read ", SIMPLE_DOC, " -> skipping tests");
 		}
 	}
 	
@@ -71,7 +71,7 @@ public class TestCompare
 			checkPatch (patch);
 			assertEquals ("did not expect any operations in patch", 0,
 				patch.getNumDeletes () + 
-				patch.getNumInsterts () + 
+				patch.getNumInserts () + 
 				patch.getNumMoves () + 
 				patch.getNumUpdates ());
 			
@@ -93,7 +93,7 @@ public class TestCompare
 			
 			// diff?
 			assertTrue ("expected at least some operations in diff", 0 < 
-				patch.getNumInsterts () + 
+				patch.getNumInserts () + 
 				patch.getNumMoves ());
 			assertEquals ("did not expected a delete or update", 0, 
 				patch.getNumDeletes () + 
@@ -115,7 +115,7 @@ public class TestCompare
 	public void checkPatch (Patch patch)
 	{
 		assertNotNull ("patch shouldn't be null", patch);
-		assertTrue ("#inserts in patch needs to be >= 0", 0 <= patch.getNumInsterts ());
+		assertTrue ("#inserts in patch needs to be >= 0", 0 <= patch.getNumInserts ());
 		assertTrue ("#deletes in patch needs to be >= 0", 0 <= patch.getNumDeletes ());
 		assertTrue ("#moves in patch needs to be >= 0", 0 <= patch.getNumMoves ());
 		assertTrue ("#updates in patch needs to be >= 0", 0 <= patch.getNumUpdates ());

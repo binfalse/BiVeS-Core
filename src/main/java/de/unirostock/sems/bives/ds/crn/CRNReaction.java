@@ -6,7 +6,7 @@ package de.unirostock.sems.bives.ds.crn;
 import java.util.Collection;
 import java.util.HashMap;
 
-import de.unirostock.sems.bives.ds.SBOTerm;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 

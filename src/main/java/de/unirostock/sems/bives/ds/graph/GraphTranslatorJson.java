@@ -10,7 +10,6 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import de.unirostock.sems.bives.ds.SBOTerm;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -19,6 +18,7 @@ import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 
 
 

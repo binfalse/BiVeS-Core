@@ -16,7 +16,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.binfalse.bflog.LOGGER;
-import de.unirostock.sems.bives.ds.SBOTerm;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -25,6 +24,7 @@ import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
@@ -122,7 +122,7 @@ public class GraphTranslatorGraphML
 		Collection<HierarchyNetworkComponent> components = hn.getComponents ();
 		for (HierarchyNetworkComponent comp : components)
 		{
-			LOGGER.info ("creating comp: " + comp.getId ());
+			LOGGER.info ("creating comp: ", comp.getId ());
 			Element node = createGraphMLNode (graphRoot, comp.getId (), null,
 				comp.getLabel (), comp.getModification () + "");
 			Element subtree = createGraphRoot (true);
@@ -131,7 +131,7 @@ public class GraphTranslatorGraphML
 			List<HierarchyNetworkVariable> vars = comp.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
-				LOGGER.info ("creating var: " + var.getId ());
+				LOGGER.info ("creating var: ", var.getId ());
 				Element vNode = createGraphMLNode (graphRoot, var.getId (), null,
 					var.getLabel (), var.getModification () + "");
 				subtree.appendChild (vNode);
@@ -174,8 +174,8 @@ public class GraphTranslatorGraphML
 				
 				for (HierarchyNetworkVariable con : cons.keySet ())
 				{
-					LOGGER.info ("connecting var: " + var.getId () + " -> "
-						+ con.getId ());
+					LOGGER.info ("connecting var: ", var.getId (), " -> ",
+						con.getId ());
 					createEdge (graphRoot, con.getId (), var.getId (), "" + cons.get (con)
 						.getModification (), null);
 				}
@@ -188,11 +188,11 @@ public class GraphTranslatorGraphML
 		}
 		catch (TransformerException e)
 		{
-			LOGGER.error ("error printing graphml", e);
+			LOGGER.error (e, "error printing graphml");
 		}
 		catch (IOException e)
 		{
-			LOGGER.error ("error printing graphml", e);
+			LOGGER.error (e, "error printing graphml");
 		}
 		return null;
 	}
@@ -273,11 +273,11 @@ public class GraphTranslatorGraphML
 		}
 		catch (TransformerException e)
 		{
-			LOGGER.error ("error printing graphml", e);
+			LOGGER.error (e, "error printing graphml");
 		}
 		catch (IOException e)
 		{
-			LOGGER.error ("error printing graphml", e);
+			LOGGER.error (e, "error printing graphml");
 		}
 		return null;
 	}
@@ -417,7 +417,7 @@ public class GraphTranslatorGraphML
 	private Element createGraphMLNode (Element parent, String id, String ns,
 		String name, String version)
 	{
-		LOGGER.debug ("create gml node: " + id + " mod: " + version);
+		LOGGER.debug ("create gml node: ", id, " mod: ", version);
 		Element element = graphDocument.createElement ("node");
 		
 		element.setAttribute ("id", id);
@@ -466,8 +466,8 @@ public class GraphTranslatorGraphML
 	private void createEdge (Element parent, String source, String target,
 		String version, String modifier)
 	{
-		LOGGER.debug ("create gml edge: " + source + " -> " + target + " mod: "
-			+ version);
+		LOGGER.debug ("create gml edge: ", source, " -> ", target, " mod: ",
+			version);
 		Element element = graphDocument.createElement ("edge");
 		
 		element.setAttribute ("source", source);

@@ -3,7 +3,7 @@
  */
 package de.unirostock.sems.bives.ds.crn;
 
-import de.unirostock.sems.bives.ds.SBOTerm;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 
 
 /**
@@ -124,8 +124,8 @@ public class CRNSubstanceRef
 		if (modTermA == null && modTermB == null)
 			return SBOTerm.MOD_UNKNOWN;
 		if (modTermA == null)
-			return modTermB.resolvModifier ();
-		return modTermA.resolvModifier ();
+			return modTermB.resolveModifier ();
+		return modTermA.resolveModifier ();
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class CRNSubstanceRef
 	{
 		if (modTermA == null)
 			return SBOTerm.MOD_UNKNOWN;
-		return modTermA.resolvModifier ();
+		return modTermA.resolveModifier ();
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class CRNSubstanceRef
 	{
 		if (modTermB == null)
 			return SBOTerm.MOD_UNKNOWN;
-		return modTermB.resolvModifier ();
+		return modTermB.resolveModifier ();
 	}
 	
 	/**
@@ -167,7 +167,7 @@ public class CRNSubstanceRef
 		{
 			if (modTermA == null && modTermB == null)
 				return CRN.UNMODIFIED;
-			if (modTermA != null && modTermB != null && modTermA.resolvModifier ().equals (modTermB.resolvModifier ()))
+			if (modTermA != null && modTermB != null && modTermA.resolveModifier ().equals (modTermB.resolveModifier ()))
 					return CRN.UNMODIFIED;
 			return CRN.MODIFIED;
 		}

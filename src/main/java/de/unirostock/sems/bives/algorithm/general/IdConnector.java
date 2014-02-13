@@ -74,5 +74,15 @@ public class IdConnector
 			}
 		}
 	}
+
+
+	/* (non-Javadoc)
+	 * @see de.unirostock.sems.bives.algorithm.Connector#init()
+	 */
+	@Override
+	protected void init () throws BivesConnectionException
+	{
+		// nothing to do
+	}
 	
 }
