@@ -68,7 +68,7 @@ public class TestCompare
 			Diff diff = new RegularDiff (simpleFile, test);
 			diff.mapTrees ();
 			Patch patch = diff.getPatch ();
-			checkPatch (patch);
+			TestPatching.checkPatch (patch);
 			assertEquals ("did not expect any operations in patch", 0,
 				patch.getNumDeletes () + 
 				patch.getNumInserts () + 
@@ -89,7 +89,7 @@ public class TestCompare
 			diff = new RegularDiff (simpleFile, test);
 			diff.mapTrees ();
 			patch = diff.getPatch ();
-			checkPatch (patch);
+			TestPatching.checkPatch (patch);
 			
 			// diff?
 			assertTrue ("expected at least some operations in diff", 0 < 
@@ -109,16 +109,5 @@ public class TestCompare
 			e.printStackTrace ();
 			fail ("unexpected error reading exported document" + e);
 		}
-	}
-	
-	
-	public void checkPatch (Patch patch)
-	{
-		assertNotNull ("patch shouldn't be null", patch);
-		assertTrue ("#inserts in patch needs to be >= 0", 0 <= patch.getNumInserts ());
-		assertTrue ("#deletes in patch needs to be >= 0", 0 <= patch.getNumDeletes ());
-		assertTrue ("#moves in patch needs to be >= 0", 0 <= patch.getNumMoves ());
-		assertTrue ("#updates in patch needs to be >= 0", 0 <= patch.getNumUpdates ());
-		
 	}
 }
