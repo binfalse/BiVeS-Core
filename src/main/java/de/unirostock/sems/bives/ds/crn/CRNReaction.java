@@ -5,11 +5,14 @@ package de.unirostock.sems.bives.ds.crn;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CRNReaction representing a reaction in a chemical reaction network.
  *
@@ -32,7 +35,8 @@ extends CRNEntity
 	private HashMap<CRNSubstance, CRNSubstanceRef> out;
 	
 	/** The mod. */
-	private HashMap<CRNSubstance, CRNSubstanceRef> mod;
+	private Vector<CRNSubstanceRef> mod;
+	//private HashMap<CRNSubstance, CRNSubstanceRef> mod;
 	
 	/**
 	 * Instantiates a new cRN reaction.
@@ -42,6 +46,8 @@ extends CRNEntity
 	 * @param labelB the label of that reaction in the modified document
 	 * @param docA the original document
 	 * @param docB the modified document
+	 * @param compartmentA the compartment a
+	 * @param compartmentB the compartment b
 	 * @param reversible the reversible flag
 	 */
 	public CRNReaction (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, CRNCompartment compartmentA, CRNCompartment compartmentB, boolean reversible)
@@ -49,7 +55,7 @@ extends CRNEntity
 		super ("r" + crn.getNextReactionID (), labelA, labelB, docA, docB);
 		in = new HashMap<CRNSubstance, CRNSubstanceRef> ();
 		out = new HashMap<CRNSubstance, CRNSubstanceRef> ();
-		mod = new HashMap<CRNSubstance, CRNSubstanceRef> ();
+		mod = new Vector<CRNSubstanceRef> ();
 		this.compartmentA = compartmentA;
 		this.compartmentB = compartmentB;
 		singleDoc = false;
@@ -123,13 +129,13 @@ extends CRNEntity
 			}
 		
 		if (sameCompartment)
-			for (CRNSubstance sub : mod.keySet ())
+			for (CRNSubstanceRef sub : mod)
 			{
 				if (compartment == null)
-					compartment = sub.getCompartment ();
+					compartment = sub.subst.getCompartment ();
 				else
 				{
-					if (compartment != sub.getCompartment ())
+					if (compartment != sub.subst.getCompartment ())
 					{
 						sameCompartment = false;
 					}
@@ -152,7 +158,9 @@ extends CRNEntity
 	{
 		CRNSubstanceRef r = in.get (subst);
 		if (r == null)
-			in.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+			try{
+				in.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+			}catch (BivesUnsupportedException e){}
 		else
 		{
 			r.setFlagA (true);
@@ -169,7 +177,9 @@ extends CRNEntity
 	{
 		CRNSubstanceRef r = out.get (subst);
 		if (r == null)
-			out.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+			try{
+				out.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+			}catch (BivesUnsupportedException e){}
 		else
 		{
 			r.setFlagA (true);
@@ -181,17 +191,22 @@ extends CRNEntity
 	 *
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the modification
+	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModA (CRNSubstance subst, SBOTerm sbo)
+	public void addModA (CRNSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
 	{
-		CRNSubstanceRef r = mod.get (subst);
-		if (r == null)
-			mod.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
-		else
-		{
-			r.setFlagA (true);
-			r.modTermA = sbo;
-		}
+		for (CRNSubstanceRef sub : mod)
+			if (sub.subst == subst)
+			{
+				if (SBOTerm.sameModifier (sub.modTermB, sbo))
+				{
+					sub.setFlagA (true);
+					sub.modTermA = sbo;
+					return;
+				}
+			}
+		
+		mod.add (new CRNSubstanceRef (subst, true, false, sbo, null));
 	}
 	
 	/**
@@ -204,7 +219,9 @@ extends CRNEntity
 	{
 		CRNSubstanceRef r = in.get (subst);
 		if (r == null)
-			in.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+			try{
+				in.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+			}catch (BivesUnsupportedException e){}
 		else
 		{
 			r.setFlagB (true);
@@ -221,7 +238,9 @@ extends CRNEntity
 	{
 		CRNSubstanceRef r = out.get (subst);
 		if (r == null)
-			out.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+			try{
+				out.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+			}catch (BivesUnsupportedException e){}
 		else
 		{
 			r.setFlagB (true);
@@ -233,17 +252,22 @@ extends CRNEntity
 	 *
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the modification
+	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModB (CRNSubstance subst, SBOTerm sbo)
+	public void addModB (CRNSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
 	{
-		CRNSubstanceRef r = mod.get (subst);
-		if (r == null)
-			mod.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
-		else
-		{
-			r.setFlagB (true);
-			r.modTermB = sbo;
-		}
+		for (CRNSubstanceRef sub : mod)
+			if (sub.subst == subst)
+			{
+				if (SBOTerm.sameModifier (sub.modTermA, sbo))
+				{
+					sub.setFlagB (true);
+					sub.modTermB = sbo;
+					return;
+				}
+			}
+		
+		mod.add (new CRNSubstanceRef (subst, false, true, null, sbo));
 	}
 	
 	/**
@@ -273,7 +297,7 @@ extends CRNEntity
 	 */
 	public Collection<CRNSubstanceRef> getModifiers ()
 	{
-		return mod.values ();
+		return mod;
 	}
 	
 	/**
@@ -311,7 +335,35 @@ extends CRNEntity
 			subst.setSingleDocument ();
 		for (CRNSubstanceRef subst : out.values ())
 			subst.setSingleDocument ();
-		for (CRNSubstanceRef subst : mod.values ())
+		for (CRNSubstanceRef subst : mod)
 			subst.setSingleDocument ();
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see de.unirostock.sems.bives.ds.crn.CRNEntity#getModification()
+	 */
+	public int getModification ()
+	{
+		int i = super.getModification ();
+		if (i != UNMODIFIED)
+			return i;
+		if (changes (in.values ()) || changes (out.values ()) || changes (mod))
+			return MODIFIED;
+		return UNMODIFIED;
+	}
+	
+	/**
+	 * Are there changes in a list of IO?
+	 *
+	 * @param substances the substances
+	 * @return true, if something in this list has changed
+	 */
+	private boolean changes (Collection<CRNSubstanceRef> substances)
+	{
+		for (CRNSubstanceRef substance : substances)
+			if (substance.getModification () != UNMODIFIED)
+				return true;
+		return false;
 	}
 }

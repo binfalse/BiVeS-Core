@@ -52,7 +52,7 @@ extends HierarchyNetworkEntity
 		 */
 		public int getModification ()
 		{
-			return (a?b?CRN.UNMODIFIED:CRN.DELETE:b?CRN.INSERT:CRN.UNMODIFIED);
+			return (a?b?UNMODIFIED:DELETE:b?INSERT:UNMODIFIED);
 		}
 	}
 
@@ -147,6 +147,22 @@ extends HierarchyNetworkEntity
 		if (componentA == componentB)
 			return componentA;
 		return null;
+	}
+	
+	/**
+	 * Gets the modification of this entity.
+	 *
+	 * @return the modification
+	 */
+	public int getModification ()
+	{
+		int i = super.getModification ();
+		if (i != UNMODIFIED)
+			return i;
+		
+		if (componentA != componentB)
+			return MODIFIED;
+		return UNMODIFIED;
 	}
 	
 }

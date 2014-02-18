@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -315,14 +316,14 @@ public class GraphTranslatorJson
 			
 			for (CRNSubstanceRef s : r.getModifiers ())
 			{
-				if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == CRN.MODIFIED)
 				{
 					addEdge (s.getSubstance ().getId (), r.getId (), CRN.DELETE,
 						s.getModTermA ());
 					addEdge (s.getSubstance ().getId (), r.getId (), CRN.INSERT,
 						s.getModTermB ());
 				}
-				else
+				else*/
 					addEdge (s.getSubstance ().getId (), r.getId (),
 						s.getModification (), s.getModTerm ());
 			}
@@ -371,19 +372,19 @@ public class GraphTranslatorJson
 				if (parA == parB)
 				{
 					// connect w/o mod
-					addEdge (parA.getId (), c.getId (), CRN.UNMODIFIED, SBOTerm.MOD_NONE);
+					addEdge (parA.getId (), c.getId (), GraphEntity.UNMODIFIED, SBOTerm.MOD_NONE);
 				}
 				else
 				{
 					if (parA != null)
 					{
 						// connect delete
-						addEdge (parA.getId (), c.getId (), CRN.DELETE, SBOTerm.MOD_NONE);
+						addEdge (parA.getId (), c.getId (), GraphEntity.DELETE, SBOTerm.MOD_NONE);
 					}
 					if (parB != null)
 					{
 						// connect insert
-						addEdge (parA.getId (), c.getId (), CRN.INSERT, SBOTerm.MOD_NONE);
+						addEdge (parA.getId (), c.getId (), GraphEntity.INSERT, SBOTerm.MOD_NONE);
 					}
 				}
 			}

@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -154,13 +155,13 @@ public class GraphTranslatorGraphML
 					if (parA != null)
 					{
 						// connect delete
-						createEdge (graphRoot, parA.getId (), comp.getId (), CRN.DELETE
+						createEdge (graphRoot, parA.getId (), comp.getId (), GraphEntity.DELETE
 							+ "", null);
 					}
 					if (parB != null)
 					{
 						// connect insert
-						createEdge (graphRoot, parB.getId (), comp.getId (), CRN.INSERT
+						createEdge (graphRoot, parB.getId (), comp.getId (), GraphEntity.INSERT
 							+ "", null);
 					}
 				}
@@ -254,14 +255,14 @@ public class GraphTranslatorGraphML
 			
 			for (CRNSubstanceRef s : r.getModifiers ())
 			{
-				if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == CRN.MODIFIED)
 				{
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
 						CRN.DELETE + "", s.getModTermA ());
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
 						CRN.INSERT + "", s.getModTermB ());
 				}
-				else
+				else*/
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
 						s.getModification () + "", s.getModTerm ());
 			}

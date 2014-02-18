@@ -3,6 +3,8 @@
  */
 package de.unirostock.sems.bives.ds.ontology;
 
+import de.unirostock.sems.bives.exception.BivesUnsupportedException;
+
 
 /**
  * The Class SBOTerm representing a link into the Systems Biology Ontology.
@@ -95,6 +97,7 @@ public class SBOTerm
 				case 207: // non-competitive inhibitor (is a)
 				case 537: // complete inhibitor (is a)
 				case 536: // partial inhibitor (is a)
+				case 597: // silencer
 					return MOD_INHIBITOR;
 			}
 		}
@@ -115,5 +118,38 @@ public class SBOTerm
 		if (SBOTerm == null || !SBOTerm.startsWith ("SBO:"))
 			return MOD_UNKNOWN;
 		return resolveModifier (SBOTerm);
+	}
+	
+	
+	/**
+	 * Check if modifiers are equal (in terms of chemical reaction networks).
+	 * They are equal if one of the following is true:
+	 * 
+	 * <ul>
+	 * <li>
+	 * both terms are null
+	 * </li>
+	 * <li>
+	 * both terms encode for an inhibitor (no matter which kind)
+	 * </li>
+	 * <li>
+	 * both terms encode for a stimulator (no matter which kind)
+	 * </li>
+	 * </ul>
+	 *
+	 * @param modTermA the mod term a
+	 * @param modTermB the mod term b
+	 * @return true, if successful
+	 */
+	public static boolean sameModifier (SBOTerm modTermA, SBOTerm modTermB)
+	{
+		if (modTermA != null || modTermB != null)
+		{
+			if (modTermA == null || modTermB == null)
+				return false;
+			if (!modTermA.resolveModifier ().equals (modTermB.resolveModifier ()))
+				return false;
+		}
+		return true;
 	}
 }

@@ -3,6 +3,7 @@
  */
 package de.unirostock.sems.bives.ds.crn;
 
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
@@ -13,6 +14,7 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  * @author Martin Scharm
  */
 public abstract class CRNEntity
+implements GraphEntity
 {
 	/** The id of this entity. */
 	protected String id;
@@ -139,15 +141,17 @@ public abstract class CRNEntity
 	public int getModification ()
 	{
 		if (singleDoc)
-			return CRN.UNMODIFIED;
+			return UNMODIFIED;
 		
 		if (labelA == null)
-			return CRN.INSERT;
+			return INSERT;
 		if (labelB == null)
-			return CRN.DELETE;
-		if (docA.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED)|| docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED))
-			return CRN.MODIFIED;
-		return CRN.UNMODIFIED;
+			return DELETE;
+		if (!labelA.equals (labelB)
+			|| docA.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED)
+			|| docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED))
+			return MODIFIED;
+		return UNMODIFIED;
 	}
 
 	/**

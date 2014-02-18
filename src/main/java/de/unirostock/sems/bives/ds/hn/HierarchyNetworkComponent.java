@@ -75,6 +75,7 @@ extends HierarchyNetworkEntity
 	public void addChildA (HierarchyNetworkComponent component)
 	{
 		this.kidsA.add (component);
+		component.parentA = this;
 	}
 	
 	/**
@@ -85,6 +86,7 @@ extends HierarchyNetworkEntity
 	public void addChildB (HierarchyNetworkComponent component)
 	{
 		this.kidsB.add (component);
+		component.parentB = this;
 	}
 	
 	/**
@@ -125,6 +127,22 @@ extends HierarchyNetworkEntity
 	public HierarchyNetworkComponent getParentB ()
 	{
 		return parentB;
+	}
+	
+	/**
+	 * Gets the modification of this entity.
+	 *
+	 * @return the modification
+	 */
+	public int getModification ()
+	{
+		int i = super.getModification ();
+		if (i != UNMODIFIED)
+			return i;
+		
+		if (parentA != parentB)
+			return MODIFIED;
+		return UNMODIFIED;
 	}
 	
 }

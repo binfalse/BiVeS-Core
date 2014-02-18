@@ -6,6 +6,7 @@ package de.unirostock.sems.bives.ds.crn;
 import java.util.Collection;
 import java.util.HashMap;
 
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
@@ -24,19 +25,6 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  */
 public class CRN
 {
-	
-	/** The flag for UNMODIFIED entities. */
-	public static final int UNMODIFIED = 0;
-	
-	/** The flag for INSERTed entities. */
-	public static final int INSERT = 1;
-	
-	/** The flag for DELETEd entities. */
-	public static final int DELETE = -1;
-	
-	/** The flag for MODIFIED entities. */
-	public static final int MODIFIED = 2;
-	
 	
 	/** The reaction id: incremented with every reation to assign ids to reactions. */
 	private int reactionID;
@@ -220,11 +208,11 @@ public class CRN
 	{
 		switch (modification)
 		{
-			case INSERT:
+			case GraphEntity.INSERT:
 				return "inserted";
-			case DELETE:
+			case GraphEntity.DELETE:
 				return "deleted";
-			case MODIFIED:
+			case GraphEntity.MODIFIED:
 				return "modified";
 		}
 		return "unmodified";

@@ -3,7 +3,9 @@
  */
 package de.unirostock.sems.bives.ds.crn;
 
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 
 
 /**
@@ -12,10 +14,11 @@ import de.unirostock.sems.bives.ds.ontology.SBOTerm;
  * @author Martin Scharm
  */
 public class CRNSubstanceRef
+implements GraphEntity
 {
 	
 	/** The substance. */
-	private CRNSubstance subst;
+	public CRNSubstance subst;
 	
 	/** The reference existent in versions A/B. */
 	private boolean refA, refB;
@@ -34,8 +37,10 @@ public class CRNSubstanceRef
 	 * @param flagB the existence flag for the modified version
 	 * @param modTermA the modification type in the original version
 	 * @param modTermB the modification type in the original version
+	 * @throws BivesUnsupportedException 
 	 */
 	public CRNSubstanceRef (CRNSubstance subst, boolean flagA, boolean flagB, SBOTerm modTermA, SBOTerm modTermB)
+		throws BivesUnsupportedException
 	{
 		this.subst = subst;
 		this.refA = flagA;
@@ -43,6 +48,37 @@ public class CRNSubstanceRef
 		this.modTermA = modTermA;
 		this.modTermB = modTermB;
 		this.singleDoc = false;
+		// modifier terms have to be the same. otherwise this edge differs -> create two edges!
+		if (refA && refB && !SBOTerm.sameModifier (modTermA, modTermB))
+			throw new BivesUnsupportedException ("modifiers differ");
+	}
+	
+	
+	/**
+	 * Sets the SBOTerm as defined in the original version.
+	 *
+	 * @param modTermA the SBOTerm of version A
+	 * @throws BivesUnsupportedException indicating that this edge has two different modification properties.
+	 */
+	public void setSboA (SBOTerm modTermA) throws BivesUnsupportedException
+	{
+		this.modTermA = modTermA;
+		if (refA && refB && !SBOTerm.sameModifier (modTermA, modTermB))
+			throw new BivesUnsupportedException ("modifiers differ");
+	}
+	
+	
+	/**
+	 * Sets the SBOTerm as defined in the modified version.
+	 *
+	 * @param modTermA the SBOTerm of version B
+	 * @throws BivesUnsupportedException indicating that this edge has two different modification properties.
+	 */
+	public void setSboB (SBOTerm modTermB) throws BivesUnsupportedException
+	{
+		this.modTermB = modTermB;
+		if (refA && refB && !SBOTerm.sameModifier (modTermA, modTermB))
+			throw new BivesUnsupportedException ("modifiers differ");
 	}
 	
 	
@@ -91,30 +127,6 @@ public class CRNSubstanceRef
 	}
 	
 	/**
-	 * Gets the SBOTerm as defined in the original version.
-	 *
-	 * @return the SBOTerm
-	 */
-	public String getSBOA ()
-	{
-		if (modTermA == null)
-			return "";
-		return modTermA.getSBOTerm ();
-	}
-	
-	/**
-	 * Gets the SBOTerm as defined in the modified version.
-	 *
-	 * @return the SBOTerm
-	 */
-	public String getSBOB ()
-	{
-		if (modTermB == null)
-			return "";
-		return modTermB.getSBOTerm ();
-	}
-	
-	/**
 	 * Gets the modifier term.
 	 *
 	 * @return the modifier term
@@ -129,30 +141,6 @@ public class CRNSubstanceRef
 	}
 	
 	/**
-	 * Gets the modification term in version A.
-	 *
-	 * @return the modification term
-	 */
-	public String getModTermA ()
-	{
-		if (modTermA == null)
-			return SBOTerm.MOD_UNKNOWN;
-		return modTermA.resolveModifier ();
-	}
-	
-	/**
-	 * Gets the modification term in version B.
-	 *
-	 * @return the modification term
-	 */
-	public String getModTermB ()
-	{
-		if (modTermB == null)
-			return SBOTerm.MOD_UNKNOWN;
-		return modTermB.resolveModifier ();
-	}
-	
-	/**
 	 * Gets the modification.
 	 *
 	 * @param singleDoc the single doc
@@ -161,19 +149,19 @@ public class CRNSubstanceRef
 	public int getModification ()
 	{
 		if (singleDoc)
-			return CRN.UNMODIFIED;
+			return UNMODIFIED;
 		
 		if (refA && refB)
 		{
 			if (modTermA == null && modTermB == null)
-				return CRN.UNMODIFIED;
+				return UNMODIFIED;
 			if (modTermA != null && modTermB != null && modTermA.resolveModifier ().equals (modTermB.resolveModifier ()))
-					return CRN.UNMODIFIED;
-			return CRN.MODIFIED;
+					return UNMODIFIED;
+			return MODIFIED;
 		}
 		if (refA)
-			return CRN.DELETE;
-		return CRN.INSERT;
+			return DELETE;
+		return INSERT;
 	}
 
 	/**

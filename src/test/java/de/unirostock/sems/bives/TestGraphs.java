@@ -13,11 +13,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
 import de.unirostock.sems.bives.ds.crn.CRNSubstance;
+import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
+import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
+import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
@@ -99,15 +105,18 @@ public class TestGraphs
 		
 		// create a dummy node
 		DocumentNode dummy = simpleFile.getRoot ();
+		DocumentNode dummy2 = simpleFile.getNodeById ("messageone");
 
-		// create a deleted compartment
 		CRNCompartment compartment1 = addCompartment (dummy, "compartment in A", crn, true);
-		
-		// create deleted species
 		CRNSubstance substrate1 = addSubstrate (dummy, "substrate in A", crn, compartment1, true);
-		
-		// create deleted reaction
 		CRNReaction reaction1 = addReaction (dummy, "reaction in A", crn, compartment1, true);
+
+		CRNCompartment compartment2 = addCompartment (dummy2, "compartment in B", crn, false);
+		CRNSubstance substrate2 = addSubstrate (dummy2, "substrate in B", crn, compartment2, false);
+		//CRNReaction reaction2 = addReaction (dummy2, "reaction in B", crn, compartment2, true);
+		
+		
+		
 		reaction1.addInputA (substrate1, null);
 		reaction1.addOutputA (substrate1, null);
 		
@@ -128,20 +137,153 @@ public class TestGraphs
 		assertEquals ("unexpected label in substrate", "substrate in A", substrate1.getLabel ());
 		assertEquals ("unexpected label in reaction", "reaction in A", reaction1.getLabel ());
 		
+		// what happens if nothing's changed?
+		compartment1.setLabelB ("compartment in A");
+		compartment1.setDocB (dummy);
+		
+		substrate1.setCompartmentB (compartment1);
+		substrate1.setDocB (dummy);
+		substrate1.setLabelB ("substrate in A");
+		
+		reaction1.setCompartmentB (compartment1);
+		reaction1.setLabelB ("reaction in A");
+		reaction1.setDocB (dummy);
+		reaction1.addInputB (substrate1, null);
+		reaction1.addOutputB (substrate1, null);
+
+		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
+
+		assertEquals ("unexpected label in substrate", "substrate in A", substrate1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, substrate1.getModification ());
+		assertEquals ("unexpected compartment in substrate", compartment1, substrate1.getCompartment ());
+
+		assertEquals ("unexpected label in reaction", "reaction in A", reaction1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, reaction1.getModification ());
+		assertEquals ("unexpected compartment in reaction", compartment1, reaction1.getCompartment ());
+		
+		
+		// what happens if we change something?
+		compartment1.setLabelB ("compartment in B");
+		compartment1.setDocB (dummy);
+		
+		substrate1.setCompartmentB (compartment1);
+		substrate1.setDocB (dummy);
+		substrate1.setLabelB ("substrate in B");
+		
+		reaction1.setCompartmentB (compartment1);
+		reaction1.setLabelB ("reaction in N");
+		reaction1.setDocB (dummy);
+		reaction1.addInputB (substrate1, null);
+		reaction1.addOutputB (substrate1, null);
+
+
+		assertFalse ("unexpected label in compartment", "compartment in A".equals (compartment1.getLabel ()));
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, compartment1.getModification ());
+
+		assertFalse ("unexpected label in substrate", "substrate in A".equals (substrate1.getLabel ()));
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, substrate1.getModification ());
+		assertEquals ("unexpected compartment in substrate", compartment1, substrate1.getCompartment ());
+
+		assertFalse ("unexpected label in reaction", "reaction in A".equals (reaction1.getLabel ()));
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, reaction1.getModification ());
+		assertEquals ("unexpected compartment in reaction", compartment1, reaction1.getCompartment ());
+		
+
+		// change compartment		
+		substrate1.setCompartmentB (compartment2);
+		substrate1.setDocB (dummy);
+		substrate1.setLabelB ("substrate in B");
+		
+		reaction1.setCompartmentB (compartment2);
+		reaction1.setLabelB ("reaction in N");
+		reaction1.setDocB (dummy);
+		reaction1.addInputB (substrate1, null);
+		reaction1.addOutputB (substrate1, null);
+
+
+		assertFalse ("unexpected label in substrate", "substrate in A".equals (substrate1.getLabel ()));
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, substrate1.getModification ());
+		assertNull ("unexpected compartment in substrate", substrate1.getCompartment ());
+
+		assertFalse ("unexpected label in reaction", "reaction in A".equals (reaction1.getLabel ()));
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, reaction1.getModification ());
+		assertNull ("unexpected compartment in reaction", reaction1.getCompartment ());
+
+		
+		// reset?
+		compartment1.setLabelB ("compartment in A");
+		compartment1.setDocB (dummy);
+		
+		substrate1.setCompartmentB (compartment1);
+		substrate1.setDocB (dummy);
+		substrate1.setLabelB ("substrate in A");
+		
+		reaction1.setCompartmentB (compartment1);
+		reaction1.setLabelB ("reaction in A");
+		reaction1.setDocB (dummy);
+		reaction1.addInputB (substrate1, null);
+		reaction1.addOutputB (substrate1, null);
+
+		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
+
+		assertEquals ("unexpected label in substrate", "substrate in A", substrate1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, substrate1.getModification ());
+		assertEquals ("unexpected compartment in substrate", compartment1, substrate1.getCompartment ());
+
+		assertEquals ("unexpected label in reaction", "reaction in A", reaction1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, reaction1.getModification ());
+		assertEquals ("unexpected compartment in reaction", compartment1, reaction1.getCompartment ());
 		
 		
 		
-		fail ("todo");
-		// test different compartments, what happens with reaction etc.
-		// get substrate by node
-		// what happens if inputA and outputB in a reaction?
-		// create a modified compartment
-		// create an inserted compartment
-		// create an unchanged compartment
+		// different i/o?
+		reaction1.addInputB (substrate2, null);
+		reaction1.addOutputA (substrate2, null);
+		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
+
+		assertEquals ("unexpected label in substrate", "substrate in A", substrate1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, substrate1.getModification ());
+		assertEquals ("unexpected compartment in substrate", compartment1, substrate1.getCompartment ());
+
+		assertEquals ("unexpected label in reaction", "reaction in A", reaction1.getLabel ());
+		assertEquals ("expected no modification", GraphEntity.MODIFIED, reaction1.getModification ());
+		assertEquals ("unexpected compartment in reaction", compartment1, reaction1.getCompartment ());
+
+		// retest components retrieving
+		assertEquals ("cannot retrieve compartment", crn.getCompartment (dummy), compartment1);
+		assertEquals ("cannot retrieve substrate", crn.getSubstance (dummy),substrate1 );
+		assertEquals ("cannot retrieve reaction", crn.getReaction (dummy), reaction1);
 		
-		// test single
-		crn.setSingleDocument ();
+
+		int tmp = 0;
+		for (CRNSubstanceRef ref : reaction1.getInputs ())
+			tmp += ref.getModification ();
+		assertEquals ("input of reaction doesn't report an insert", GraphEntity.UNMODIFIED + GraphEntity.INSERT, tmp);
 		
+		tmp = 0;
+		for (CRNSubstanceRef ref : reaction1.getOutputs ())
+			tmp += ref.getModification ();
+		assertEquals ("input of reaction doesn't report an insert", GraphEntity.UNMODIFIED + GraphEntity.DELETE, tmp);
+		
+		
+		
+		// test modifiers
+		try
+		{
+			reaction1.addModA (substrate1, null);
+			reaction1.addModB (substrate1, SBOTerm.createStimulator ());
+			reaction1.addModB (substrate2, null);
+			reaction1.addModA (substrate2, null);
+			assertEquals ("unexpected number of modifiers", 3, reaction1.getModifiers ().size ());
+		}
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
 		
 	}
 	
@@ -151,8 +293,72 @@ public class TestGraphs
 		// test the hierarchy network stuff
 		HierarchyNetwork hn = new HierarchyNetwork ();
 		
-		fail ("todo");
-		// test single
-		hn.setSingleDocument ();
+
+		
+		// create a dummy node
+		DocumentNode dummy = simpleFile.getRoot ();
+		DocumentNode dummy2 = simpleFile.getNodeById ("messageone");
+		
+		HierarchyNetworkComponent component1 = new HierarchyNetworkComponent (hn, "component A",null, dummy, null);
+		HierarchyNetworkComponent component2 = new HierarchyNetworkComponent (hn, null, "component B", null, dummy2);
+		
+		HierarchyNetworkVariable var1 = new HierarchyNetworkVariable (hn, "var A", null, dummy, null, component1, null);
+		HierarchyNetworkVariable var2 = new HierarchyNetworkVariable (hn, null, "var B", null, dummy2, null, component2);
+		
+		
+		
+		// test component belonging and modification
+		var1.setComponentA (component1);
+		assertEquals ("expected to see a deletion", GraphEntity.DELETE, var1.getModification ());
+		
+		var1.setComponentB (component1);
+		var1.setDocB (dummy2);
+		var1.setLabelB ("var A");
+		assertEquals ("expected to get a component", component1, var1.getComponent ());
+		assertEquals ("unexpected modification", GraphEntity.UNMODIFIED, var1.getModification ());
+		
+		var1.setComponentB (component2);
+		var1.setDocB (dummy2);
+		var1.setLabelB ("label b");
+		assertNull ("didn't expect to get a component (different components)", var1.getComponent ());
+		assertEquals ("expected to see a modification", GraphEntity.MODIFIED, var1.getModification ());
+
+		var1.setComponentA (null);
+		var1.setDocA (null);
+		var1.setLabelA (null);
+		assertEquals ("expected to see an insertion", GraphEntity.INSERT, var1.getModification ());
+		
+		
+		// component modifications
+		assertEquals ("expected to see a deletion in component", GraphEntity.DELETE, component1.getModification ());
+
+		component1.setDocB (dummy2);
+		component1.setLabelB ("component A");
+		assertEquals ("unexpected modification in component", GraphEntity.UNMODIFIED, component1.getModification ());
+
+		component1.setDocB (dummy2);
+		component1.setLabelB ("component b");
+		assertEquals ("unexpected modification in component", GraphEntity.MODIFIED, component1.getModification ());
+
+		component1.setDocA (null);
+		component1.setLabelA (null);
+		assertEquals ("expected to see an insertion", GraphEntity.INSERT, component1.getModification ());
+		
+		component1.setDocA (dummy2);
+		component1.setLabelA ("component b");
+		assertEquals ("unexpected modification in component", GraphEntity.UNMODIFIED, component1.getModification ());
+		
+		
+		// variable changes
+		component1.addVariable (var1);
+		component1.addVariable (var2);
+		assertEquals ("unexpected modification in component", GraphEntity.UNMODIFIED, component1.getModification ());
+		
+		component1.addChildA (component2);
+		assertEquals ("unexpected modification in component (UPDATE WIKI!)", GraphEntity.UNMODIFIED, component1.getModification ());
+		
+		component2.addChildA (component1);
+		assertEquals ("expected modification after hierarchy change", GraphEntity.MODIFIED, component1.getModification ());
+
 	}
 }

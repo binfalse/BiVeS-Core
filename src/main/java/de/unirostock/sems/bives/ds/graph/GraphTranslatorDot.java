@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.crn.CRNCompartment;
 import de.unirostock.sems.bives.ds.crn.CRNReaction;
@@ -287,14 +288,14 @@ public class GraphTranslatorDot
 			
 			for (CRNSubstanceRef s : r.getModifiers ())
 			{
-				if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == CRN.MODIFIED)
 				{
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
 						CRN.DELETE, s.getModTermA ()));
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
 						CRN.INSERT, s.getModTermB ()));
 				}
-				else
+				else*/
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
 						s.getModification (), s.getModTerm ()));
 			}
@@ -352,7 +353,7 @@ public class GraphTranslatorDot
 				{
 					// connect w/o mod
 					dotStr += addEdge ("cluster" + parA.getId (),
-						"cluster" + comp.getId (), CRN.UNMODIFIED, SBOTerm.MOD_NONE);
+						"cluster" + comp.getId (), GraphEntity.UNMODIFIED, SBOTerm.MOD_NONE);
 				}
 				else
 				{
@@ -360,13 +361,13 @@ public class GraphTranslatorDot
 					{
 						// connect delete
 						dotStr += addEdge ("cluster" + parA.getId (),
-							"cluster" + comp.getId (), CRN.DELETE, SBOTerm.MOD_NONE);
+							"cluster" + comp.getId (), GraphEntity.DELETE, SBOTerm.MOD_NONE);
 					}
 					if (parB != null)
 					{
 						// connect insert
 						dotStr += addEdge ("cluster" + parA.getId (),
-							"cluster" + comp.getId (), CRN.INSERT, SBOTerm.MOD_NONE);
+							"cluster" + comp.getId (), GraphEntity.INSERT, SBOTerm.MOD_NONE);
 					}
 				}
 			}
