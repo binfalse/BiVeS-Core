@@ -18,7 +18,7 @@ import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
 /**
- * The Class Single, providing an API to extract some information about single XML files.
+ * The Class Single, providing an API to extract some information about single XML files. All methods might return null if not available in a certain case.
  *
  * @author Martin Scharm
  */
@@ -70,7 +70,8 @@ public abstract class Single
 	
 	/**
 	 * Returns the graph of the chemical reaction network providing an own graph translator.
-	 *
+	 * Might return null if not available.
+	 * 
 	 * @param gt the graph translator
 	 * @return the chemical reaction network or null if not available
 	 * @throws Exception the exception
@@ -79,6 +80,7 @@ public abstract class Single
 	
 	/**
 	 * Returns the component's hierarchy graph providing an own graph translator.
+	 * Might return null if not available.
 	 *
 	 * @param gt the graph translator
 	 * @return the hierarchy graph or null if not available
@@ -88,6 +90,7 @@ public abstract class Single
 
 	/**
 	 * Returns the graph of the chemical reaction network encoded in GraphML.
+	 * Might return null if not available.
 	 *
 	 * @return the chemical reaction network or null if not available
 	 * @throws ParserConfigurationException the parser configuration exception
@@ -96,6 +99,7 @@ public abstract class Single
 
 	/**
 	 * Returns the component's hierarchy graph encoded in GraphML.
+	 * Might return null if not available.
 	 *
 	 * @return the hierarchy graph or null if not available
 	 * @throws ParserConfigurationException the parser configuration exception
@@ -104,6 +108,7 @@ public abstract class Single
 
 	/**
 	 * Returns the graph of the chemical reaction network encoded in DOT language.
+	 * Might return null if not available.
 	 *
 	 * @return the chemical reaction network or null if not available
 	 */
@@ -111,6 +116,7 @@ public abstract class Single
 
 	/**
 	 * Returns the component's hierarchy graph encoded in DOT language.
+	 * Might return null if not available.
 	 *
 	 * @return the hierarchy graph or null if not available
 	 */
@@ -118,6 +124,7 @@ public abstract class Single
 
 	/**
 	 * Returns the graph of the chemical reaction network encoded in JSON.
+	 * Might return null if not available.
 	 *
 	 * @return the chemical reaction network or null if not available
 	 */
@@ -125,6 +132,7 @@ public abstract class Single
 
 	/**
 	 * Returns the component's hierarchy graph encoded in JSON.
+	 * Might return null if not available.
 	 *
 	 * @return the hierarchy graph or null if not available
 	 */

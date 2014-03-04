@@ -281,6 +281,9 @@ public class GraphTranslatorJson
 	@Override
 	public String translate (CRN crn)
 	{
+		if (crn == null)
+			return null;
+		
 		startNewGraph ();
 		for (CRNCompartment c : crn.getCompartments ())
 		{
@@ -343,6 +346,9 @@ public class GraphTranslatorJson
 	@Override
 	public String translate (HierarchyNetwork hn)
 	{
+		if (hn == null)
+			return null;
+		
 		startNewGraph ();
 		
 		Collection<HierarchyNetworkComponent> components = hn.getComponents ();

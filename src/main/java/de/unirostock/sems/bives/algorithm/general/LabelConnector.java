@@ -10,6 +10,7 @@ import de.unirostock.sems.bives.algorithm.Connector;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
@@ -39,6 +40,17 @@ public class LabelConnector
 	extends Connector
 {
 	
+	/**
+	 * Instantiates a new label connector.
+	 *
+	 * @param docA the original document
+	 * @param docB the modified document
+	 */
+	public LabelConnector (TreeDocument docA, TreeDocument docB)
+	{
+		super (docA, docB);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

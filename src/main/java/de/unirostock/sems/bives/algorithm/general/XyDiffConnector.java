@@ -18,6 +18,7 @@ import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.NodeDistance;
 import de.unirostock.sems.xmlutils.ds.NodeDistanceComparator;
+import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 import de.unirostock.sems.xmlutils.ds.TreeNodeComparatorBySubtreeSize;
 
@@ -41,9 +42,9 @@ public class XyDiffConnector
 	/**
 	 * Instantiates a new XyDiffConnector. In this setting we'll run an ID mapper before we do our work.
 	 */
-	public XyDiffConnector ()
+	public XyDiffConnector (TreeDocument docA, TreeDocument docB)
 	{
-		super ();
+		super (docA, docB);
 	}
 	
 	/**
@@ -53,7 +54,7 @@ public class XyDiffConnector
 	 */
 	public XyDiffConnector (Connector preprocessor)
 	{
-		super ();
+		super (preprocessor.getDocA (), preprocessor.getDocB ());
 		this.preprocessor = preprocessor;
 	}
 	
@@ -69,16 +70,15 @@ public class XyDiffConnector
 		if (preprocessor == null)
 		{
 			// then we'll use an id-connector by default...
-			IdConnector id = new IdConnector ();
-			id.init (docA, docB);
-			id.findConnections (true);
+			IdConnector id = new IdConnector (docA, docB, true);
+			id.findConnections ();
 	
 			conMgmt = id.getConnections ();
 		}
 		else
 		{
 			// otherwise let the preprocessor do its work
-			preprocessor.init (docA, docB);
+			//preprocessor.init (docA, docB);
 			preprocessor.findConnections ();
 	
 			conMgmt = preprocessor.getConnections ();

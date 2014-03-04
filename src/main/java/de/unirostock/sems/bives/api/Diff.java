@@ -24,7 +24,7 @@ import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 /**
  * The Class Diff, the central object if it comes to the comparison of XML
- * documents.
+ * documents. All methods might return null if not available in a certain case.
  * 
  * @author Martin Scharm
  */
@@ -183,6 +183,7 @@ public abstract class Diff
 	/**
 	 * Returns the graph of the chemical reaction network providing an own graph
 	 * translator.
+	 * Might return null if not available.
 	 * 
 	 * @param gt
 	 *          the graph translator
@@ -195,6 +196,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the component's hierarchy graph providing an own graph translator.
+	 * Might return null if not available.
 	 * 
 	 * @param gt
 	 *          the graph translator
@@ -208,6 +210,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the graph of the chemical reaction network encoded in GraphML.
+	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
 	 * @throws ParserConfigurationException
@@ -218,6 +221,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the component's hierarchy graph encoded in GraphML.
+	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
 	 * @throws ParserConfigurationException
@@ -229,6 +233,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the graph of the chemical reaction network encoded in DOT language.
+	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
 	 */
@@ -237,6 +242,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the component's hierarchy graph encoded in DOT language.
+	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
 	 */
@@ -245,6 +251,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the graph of the chemical reaction network encoded in JSON.
+	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
 	 */
@@ -253,6 +260,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the component's hierarchy graph encoded in JSON.
+	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
 	 */
@@ -261,6 +269,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the report providing an on markup processor.
+	 * Might return null if not available.
 	 * 
 	 * @param ts
 	 *          the ts
@@ -271,6 +280,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the report encoded in HTML.
+	 * Might return null if not available.
 	 * 
 	 * @return the hTML report or null if not available
 	 */
@@ -279,6 +289,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the report encoded MarkDown.
+	 * Might return null if not available.
 	 * 
 	 * @return the mark down report or null if not available
 	 */
@@ -287,6 +298,7 @@ public abstract class Diff
 	
 	/**
 	 * Returns the report encoded in ReStructured text.
+	 * Might return null if not available.
 	 * 
 	 * @return the ReStructured text report or null if not available
 	 */

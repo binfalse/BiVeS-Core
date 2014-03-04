@@ -22,17 +22,36 @@ public abstract class Connector
 	protected TreeDocument docA, docB;
 	
 	/**
-	 * Initializes the connector.
+	 * Instantiates a new connector.
 	 *
 	 * @param docA the original document
 	 * @param docB the modified document
-	 * @throws BivesConnectionException 
 	 */
-	public final void init (TreeDocument docA, TreeDocument docB) throws BivesConnectionException
+	public Connector (TreeDocument docA, TreeDocument docB)
 	{
 		this.docA = docA;
 		this.docB = docB;
 		conMgmt = new SimpleConnectionManager (docA, docB);
+	}
+	
+	/**
+	 * Gets the original document.
+	 *
+	 * @return the original document
+	 */
+	public TreeDocument getDocA ()
+	{
+		return docA;
+	}
+	
+	/**
+	 * Gets the modified document.
+	 *
+	 * @return the modified document
+	 */
+	public TreeDocument getDocB ()
+	{
+		return docB;
 	}
 	
 	
@@ -54,6 +73,7 @@ public abstract class Connector
 	 */
 	public final void findConnections () throws BivesConnectionException
 	{
+		init ();
 		connect ();
 
 		docA.getRoot ().resetModifications ();

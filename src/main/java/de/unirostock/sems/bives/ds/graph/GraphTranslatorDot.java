@@ -248,6 +248,9 @@ public class GraphTranslatorDot
 	@Override
 	public String translate (CRN crn)
 	{
+		if (crn == null)
+			return null;
+		
 		dotStr = getDotPreamble ();
 		
 		List<String> edges = new ArrayList<String> ();
@@ -325,6 +328,9 @@ public class GraphTranslatorDot
 	@Override
 	public String translate (HierarchyNetwork hn)
 	{
+		if (hn == null)
+			return null;
+		
 		dotStr = getDotPreamble ();
 		Collection<HierarchyNetworkComponent> components = hn.getComponents ();
 		for (HierarchyNetworkComponent c : components)

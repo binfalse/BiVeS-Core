@@ -112,9 +112,7 @@ public class RegularDiff
 	@Override
 	public boolean mapTrees () throws BivesConnectionException
 	{
-		XyDiffConnector con = new XyDiffConnector ();
-		
-		con.init (treeA, treeB);
+		XyDiffConnector con = new XyDiffConnector (treeA, treeB);
 		con.findConnections ();
 		connections = con.getConnections ();
 		

@@ -115,6 +115,9 @@ public class GraphTranslatorGraphML
 	public String translate (HierarchyNetwork hn)
 		throws ParserConfigurationException
 	{
+		if (hn == null)
+			return null;
+		
 		graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
 			.newDocument ();
 		graphRoot = addGraphMLPreamble (graphDocument);
@@ -209,6 +212,9 @@ public class GraphTranslatorGraphML
 	@Override
 	public String translate (CRN crn) throws ParserConfigurationException
 	{
+		if (crn == null)
+			return null;
+		
 		graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
 			.newDocument ();
 		graphRoot = addGraphMLPreamble (graphDocument);
