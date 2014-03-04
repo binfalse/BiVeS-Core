@@ -3,6 +3,8 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
+import java.io.File;
+
 import de.unirostock.sems.bives.ds.ModelDocument;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
 
@@ -30,7 +32,17 @@ public abstract class ModelValidator
 	 * Validate a document represented as a string.
 	 * 
 	 * @param d
-	 *          the textual representation of the document
+	 *          the file storing a document
+	 * @return true, if submitted string is a valid model
+	 */
+	public abstract boolean validate (File d);
+	
+	
+	/**
+	 * Validate a document represented as a string.
+	 * 
+	 * @param d
+	 *          the textual representation of a document
 	 * @return true, if submitted string is a valid model
 	 */
 	public abstract boolean validate (String d);
