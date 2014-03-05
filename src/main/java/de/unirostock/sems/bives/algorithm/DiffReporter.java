@@ -18,7 +18,7 @@ public interface DiffReporter
 	public String reportInsert ();
 	public String reportDelete ();*/
 	
-	public MarkupElement reportMofification (SimpleConnectionManager conMgmt, DiffReporter docA, DiffReporter docB);
+	public MarkupElement reportModification (SimpleConnectionManager conMgmt, DiffReporter docA, DiffReporter docB);
 	public MarkupElement reportInsert ();
 	public MarkupElement reportDelete ();
 	
