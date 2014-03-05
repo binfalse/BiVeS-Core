@@ -4,9 +4,13 @@
 package de.unirostock.sems.bives.algorithm;
 
 import java.io.File;
+import java.net.URL;
 
+import de.binfalse.bflog.LOGGER;
+import de.binfalse.bfutils.FileRetriever;
 import de.unirostock.sems.bives.ds.ModelDocument;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
 
@@ -17,6 +21,8 @@ import de.unirostock.sems.xmlutils.ds.TreeDocument;
  */
 public abstract class ModelValidator
 {
+	/** The error. */
+	protected Exception error;
 	
 	/**
 	 * Validate a document.
@@ -29,7 +35,7 @@ public abstract class ModelValidator
 	
 	
 	/**
-	 * Validate a document represented as a string.
+	 * Validate a document represented as a file.
 	 * 
 	 * @param d
 	 *          the file storing a document
@@ -62,5 +68,33 @@ public abstract class ModelValidator
 	 * 
 	 * @return the error
 	 */
-	public abstract Exception getError ();
+	public Exception getError ()
+	{
+		return error;
+	}
+	
+	
+	/**
+	 * Validate a document downladable from a web server.
+	 * 
+	 * @param url
+	 *          the URL to the webserver
+	 * @return true, if submitted string is a valid model
+	 */
+	public boolean validate (URL url)
+	{
+		try
+		{
+			File tmp = File.createTempFile ("Bives", "download");
+			tmp.deleteOnExit ();
+			FileRetriever.getFile (url.toURI (), tmp);
+			return validate (new TreeDocument (XmlTools.readDocument (tmp), url.toURI ()));
+		}
+		catch (Exception e)
+		{
+			error = e;
+			LOGGER.error (e, "error retrieving file from ", url);
+			return false;
+		}
+	}
 }
