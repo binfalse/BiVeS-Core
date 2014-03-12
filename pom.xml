@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.unirostock.sems</groupId>
     <artifactId>BiVeS-Core</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.7</version>
+    <version>1.2.9</version>
     <name>BiVeS-Core</name>
     <description>
         BiVeS - BioModel Version Control System
@@ -42,7 +41,7 @@
         <dependency>
             <groupId>de.unirostock.sems</groupId>
             <artifactId>xmlutils</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.7</version>
         </dependency>
     </dependencies>
     <distributionManagement>
