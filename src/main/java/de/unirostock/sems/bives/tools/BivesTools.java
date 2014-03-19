@@ -87,7 +87,7 @@ public class BivesTools
 		allAttr.addAll (b.getAttributes ());
 		for (String attr : allAttr)
 		{
-			String aA = a.getAttribute (attr), bA = b.getAttribute (attr);
+			String aA = a.getAttributeValue (attr), bA = b.getAttributeValue (attr);
 			if (aA == null)
 				markupElement.addValue ("Attribute " + MarkupDocument.attribute (attr)
 					+ " was inserted: " + MarkupDocument.insert (bA));

@@ -50,4 +50,12 @@ public abstract class ModelDocument
 	{
 		return doc;
 	}
+	
+	
+	/**
+	 * Flatten this document.
+	 *
+	 * @throws Exception the exception
+	 */
+	public abstract void flatten () throws Exception;
 }

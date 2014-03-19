@@ -3,17 +3,12 @@
  */
 package de.unirostock.sems.bives.ds.graph;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.GraphEntity;
@@ -113,14 +108,15 @@ public class GraphTranslatorGraphML
 	 */
 	@Override
 	public String translate (HierarchyNetwork hn)
-		throws ParserConfigurationException
 	{
 		if (hn == null)
 			return null;
 		
-		graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
-			.newDocument ();
-		graphRoot = addGraphMLPreamble (graphDocument);
+		/*graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
+			.newDocument ();*/
+		Element graphML = new Element ("graphml");
+		graphRoot = addGraphMLPreamble (graphML);
+		graphDocument = new Document (graphML);
 		graphid = 1;
 		
 		Collection<HierarchyNetworkComponent> components = hn.getComponents ();
@@ -130,15 +126,16 @@ public class GraphTranslatorGraphML
 			Element node = createGraphMLNode (graphRoot, comp.getId (), null,
 				comp.getLabel (), comp.getModification () + "");
 			Element subtree = createGraphRoot (true);
-			node.appendChild (subtree);
+			node.addContent (subtree);
 			
 			List<HierarchyNetworkVariable> vars = comp.getVariables ();
 			for (HierarchyNetworkVariable var : vars)
 			{
 				LOGGER.info ("creating var: ", var.getId ());
-				Element vNode = createGraphMLNode (graphRoot, var.getId (), null,
+				//Element vNode = 
+				createGraphMLNode (subtree, var.getId (), null,
 					var.getLabel (), var.getModification () + "");
-				subtree.appendChild (vNode);
+				//subtree.addContent (vNode);
 			}
 		}
 		
@@ -186,19 +183,7 @@ public class GraphTranslatorGraphML
 			}
 		}
 		
-		try
-		{
-			return XmlTools.prettyPrintDocument (graphDocument);
-		}
-		catch (TransformerException e)
-		{
-			LOGGER.error (e, "error printing graphml");
-		}
-		catch (IOException e)
-		{
-			LOGGER.error (e, "error printing graphml");
-		}
-		return null;
+		return XmlTools.prettyPrintDocument (graphDocument);
 	}
 	
 	
@@ -210,14 +195,18 @@ public class GraphTranslatorGraphML
 	 * .sems.bives.ds.graph.CRN)
 	 */
 	@Override
-	public String translate (CRN crn) throws ParserConfigurationException
+	public String translate (CRN crn)
 	{
 		if (crn == null)
 			return null;
 		
-		graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
-			.newDocument ();
-		graphRoot = addGraphMLPreamble (graphDocument);
+		/*graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
+			.newDocument ();*/
+
+		Element graphML = new Element ("graphml");
+		
+		graphRoot = addGraphMLPreamble (graphML);
+		graphDocument = new Document (graphML);
 		HashMap<CRNCompartment, Element> compartments = new HashMap<CRNCompartment, Element> ();
 		graphid = 1;
 		
@@ -226,7 +215,7 @@ public class GraphTranslatorGraphML
 			Element node = createGraphMLNode (graphRoot, c.getId (), null,
 				c.getLabel (), c.getModification () + "");
 			Element compartment = createGraphRoot (true);
-			node.appendChild (compartment);
+			node.addContent (compartment);
 			compartments.put (c, compartment);
 		}
 		
@@ -274,19 +263,7 @@ public class GraphTranslatorGraphML
 			}
 		}
 		
-		try
-		{
-			return XmlTools.prettyPrintDocument (graphDocument);
-		}
-		catch (TransformerException e)
-		{
-			LOGGER.error (e, "error printing graphml");
-		}
-		catch (IOException e)
-		{
-			LOGGER.error (e, "error printing graphml");
-		}
-		return null;
+		return XmlTools.prettyPrintDocument (graphDocument);
 	}
 	
 	/**
@@ -327,59 +304,57 @@ public class GraphTranslatorGraphML
 	 * &lt;/graphml&gt;
 	 * </pre>
 	 * 
-	 * @param doc
+	 * @param root
 	 *          the document
 	 * @return the graph node (root for the graph)
 	 */
-	private Element addGraphMLPreamble (Document doc)
+	private Element addGraphMLPreamble (Element graphML)
 	{
-		Element graphML = doc.createElement ("graphml");
-		doc.appendChild (graphML);
 		
 		// key for node name
-		Element keyEl = doc.createElement ("key");
+		Element keyEl = new Element ("key");
 		keyEl.setAttribute ("id", "name");
 		keyEl.setAttribute ("for", "node");
 		keyEl.setAttribute ("attr.name", "name");
 		keyEl.setAttribute ("attr.type", "string");
-		graphML.appendChild (keyEl);
+		graphML.addContent (keyEl);
 		
 		// key for node set (e.g. species or reaction)
-		keyEl = doc.createElement ("key");
+		keyEl = new Element ("key");
 		keyEl.setAttribute ("id", "ns");
 		keyEl.setAttribute ("for", "node");
 		keyEl.setAttribute ("attr.name", "node set");
 		keyEl.setAttribute ("attr.type", "string");
-		Element defEl = doc.createElement ("default");
-		defEl.appendChild (doc.createTextNode ("species"));
-		keyEl.appendChild (defEl);
-		graphML.appendChild (keyEl);
+		Element defEl = new Element ("default");
+		defEl.setText ("species");
+		keyEl.addContent (defEl);
+		graphML.addContent (keyEl);
 		
 		// key for version flag
-		keyEl = doc.createElement ("key");
+		keyEl = new Element ("key");
 		keyEl.setAttribute ("id", "vers");
 		keyEl.setAttribute ("for", "all");
 		keyEl.setAttribute ("attr.name", "version");
 		keyEl.setAttribute ("attr.type", "int");
-		defEl = doc.createElement ("default");
-		defEl.appendChild (doc.createTextNode ("0"));
-		keyEl.appendChild (defEl);
-		graphML.appendChild (keyEl);
+		defEl = new Element ("default");
+		defEl.setText ("0");
+		keyEl.addContent (defEl);
+		graphML.addContent (keyEl);
 		
 		// key for modifier flag
-		keyEl = doc.createElement ("key");
+		keyEl = new Element ("key");
 		keyEl.setAttribute ("id", "mod");
 		keyEl.setAttribute ("for", "edge");
 		keyEl.setAttribute ("attr.name", "modifier");
 		keyEl.setAttribute ("attr.type", "string");
-		defEl = doc.createElement ("default");
-		defEl.appendChild (doc.createTextNode (SBOTerm.MOD_NONE));
-		keyEl.appendChild (defEl);
-		graphML.appendChild (keyEl);
+		defEl = new Element ("default");
+		defEl.setText (SBOTerm.MOD_NONE);
+		keyEl.addContent (defEl);
+		graphML.addContent (keyEl);
 		
 		// <graph>
 		keyEl = createGraphRoot (true);
-		graphML.appendChild (keyEl);
+		graphML.addContent (keyEl);
 		
 		return keyEl;
 	}
@@ -394,7 +369,7 @@ public class GraphTranslatorGraphML
 	 */
 	private Element createGraphRoot (boolean directed)
 	{
-		Element keyEl = graphDocument.createElement ("graph");
+		Element keyEl = new Element ("graph");
 		keyEl.setAttribute ("id", "G" + graphid++);
 		if (directed)
 			keyEl.setAttribute ("edgedefault", "directed");
@@ -425,32 +400,33 @@ public class GraphTranslatorGraphML
 		String name, String version)
 	{
 		LOGGER.debug ("create gml node: ", id, " mod: ", version);
-		Element element = graphDocument.createElement ("node");
+		Element element = new Element ("node");
 		
 		element.setAttribute ("id", id);
 		
 		if (ns != null)
 		{
-			Element nsElement = graphDocument.createElement ("data");
+			Element nsElement = new Element ("data");
 			nsElement.setAttribute ("key", "ns");
-			nsElement.appendChild (graphDocument.createTextNode (ns));
-			element.appendChild (nsElement);
+			nsElement.setText (ns);
+			element.addContent (nsElement);
 		}
 		
 		if (version != null)
 		{
-			Element srcElement = graphDocument.createElement ("data");
+			Element srcElement = new Element ("data");
 			srcElement.setAttribute ("key", "vers");
-			srcElement.appendChild (graphDocument.createTextNode (version));
-			element.appendChild (srcElement);
+			srcElement.setText (version);
+			element.addContent (srcElement);
 		}
 		
-		Element nameElement = graphDocument.createElement ("data");
+		Element nameElement = new Element ("data");
 		nameElement.setAttribute ("key", "name");
-		nameElement.appendChild (graphDocument.createTextNode (name));
-		element.appendChild (nameElement);
+		nameElement.setText (name);
+		element.addContent (nameElement);
 		
-		parent.appendChild (element);
+		if (parent != null)
+			parent.addContent (element);
 		return element;
 	}
 	
@@ -475,27 +451,27 @@ public class GraphTranslatorGraphML
 	{
 		LOGGER.debug ("create gml edge: ", source, " -> ", target, " mod: ",
 			version);
-		Element element = graphDocument.createElement ("edge");
+		Element element = new Element ("edge");
 		
 		element.setAttribute ("source", source);
 		element.setAttribute ("target", target);
 		
 		if (modifier != null)
 		{
-			Element nsElement = graphDocument.createElement ("data");
+			Element nsElement = new Element ("data");
 			nsElement.setAttribute ("key", "mod");
-			nsElement.appendChild (graphDocument.createTextNode (modifier));
-			element.appendChild (nsElement);
+			nsElement.setText (modifier);
+			element.addContent (nsElement);
 		}
 		
 		if (version != null)
 		{
-			Element srcElement = graphDocument.createElement ("data");
+			Element srcElement = new Element ("data");
 			srcElement.setAttribute ("key", "vers");
-			srcElement.appendChild (graphDocument.createTextNode (version));
-			element.appendChild (srcElement);
+			srcElement.setText (version);
+			element.addContent (srcElement);
 		}
 		
-		parent.appendChild (element);
+		parent.addContent (element);
 	}
 }

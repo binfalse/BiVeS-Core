@@ -4,12 +4,9 @@
 package de.unirostock.sems.bives.api;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
+import org.jdom2.JDOMException;
 
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.PatchProducer;
@@ -52,28 +49,14 @@ public abstract class Diff
 	/**
 	 * Instantiates a new diff object in order to compare two documents stored in
 	 * files fileA and fileB.
-	 * 
-	 * @param fileA
-	 *          the file containing the former version
-	 * @param fileB
-	 *          the file containing the later version
-	 * @throws ParserConfigurationException
-	 *           the parser configuration exception
-	 * @throws XmlDocumentParseException
-	 *           the xml document parse exception
-	 * @throws FileNotFoundException
-	 *           the file not found exception
-	 * @throws SAXException
-	 *           the sAX exception
-	 * @throws IOException
-	 *           Signals that an I/O exception has occurred.
+	 *
+	 * @param fileA the file containing the former version
+	 * @param fileB the file containing the later version
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
 	 */
-	public Diff (File fileA, File fileB)
-		throws ParserConfigurationException,
-			XmlDocumentParseException,
-			FileNotFoundException,
-			SAXException,
-			IOException
+	public Diff (File fileA, File fileB) throws XmlDocumentParseException, IOException, JDOMException
 	{
 		treeA = new TreeDocument (XmlTools.readDocument (fileA),
 			fileA.toURI ());
@@ -85,28 +68,14 @@ public abstract class Diff
 	/**
 	 * Instantiates a new diff object in order to compare two documents stored in
 	 * strings docA and docB.
-	 * 
-	 * @param docA
-	 *          the former version
-	 * @param docB
-	 *          the later version
-	 * @throws ParserConfigurationException
-	 *           the parser configuration exception
-	 * @throws XmlDocumentParseException
-	 *           the xml document parse exception
-	 * @throws FileNotFoundException
-	 *           the file not found exception
-	 * @throws SAXException
-	 *           the sAX exception
-	 * @throws IOException
-	 *           Signals that an I/O exception has occurred.
+	 *
+	 * @param docA the former version
+	 * @param docB the later version
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
 	 */
-	public Diff (String docA, String docB)
-		throws ParserConfigurationException,
-			XmlDocumentParseException,
-			FileNotFoundException,
-			SAXException,
-			IOException
+	public Diff (String docA, String docB) throws XmlDocumentParseException, IOException, JDOMException
 	{
 		treeA = new TreeDocument (XmlTools.readDocument (docA), null);
 		treeB = new TreeDocument (XmlTools.readDocument (docB), null);
@@ -213,10 +182,8 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
-	 * @throws ParserConfigurationException
-	 *           the parser configuration exception
 	 */
-	public abstract String getCRNGraphML () throws ParserConfigurationException;
+	public abstract String getCRNGraphML () throws Exception;
 	
 	
 	/**
@@ -224,11 +191,8 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
-	 * @throws ParserConfigurationException
-	 *           the parser configuration exception
 	 */
-	public abstract String getHierarchyGraphML ()
-		throws ParserConfigurationException;
+	public abstract String getHierarchyGraphML () throws Exception;
 	
 	
 	/**
@@ -237,7 +201,7 @@ public abstract class Diff
 	 * 
 	 * @return the chemical reaction network or null if not available
 	 */
-	public abstract String getCRNDotGraph ();
+	public abstract String getCRNDotGraph () throws Exception;
 	
 	
 	/**
@@ -246,7 +210,7 @@ public abstract class Diff
 	 * 
 	 * @return the hierarchy graph or null if not available
 	 */
-	public abstract String getHierarchyDotGraph ();
+	public abstract String getHierarchyDotGraph () throws Exception;
 	
 	
 	/**
@@ -255,7 +219,7 @@ public abstract class Diff
 	 * 
 	 * @return the chemical reaction network or null if not available
 	 */
-	public abstract String getCRNJsonGraph ();
+	public abstract String getCRNJsonGraph () throws Exception;
 	
 	
 	/**
@@ -264,7 +228,7 @@ public abstract class Diff
 	 * 
 	 * @return the hierarchy graph or null if not available
 	 */
-	public abstract String getHierarchyJsonGraph ();
+	public abstract String getHierarchyJsonGraph () throws Exception;
 	
 	
 	/**
@@ -275,7 +239,7 @@ public abstract class Diff
 	 *          the ts
 	 * @return the report or null if not available
 	 */
-	public abstract String getReport (Typesetting ts);
+	public abstract String getReport (Typesetting ts) throws Exception;
 	
 	
 	/**
@@ -284,7 +248,7 @@ public abstract class Diff
 	 * 
 	 * @return the hTML report or null if not available
 	 */
-	public abstract String getHTMLReport ();
+	public abstract String getHTMLReport () throws Exception;
 	
 	
 	/**
@@ -293,7 +257,7 @@ public abstract class Diff
 	 * 
 	 * @return the mark down report or null if not available
 	 */
-	public abstract String getMarkDownReport ();
+	public abstract String getMarkDownReport () throws Exception;
 	
 	
 	/**
@@ -302,6 +266,6 @@ public abstract class Diff
 	 * 
 	 * @return the ReStructured text report or null if not available
 	 */
-	public abstract String getReStructuredTextReport ();
+	public abstract String getReStructuredTextReport () throws Exception;
 	
 }

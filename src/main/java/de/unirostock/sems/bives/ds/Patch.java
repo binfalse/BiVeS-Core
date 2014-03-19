@@ -6,13 +6,8 @@ package de.unirostock.sems.bives.ds;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
@@ -44,10 +39,8 @@ public class Patch
 	
 	/**
 	 * Instantiates a new patch.
-	 *
-	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	public Patch () throws ParserConfigurationException
+	public Patch ()
 	{
 		fullDiff = true;
 		init ();
@@ -58,9 +51,8 @@ public class Patch
 	 * This diff briefly describes the modifications, but cannot be used to transform one version of a document into another.
 	 *
 	 * @param fullDiff the fullDiff flag
-	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	public Patch (boolean fullDiff) throws ParserConfigurationException
+	public Patch (boolean fullDiff)
 	{
 		this.fullDiff = fullDiff;
 		init ();
@@ -73,7 +65,7 @@ public class Patch
 	 */
 	public int getNumMoves ()
 	{
-		return move.getChildNodes ().getLength ();
+		return move.getChildren ().size ();
 	}
 	
 	/**
@@ -83,7 +75,7 @@ public class Patch
 	 */
 	public int getNumUpdates ()
 	{
-		return update.getChildNodes ().getLength ();
+		return update.getChildren ().size ();
 	}
 	
 	/**
@@ -93,7 +85,7 @@ public class Patch
 	 */
 	public int getNumDeletes ()
 	{
-		return delete.getChildNodes ().getLength ();
+		return delete.getChildren ().size ();
 	}
 	
 	/**
@@ -103,7 +95,7 @@ public class Patch
 	 */
 	public int getNumInserts ()
 	{
-		return insert.getChildNodes ().getLength ();
+		return insert.getChildren ().size ();
 	}
 	
 	/**
@@ -118,41 +110,33 @@ public class Patch
 	
 	/**
 	 * Initializes the patch. Creates the XML document and the nodes which will root the different kinds of operations.
-	 *
-	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	private void init () throws ParserConfigurationException
+	private void init ()
 	{
 		LOGGER.info ("initializing patch w/ fullDiff = ", fullDiff);
 		id = 0;
 		
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
- 
-		xmlDoc = docBuilder.newDocument();
-		
 		// add root element <bives type="fullDiff">
-		Element rootElement = xmlDoc.createElement("bives");
-		Attr attr = xmlDoc.createAttribute("type");
-		attr.setValue("fullDiff"); // TODO: implement shortDiff
-		rootElement.setAttributeNode(attr);
-		xmlDoc.appendChild (rootElement);
+		Element rootElement = new Element ("bives");
+		xmlDoc = new Document (rootElement);
+		
+		rootElement.setAttribute ("type", "fullDiff");// TODO: implement shortDiff
 		
 		// create nodes for inserts/updates/moves tec
-		update = xmlDoc.createElement("update");
-		rootElement.appendChild (update);
+		update = new Element("update");
+		rootElement.addContent (update);
 		
 		
-		delete = xmlDoc.createElement("delete");
-		rootElement.appendChild (delete);
+		delete = new Element("delete");
+		rootElement.addContent (delete);
 		
 		
-		insert = xmlDoc.createElement("insert");
-		rootElement.appendChild (insert);
+		insert = new Element("insert");
+		rootElement.addContent (insert);
 		
 		
-		move = xmlDoc.createElement("move");
-		rootElement.appendChild (move);
+		move = new Element("move");
+		rootElement.addContent (move);
 		
 		LOGGER.info ("initialized patch");
 	}
@@ -172,50 +156,25 @@ public class Patch
 	private Element createAttributeElement (int nodeId, String oldPath, String newPath, String name, String oldValue, String newValue, int chainId)
 	{
 		LOGGER.info ("create attribute element for ", oldPath, " -> ", newPath);
-		Element attribute = xmlDoc.createElement("attribute");
+		Element attribute = new Element("attribute");
 
-		Attr attr = xmlDoc.createAttribute("name");
-		attr.setValue (name);
-		attribute.setAttributeNode(attr);
-		
-		attr = xmlDoc.createAttribute("id");
-		attr.setValue (nodeId + "");
-		attribute.setAttributeNode(attr);
+		attribute.setAttribute ("name", name);
+		attribute.setAttribute ("id", nodeId + "");
 		
 		if (chainId > 0)
-		{
-			attr = xmlDoc.createAttribute("triggeredBy");
-			attr.setValue (chainId + "");
-			attribute.setAttributeNode(attr);
-		}
+			attribute.setAttribute ("triggeredBy", chainId + "");
 		
 		if (oldValue != null)
-		{
-			attr = xmlDoc.createAttribute("oldValue");
-			attr.setValue (oldValue);
-			attribute.setAttributeNode(attr);
-		}
+			attribute.setAttribute ("oldValue", oldValue);
 		
 		if (newValue != null)
-		{
-			attr = xmlDoc.createAttribute("newValue");
-			attr.setValue (newValue);
-			attribute.setAttributeNode(attr);
-		}
+			attribute.setAttribute ("newValue", newValue);
 
 		if (oldPath != null)
-		{
-			attr = xmlDoc.createAttribute("oldPath");
-			attr.setValue (oldPath);
-			attribute.setAttributeNode(attr);
-		}
+			attribute.setAttribute ("oldPath", oldPath);
 		
 		if (newPath != null)
-		{
-			attr = xmlDoc.createAttribute("newPath");
-			attr.setValue (newPath);
-			attribute.setAttributeNode(attr);
-		}
+			attribute.setAttribute ("newPath", newPath);
 		
 		return attribute;
 	}
@@ -238,74 +197,36 @@ public class Patch
 	private Element createNodeElement (int nodeId, String oldParent, String newParent, String oldPath, String newPath, int oldChildNo, int newChildNo, String oldTag, String newTag, int chainId)
 	{
 		LOGGER.info ("create node element for ", oldPath, " -> ", newPath);
-		Element node = xmlDoc.createElement("node");
-		
-		Attr attr = xmlDoc.createAttribute("id");
-		attr.setValue (nodeId + "");
-		node.setAttributeNode(attr);
+		Element node = new Element("node");
+
+		node.setAttribute ("id", "" + nodeId);
 		
 		if (chainId > 0)
-		{
-			attr = xmlDoc.createAttribute("triggeredBy");
-			attr.setValue (chainId + "");
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("triggeredBy", chainId + "");
 
 		if (oldParent != null)
-		{
-			attr = xmlDoc.createAttribute("oldParent");
-			attr.setValue (oldParent);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldParent", oldParent);
 
 		if (newParent != null)
-		{
-			attr = xmlDoc.createAttribute("newParent");
-			attr.setValue (newParent);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newParent", newParent);
 
 		if (oldChildNo > 0)
-		{
-			attr = xmlDoc.createAttribute("oldChildNo");
-			attr.setValue ("" + oldChildNo);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldChildNo", "" + oldChildNo);
 		
 		if (newChildNo > 0)
-		{
-			attr = xmlDoc.createAttribute("newChildNo");
-			attr.setValue ("" + newChildNo);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newChildNo", newChildNo + "");
 		
 		if (oldPath != null)
-		{
-			attr = xmlDoc.createAttribute("oldPath");
-			attr.setValue (oldPath);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldPath", oldPath);
 		
 		if (newPath != null)
-		{
-			attr = xmlDoc.createAttribute("newPath");
-			attr.setValue (newPath);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newPath", newPath);
 		
 		if (oldTag != null)
-		{
-			attr = xmlDoc.createAttribute("oldTag");
-			attr.setValue (oldTag);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldTag", oldTag);
 		
 		if (newTag != null)
-		{
-			attr = xmlDoc.createAttribute("newTag");
-			attr.setValue (newTag);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newTag", newTag);
 		
 		return node;
 	}
@@ -328,76 +249,38 @@ public class Patch
 	private Element createTextElement (int nodeId, String oldParent, String newParent, String oldPath, String newPath, int oldChildNo, int newChildNo, String oldText, String newText, int chainId)
 	{
 		LOGGER.info ("create text element for ", oldPath, " -> ", newPath);
-		Element node = xmlDoc.createElement("text");
+		Element node = new Element("text");
 		
-		Attr attr = xmlDoc.createAttribute("id");
-		attr.setValue (nodeId + "");
-		node.setAttributeNode(attr);
+		node.setAttribute ("id", nodeId + "");
 		
 		if (chainId > 0)
-		{
-			attr = xmlDoc.createAttribute("triggeredBy");
-			attr.setValue (chainId + "");
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("triggeredBy", chainId + "");
 
 		if (oldParent != null)
-		{
-			attr = xmlDoc.createAttribute("oldParent");
-			attr.setValue (oldParent);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldParent", oldParent);
 
 		if (newParent != null)
-		{
-			attr = xmlDoc.createAttribute("newParent");
-			attr.setValue (newParent);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newParent", newParent);
 
 		if (oldChildNo > 0)
-		{
-			attr = xmlDoc.createAttribute("oldChildNo");
-			attr.setValue ("" + oldChildNo);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldChildNo", "" + oldChildNo);
 		
 		if (newChildNo > 0)
-		{
-			attr = xmlDoc.createAttribute("newChildNo");
-			attr.setValue ("" + newChildNo);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newChildNo", "" + newChildNo);
 		
 		if (oldPath != null)
-		{
-			attr = xmlDoc.createAttribute("oldPath");
-			attr.setValue (oldPath);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("oldPath", oldPath);
 		
 		if (newPath != null)
-		{
-			attr = xmlDoc.createAttribute("newPath");
-			attr.setValue (newPath);
-			node.setAttributeNode(attr);
-		}
+			node.setAttribute ("newPath", newPath);
 
 		if (fullDiff)
 		{
 			if (oldText != null)
-			{
-				Element old = xmlDoc.createElement("oldText");
-				old.setTextContent (oldText);
-				node.appendChild (old);
-			}
+				node.setAttribute ("oldText", oldText);
 			
 			if (newText != null)
-			{
-				Element neu = xmlDoc.createElement("newText");
-				neu.setTextContent (newText);
-				node.appendChild (neu);
-			}
+				node.setAttribute ("newText", newText);
 		}
 		
 		return node;
@@ -468,7 +351,7 @@ public class Patch
 	{
 		LOGGER.info ("deleting node ", toDelete.getXPath ());
 		int nodeId = ++id;
-		delete.appendChild (createNodeElement (nodeId, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getTagName (), null, chainId));
+		delete.addContent (createNodeElement (nodeId, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getTagName (), null, chainId));
 		
 		if (!fullDiff)
 			return nodeId;
@@ -489,7 +372,7 @@ public class Patch
 	private void deleteAttribute (DocumentNode node, String attribute, int chainId)
 	{
 		LOGGER.info ("deleting attribute ", attribute, " of ", node.getXPath ());
-		delete.appendChild (createAttributeElement (++id, node.getXPath (), null, attribute, node.getAttribute (attribute), null, chainId));
+		delete.addContent (createAttributeElement (++id, node.getXPath (), null, attribute, node.getAttributeValue (attribute), null, chainId));
 	}
 	
 	/**
@@ -501,7 +384,7 @@ public class Patch
 	private void deleteNode (TextNode toDelete, int chainId)
 	{
 		LOGGER.info ("deleting text of ", toDelete.getXPath ());
-		delete.appendChild (createTextElement (++id, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getText (), null, chainId));
+		delete.addContent (createTextElement (++id, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getText (), null, chainId));
 	}
 	
 	/**
@@ -566,7 +449,7 @@ public class Patch
 	{
 		LOGGER.info ("inserting node ", toInsert.getXPath ());
 		int nodeId = ++id;
-		insert.appendChild (createNodeElement (nodeId, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getTagName (), chainId));
+		insert.addContent (createNodeElement (nodeId, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getTagName (), chainId));
 		
 		if (!fullDiff)
 			return nodeId;
@@ -587,7 +470,7 @@ public class Patch
 	private void insertAttribute (DocumentNode node, String attribute, int chainId)
 	{
 		LOGGER.info ("inserting attribute ", attribute, " of ", node.getXPath ());
-		insert.appendChild (createAttributeElement (++id, null, node.getXPath (), attribute, null, node.getAttribute (attribute), chainId));
+		insert.addContent (createAttributeElement (++id, null, node.getXPath (), attribute, null, node.getAttributeValue (attribute), chainId));
 	}
 	
 	/**
@@ -599,7 +482,7 @@ public class Patch
 	private void insertNode (TextNode toInsert, int chainId)
 	{
 		LOGGER.info ("inserting text of ", toInsert.getXPath ());
-		insert.appendChild (createTextElement (++id, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getText (), chainId));
+		insert.addContent (createTextElement (++id, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getText (), chainId));
 	}
 	
 	/**
@@ -636,14 +519,14 @@ public class Patch
 				Element e = createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), ((TextNode) a).getText (), ((TextNode) b).getText (), -1);
 				
 				if (moveThem)
-					move.appendChild (e);
+					move.addContent (e);
 				else
-					update.appendChild (e);
+					update.addContent (e);
 			}
 			else if (moveThem)
 			{
 				LOGGER.info ("equal text");
-				move.appendChild (createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				move.addContent (createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
 			}
 			return;
 		}
@@ -659,7 +542,7 @@ public class Patch
 			if (moveThem)
 			{
 				LOGGER.info ("nodes unmodified");
-				move.appendChild (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				move.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
 			}
 		}
 		else
@@ -668,12 +551,12 @@ public class Patch
 			if (!dA.getTagName ().equals (dB.getTagName ()))
 			{
 				LOGGER.info ("label of nodes differ -> updating");
-				update.appendChild (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), dA.getTagName (), dB.getTagName (), -1));
+				update.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), dA.getTagName (), dB.getTagName (), -1));
 			}
 			else if (moveThem)
 			{
 				LOGGER.info ("label of nodes do not differ -> moving");
-				move.appendChild (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				move.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
 			}
 			
 			if (fullDiff)
@@ -686,13 +569,13 @@ public class Patch
 				allAttr.addAll (dB.getAttributes ());
 				for (String attr : allAttr)
 				{
-					String aA = dA.getAttribute (attr), bA = dB.getAttribute (attr);
+					String aA = dA.getAttributeValue (attr), bA = dB.getAttributeValue (attr);
 					if (aA == null)
 						insertAttribute (dB, attr, -1);
 					else if (bA == null)
 						deleteAttribute (dA, attr, -1);
 					else if (!aA.equals (bA))
-						update.appendChild (createAttributeElement (++id, a.getXPath (), b.getXPath (), attr, aA, bA, -1));
+						update.addContent (createAttributeElement (++id, a.getXPath (), b.getXPath (), attr, aA, bA, -1));
 				}
 			}
 		}

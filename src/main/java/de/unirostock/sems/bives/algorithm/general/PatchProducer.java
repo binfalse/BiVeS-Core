@@ -3,13 +3,7 @@
  */
 package de.unirostock.sems.bives.algorithm.general;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import de.binfalse.bflog.LOGGER;
-import de.binfalse.bfutils.SimpleOutputStream;
 import de.unirostock.sems.bives.algorithm.Producer;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.ds.Patch;
@@ -61,38 +55,18 @@ public class PatchProducer
 	public String produce ()
 	{
 		LOGGER.info ("producing patch");
-		try
-		{
-			patch = new Patch (fullDiff);
-			
-			// examine original document
-			producePatchA (docA.getRoot ());
-
-			// examine modified version
-			producePatchB (docB.getRoot ());
-			
-			LOGGER.info ("patch finished, producing xml output");
-			
-			try
-			{
-				return XmlTools.prettyPrintDocument (patch.getDocument (), new SimpleOutputStream()).toString ();
-			}
-			catch (IOException e)
-			{
-				LOGGER.error (e, "error producing output");
-			}
-			catch (TransformerException e)
-			{
-				LOGGER.error (e, "error producing output");
-			}
-			return null;
-		}
-		catch (ParserConfigurationException e)
-		{
-			LOGGER.error (e, "error producing patch");
-		}
 		
-		return null;
+		patch = new Patch (fullDiff);
+		
+		// examine original document
+		producePatchA (docA.getRoot ());
+
+		// examine modified version
+		producePatchB (docB.getRoot ());
+		
+		LOGGER.info ("patch finished, producing xml output");
+		
+		return XmlTools.prettyPrintDocument (patch.getDocument ());
 	}
 	
 	/**

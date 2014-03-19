@@ -79,8 +79,8 @@ extends CRNEntity
 	 */
 	public String getSBO ()
 	{
-		String a = docA.getAttribute ("sboTerm");
-		String b = docA.getAttribute ("sboTerm");
+		String a = docA.getAttributeValue ("sboTerm");
+		String b = docA.getAttributeValue ("sboTerm");
 		if (a == null || b == null || !a.equals (b))
 			return "";
 		return a;

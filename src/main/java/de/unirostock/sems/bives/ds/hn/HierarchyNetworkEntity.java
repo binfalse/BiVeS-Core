@@ -4,7 +4,6 @@
 package de.unirostock.sems.bives.ds.hn;
 
 import de.unirostock.sems.bives.ds.GraphEntity;
-import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 

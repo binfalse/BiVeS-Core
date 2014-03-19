@@ -4,12 +4,9 @@
 package de.unirostock.sems.bives.api;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
+import org.jdom2.JDOMException;
 
 import de.unirostock.sems.bives.ds.graph.GraphTranslator;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
@@ -32,13 +29,11 @@ public abstract class Single
 	 * Instantiates a new single object reading the document from a file.
 	 *
 	 * @param file the file containing the document
-	 * @throws ParserConfigurationException the parser configuration exception
 	 * @throws XmlDocumentParseException the xml document parse exception
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws SAXException the sAX exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
 	 */
-	public Single (File file) throws ParserConfigurationException, XmlDocumentParseException, FileNotFoundException, SAXException, IOException
+	public Single (File file) throws XmlDocumentParseException, IOException, JDOMException
 	{
 		tree = new TreeDocument (XmlTools.readDocument (file), file.toURI ());
 	}
@@ -47,13 +42,11 @@ public abstract class Single
 	 * Instantiates a new single object reading the document from a string.
 	 *
 	 * @param str the string containing the document
-	 * @throws ParserConfigurationException the parser configuration exception
 	 * @throws XmlDocumentParseException the xml document parse exception
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws SAXException the sAX exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
 	 */
-	public Single (String str) throws ParserConfigurationException, XmlDocumentParseException, FileNotFoundException, SAXException, IOException
+	public Single (String str) throws XmlDocumentParseException, IOException, JDOMException
 	{
 		tree = new TreeDocument (XmlTools.readDocument (str), null);
 	}
@@ -67,6 +60,14 @@ public abstract class Single
 	{
 		this.tree = tree;
 	}
+	
+	/**
+	 * Flatten the document.
+	 *
+	 * @return the flattened document
+	 * @throws Exception the exception
+	 */
+	public abstract String flatten () throws Exception;
 	
 	/**
 	 * Returns the graph of the chemical reaction network providing an own graph translator.
@@ -93,18 +94,16 @@ public abstract class Single
 	 * Might return null if not available.
 	 *
 	 * @return the chemical reaction network or null if not available
-	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	public abstract String getCRNGraphML () throws ParserConfigurationException;
+	public abstract String getCRNGraphML () throws Exception;
 
 	/**
 	 * Returns the component's hierarchy graph encoded in GraphML.
 	 * Might return null if not available.
 	 *
 	 * @return the hierarchy graph or null if not available
-	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	public abstract String getHierarchyGraphML () throws ParserConfigurationException;
+	public abstract String getHierarchyGraphML () throws Exception;
 
 	/**
 	 * Returns the graph of the chemical reaction network encoded in DOT language.
@@ -112,7 +111,7 @@ public abstract class Single
 	 *
 	 * @return the chemical reaction network or null if not available
 	 */
-	public abstract String getCRNDotGraph ();
+	public abstract String getCRNDotGraph () throws Exception;
 
 	/**
 	 * Returns the component's hierarchy graph encoded in DOT language.
@@ -120,7 +119,7 @@ public abstract class Single
 	 *
 	 * @return the hierarchy graph or null if not available
 	 */
-	public abstract String getHierarchyDotGraph ();
+	public abstract String getHierarchyDotGraph () throws Exception;
 
 	/**
 	 * Returns the graph of the chemical reaction network encoded in JSON.
@@ -128,7 +127,7 @@ public abstract class Single
 	 *
 	 * @return the chemical reaction network or null if not available
 	 */
-	public abstract String getCRNJsonGraph ();
+	public abstract String getCRNJsonGraph () throws Exception;
 
 	/**
 	 * Returns the component's hierarchy graph encoded in JSON.
@@ -136,6 +135,6 @@ public abstract class Single
 	 *
 	 * @return the hierarchy graph or null if not available
 	 */
-	public abstract String getHierarchyJsonGraph ();
+	public abstract String getHierarchyJsonGraph () throws Exception;
 	
 }

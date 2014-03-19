@@ -5,7 +5,6 @@ package de.unirostock.sems.bives.ds.hn;
 
 import java.util.HashMap;
 
-import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 
