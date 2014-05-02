@@ -5,6 +5,8 @@ package de.unirostock.sems.bives.ds.hn;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
@@ -56,7 +58,9 @@ public class HierarchyNetwork
 	 */
 	public Collection<HierarchyNetworkComponent> getComponents ()
 	{
-		return hnC.values ();
+		Set<HierarchyNetworkComponent> s = new HashSet<HierarchyNetworkComponent> ();
+		s.addAll (hnC.values ());
+		return s;
 	}
 	
 	/**
@@ -66,7 +70,9 @@ public class HierarchyNetwork
 	 */
 	public Collection<HierarchyNetworkVariable> getVariables ()
 	{
-		return hnV.values ();
+		Set<HierarchyNetworkVariable> s = new HashSet<HierarchyNetworkVariable> ();
+		s.addAll (hnV.values ());
+		return s;
 	}
 	
 	/**

@@ -5,6 +5,8 @@ package de.unirostock.sems.bives.ds.crn;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
@@ -64,7 +66,9 @@ public class CRN
 	 */
 	public Collection<CRNSubstance> getSubstances ()
 	{
-		return crnS.values ();
+		Set<CRNSubstance> s = new HashSet<CRNSubstance> ();
+		s.addAll (crnS.values ());
+		return s;
 	}
 	
 	/**
@@ -74,7 +78,9 @@ public class CRN
 	 */
 	public Collection<CRNReaction> getReactions ()
 	{
-		return crnR.values ();
+		Set<CRNReaction> s = new HashSet<CRNReaction> ();
+		s.addAll (crnR.values ());
+		return s;
 	}
 	
 	/**
@@ -84,7 +90,9 @@ public class CRN
 	 */
 	public Collection<CRNCompartment> getCompartments ()
 	{
-		return crnC.values ();
+		Set<CRNCompartment> s = new HashSet<CRNCompartment> ();
+		s.addAll (crnC.values ());
+		return s;
 	}
 	
 	/**

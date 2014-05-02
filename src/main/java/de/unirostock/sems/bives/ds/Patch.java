@@ -99,6 +99,47 @@ public class Patch
 	}
 	
 	/**
+	 * Gets the number of node changes.
+	 *
+	 * @return the number of node changes
+	 */
+	public int getNumNodeChanges ()
+	{
+		return insert.getChildren ("node").size ()
+			+ delete.getChildren ("node").size ()
+			+ update.getChildren ("node").size ()
+			+ move.getChildren ("node").size ();
+	}
+
+	
+	/**
+	 * Gets the number of text changes.
+	 *
+	 * @return the number of text changes
+	 */
+	public int getNumTextChanges ()
+	{
+		return insert.getChildren ("text").size ()
+			+ delete.getChildren ("text").size ()
+			+ update.getChildren ("text").size ()
+			+ move.getChildren ("text").size ();
+	}
+
+	
+	/**
+	 * Gets the number of attribute changes.
+	 *
+	 * @return the number of attribute changes
+	 */
+	public int getNumAttributeChanges ()
+	{
+		return insert.getChildren ("attribute").size ()
+			+ delete.getChildren ("attribute").size ()
+			+ update.getChildren ("attribute").size ()
+			+ move.getChildren ("attribute").size ();
+	}
+	
+	/**
 	 * Gets the document containing all changes.
 	 *
 	 * @return the document
