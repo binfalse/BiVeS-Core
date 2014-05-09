@@ -99,6 +99,46 @@ public class Patch
 	}
 	
 	/**
+	 * Gets the deletes.
+	 *
+	 * @return the deletes
+	 */
+	public Element getDeletes ()
+	{
+		return delete;
+	}
+	
+	/**
+	 * Gets the inserts.
+	 *
+	 * @return the inserts
+	 */
+	public Element getInserts ()
+	{
+		return insert;
+	}
+	
+	/**
+	 * Gets the updates.
+	 *
+	 * @return the updates
+	 */
+	public Element getUpdates ()
+	{
+		return update;
+	}
+	
+	/**
+	 * Gets the moves.
+	 *
+	 * @return the moves
+	 */
+	public Element getMoves ()
+	{
+		return move;
+	}
+	
+	/**
 	 * Gets the number of node changes.
 	 *
 	 * @return the number of node changes
