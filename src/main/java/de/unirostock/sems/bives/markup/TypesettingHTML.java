@@ -40,12 +40,18 @@ public class TypesettingHTML
 			s += typesetSection (sec);
 		
 		s = MarkupDocument.replaceHighlights (s, "<strong>", "</strong>");
-		s = MarkupDocument.replaceInserts (s, "<span class='bives-insert'>",
+		s = MarkupDocument.replaceInserts (s, "<span class='" + CSS_CLASS_INSERT + "'>",
 			"</span>");
-		s = MarkupDocument.replaceDeletes (s, "<span class='bives-delete'>",
+		s = MarkupDocument.replaceDeletes (s, "<span class='" + CSS_CLASS_DELETE + "'>",
 			"</span>");
-		s = MarkupDocument.replaceAttributes (s, "<span class='bives-attr'>",
+		s = MarkupDocument.replaceAttributes (s, "<span class='" + CSS_CLASS_ATTRIBUTE + "'>",
 			"</span>");
+		s = MarkupDocument.replaceOriginalMaths (s, "<div class='" + CSS_CLASS_MATH + " " + CSS_CLASS_MATH_ORIGINAL + "'>",
+			"</div>");
+		s = MarkupDocument.replaceModifiedMaths (s, "<div class='" + CSS_CLASS_MATH + " " + CSS_CLASS_MATH_MODIFIED+ "'>",
+			"</div>");
+		s = MarkupDocument.replaceUnchangedMaths (s, "<div class='" + CSS_CLASS_MATH + "'>",
+			"</div>");
 		s = MarkupDocument.replaceRightArrow (s, "&rarr;");
 		s = MarkupDocument.replaceMultiplication (s, "&middot;");
 		
@@ -86,8 +92,8 @@ public class TypesettingHTML
 	 */
 	private String typesetElement (MarkupElement element)
 	{
-		String s = "<tr><td class='bives-table-left'>" + element.getHeader ()
-			+ "</td><td class='bives-table-right'>";
+		String s = "<tr><td class='" + CSS_CLASS_TABLE_LEFT_COLUMN + "'>" + element.getHeader ()
+			+ "</td><td class='" + CSS_CLASS_TABLE_RIGHT_COLUMN + "'>";
 		String sub = "";
 		
 		List<String> values = element.getValues ();

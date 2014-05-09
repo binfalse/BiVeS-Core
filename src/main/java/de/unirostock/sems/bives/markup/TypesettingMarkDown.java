@@ -39,11 +39,13 @@ public class TypesettingMarkDown
 			s += typesetSection (sec);
 		
 		s = MarkupDocument.replaceHighlights (s, "*", "*");
-		s = MarkupDocument.replaceInserts (s, "<span class='bives-insert'>",
+		s = MarkupDocument.replaceInserts (s, "<span class='" + CSS_CLASS_INSERT + "'>",
 			"</span>");
-		s = MarkupDocument.replaceDeletes (s, "<span class='bives-delete'>",
+		s = MarkupDocument.replaceDeletes (s, "<span class='" + CSS_CLASS_DELETE + "'>",
 			"</span>");
-		s = MarkupDocument.replaceAttributes (s, "<span class='bives-attr'>",
+		s = MarkupDocument.replaceAttributes (s, "<span class='" + CSS_CLASS_ATTRIBUTE + "'>",
+			"</span>");
+		s = MarkupDocument.replaceAllMaths (s, "<span class='" + CSS_CLASS_MATH + "'>",
 			"</span>");
 		s = MarkupDocument.replaceRightArrow (s, "->");
 		s = MarkupDocument.replaceMultiplication (s, "*");

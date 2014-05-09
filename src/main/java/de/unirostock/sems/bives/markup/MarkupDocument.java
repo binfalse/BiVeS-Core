@@ -103,6 +103,30 @@ public class MarkupDocument
 	}
 	
 	/**
+	 * Container for unchanged math.
+	 *
+	 * @param s the string representing math
+	 * @return the container containing the math
+	 */
+	public static final String math (String s)
+	{
+		return "{{math}}" + s + "}}math{{";
+	}
+	
+	/**
+	 * Container for modified math.
+	 *
+	 * @param s the string representing math
+	 * @return the container containing the math
+	 */
+	public static final String math (String s, boolean original)
+	{
+		if (original)
+			return "{{mathD}}" + s + "}}mathD{{";
+		return "{{mathI}}" + s + "}}mathI{{";
+	}
+	
+	/**
 	 * Produces a right arrow. (e.g. for chemical reactions)
 	 *
 	 * @return the right arrow
@@ -202,6 +226,58 @@ public class MarkupDocument
 	public static final String replaceAttributes (String s, String pre, String post)
 	{
 		return replace (s, "{{attribute}}", "}}attribute{{", pre, post);
+	}
+	
+	/**
+	 * Replaces modified math.
+	 *
+	 * @param s the string containing modified math
+	 * @param pre the opening, e.g. &lt;inserted math&gt;
+	 * @param post the closing, e.g. &lt;/inserted math&gt;
+	 * @return the final string
+	 */
+	public static final String replaceModifiedMaths (String s, String pre, String post)
+	{
+		return replace (s, "{{mathI}}", "}}mathI{{", pre, post);
+	}
+	
+	/**
+	 * Replaces original math.
+	 *
+	 * @param s the string containing original math
+	 * @param pre the opening, e.g. &lt;deleted math&gt;
+	 * @param post the closing, e.g. &lt;/deleted math&gt;
+	 * @return the final string
+	 */
+	public static final String replaceOriginalMaths (String s, String pre, String post)
+	{
+		return replace (s, "{{mathD}}", "}}mathD{{", pre, post);
+	}
+	
+	/**
+	 * Replaces all math stuff, doesn't matter if inserted or deleted.
+	 *
+	 * @param s the string containing inserted or deleted math
+	 * @param pre the opening, e.g. &lt;my math tag&gt;
+	 * @param post the closing, e.g. &lt;/my math tag&gt;
+	 * @return the final string
+	 */
+	public static final String replaceAllMaths (String s, String pre, String post)
+	{
+		return replace (replace (replace (s, "{{mathI}}", "}}mathI{{", pre, post), "{{mathD}}", "}}mathD{{", pre, post), "{{math}}", "}}math{{", pre, post);
+	}
+	
+	/**
+	 * Replaces math that hasn't changed.
+	 *
+	 * @param s the string containing math
+	 * @param pre the opening, e.g. &lt;unchanged math&gt;
+	 * @param post the closing, e.g. &lt;/unchanged math&gt;
+	 * @return the final string
+	 */
+	public static final String replaceUnchangedMaths (String s, String pre, String post)
+	{
+		return replace (s, "{{math}}", "}}math{{", pre, post);
 	}
 	
 	/**

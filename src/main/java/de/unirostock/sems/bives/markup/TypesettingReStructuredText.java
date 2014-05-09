@@ -40,9 +40,10 @@ public class TypesettingReStructuredText
 			s += typesetSection (sec);
 		
 		s = MarkupDocument.replaceHighlights (s, "*", "*");
-		s = MarkupDocument.replaceInserts (s, ":bives-insert:`", "`");
-		s = MarkupDocument.replaceDeletes (s, ":bives-delete:`", "`");
-		s = MarkupDocument.replaceAttributes (s, ":bives-attr:`", "`");
+		s = MarkupDocument.replaceInserts (s, ":" + CSS_CLASS_INSERT + ":`", "`");
+		s = MarkupDocument.replaceDeletes (s, ":" + CSS_CLASS_DELETE + ":`", "`");
+		s = MarkupDocument.replaceAttributes (s, ":" + CSS_CLASS_ATTRIBUTE + ":`", "`");
+		s = MarkupDocument.replaceAllMaths (s, ":" + CSS_CLASS_MATH + ":`", "`");
 		s = MarkupDocument.replaceRightArrow (s, "->");
 		s = MarkupDocument.replaceMultiplication (s, "*");
 		
