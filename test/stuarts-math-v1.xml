@@ -1,0 +1,338 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+        <divide/>
+        <apply>
+            <times/>
+            <ci> VmGLK </ci>
+            <apply>
+                <plus/>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <times/>
+                            <ci> G6P </ci>
+                            <apply>
+                                <plus/>
+                                <ci> SUMAXP </ci>
+                                <apply>
+                                    <power/>
+                                    <apply>
+                                        <minus/>
+                                        <apply>
+                                            <plus/>
+                                            <apply>
+                                                <minus/>
+                                                <apply>
+                                                    <power/>
+                                                    <ci> SUMAXP </ci>
+                                                    <cn type="integer"> 2 </cn>
+                                                </apply>
+                                                <apply>
+                                                    <times/>
+                                                    <cn type="integer"> 2 </cn>
+                                                    <ci> SUMAXP </ci>
+                                                    <ci> Prb </ci>
+                                                </apply>
+                                            </apply>
+                                            <apply>
+                                                <times/>
+                                                <cn type="integer"> 8 </cn>
+                                                <ci> KeqAK </ci>
+                                                <ci> SUMAXP </ci>
+                                                <ci> Prb </ci>
+                                            </apply>
+                                            <apply>
+                                                <power/>
+                                                <ci> Prb </ci>
+                                                <cn type="integer"> 2 </cn>
+                                            </apply>
+                                        </apply>
+                                        <apply>
+                                            <times/>
+                                            <cn type="integer"> 4 </cn>
+                                            <ci> KeqAK </ci>
+                                            <apply>
+                                                <power/>
+                                                <ci> Prb </ci>
+                                                <cn type="integer"> 2 </cn>
+                                            </apply>
+                                        </apply>
+                                    </apply>
+                                    <cn> 0.5 </cn>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <cn type="integer"> 1 </cn>
+                                <apply>
+                                    <times/>
+                                    <cn type="integer"> 4 </cn>
+                                    <ci> KeqAK </ci>
+                                </apply>
+                            </apply>
+                            <ci> KeqGLK </ci>
+                        </apply>
+                    </apply>
+                </apply>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci> GLCi </ci>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <minus/>
+                                        <ci> SUMAXP </ci>
+                                    </apply>
+                                    <ci> Prb </ci>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <cn type="integer"> 4 </cn>
+                                    <ci> KeqAK </ci>
+                                    <ci> Prb </ci>
+                                </apply>
+                            </apply>
+                            <apply>
+                                <power/>
+                                <apply>
+                                    <minus/>
+                                    <apply>
+                                        <plus/>
+                                        <apply>
+                                            <minus/>
+                                            <apply>
+                                                <power/>
+                                                <ci> SUMAXP </ci>
+                                                <cn type="integer"> 2 </cn>
+                                            </apply>
+                                            <apply>
+                                                <times/>
+                                                <cn type="integer"> 2 </cn>
+                                                <ci> SUMAXP </ci>
+                                                <ci> Prb </ci>
+                                            </apply>
+                                        </apply>
+                                        <apply>
+                                            <times/>
+                                            <cn type="integer"> 8 </cn>
+                                            <ci> KeqAK </ci>
+                                            <ci> SUMAXP </ci>
+                                            <ci> Prb </ci>
+                                        </apply>
+                                        <apply>
+                                            <power/>
+                                            <ci> Prb </ci>
+                                            <cn type="integer"> 2 </cn>
+                                        </apply>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <cn type="integer"> 4 </cn>
+                                        <ci> KeqAK </ci>
+                                        <apply>
+                                            <power/>
+                                            <ci> Prb </ci>
+                                            <cn type="integer"> 2 </cn>
+                                        </apply>
+                                    </apply>
+                                </apply>
+                                <cn> 0.5 </cn>
+                            </apply>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <minus/>
+                        <cn type="integer"> 2 </cn>
+                        <apply>
+                            <times/>
+                            <cn type="integer"> 8 </cn>
+                            <ci> KeqAK </ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </apply>
+        <apply>
+            <times/>
+            <ci> KmGLKATP </ci>
+            <ci> KmGLKGLCi </ci>
+            <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                    <divide/>
+                    <ci> G6P </ci>
+                    <ci> KmGLKG6P </ci>
+                </apply>
+                <apply>
+                    <divide/>
+                    <ci> GLCi </ci>
+                    <ci> KmGLKGLCi </ci>
+                </apply>
+            </apply>
+            <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <minus/>
+                        <ci> SUMAXP </ci>
+                        <apply>
+                            <power/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <minus/>
+                                        <apply>
+                                            <power/>
+                                            <ci> SUMAXP </ci>
+                                            <cn type="integer"> 2 </cn>
+                                        </apply>
+                                        <apply>
+                                            <times/>
+                                            <cn type="integer"> 2 </cn>
+                                            <ci> SUMAXP </ci>
+                                            <ci> Prb </ci>
+                                        </apply>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <cn type="integer"> 8 </cn>
+                                        <ci> KeqAK </ci>
+                                        <ci> SUMAXP </ci>
+                                        <ci> Prb </ci>
+                                    </apply>
+                                    <apply>
+                                        <power/>
+                                        <ci> Prb </ci>
+                                        <cn type="integer"> 2 </cn>
+                                    </apply>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <cn type="integer"> 4 </cn>
+                                    <ci> KeqAK </ci>
+                                    <apply>
+                                        <power/>
+                                        <ci> Prb </ci>
+                                        <cn type="integer"> 2 </cn>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <cn> 0.5 </cn>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <minus/>
+                            <cn type="integer"> 1 </cn>
+                            <apply>
+                                <times/>
+                                <cn type="integer"> 4 </cn>
+                                <ci> KeqAK </ci>
+                            </apply>
+                        </apply>
+                        <ci> KmGLKADP </ci>
+                    </apply>
+                </apply>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <plus/>
+                                <apply>
+                                    <minus/>
+                                    <ci> SUMAXP </ci>
+                                </apply>
+                                <ci> Prb </ci>
+                            </apply>
+                            <apply>
+                                <times/>
+                                <cn type="integer"> 4 </cn>
+                                <ci> KeqAK </ci>
+                                <ci> Prb </ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <power/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <minus/>
+                                        <apply>
+                                            <power/>
+                                            <ci> SUMAXP </ci>
+                                            <cn type="integer"> 2 </cn>
+                                        </apply>
+                                        <apply>
+                                            <times/>
+                                            <cn type="integer"> 2 </cn>
+                                            <ci> SUMAXP </ci>
+                                            <ci> Prb </ci>
+                                        </apply>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <cn type="integer"> 8 </cn>
+                                        <ci> KeqAK </ci>
+                                        <ci> SUMAXP </ci>
+                                        <ci> Prb </ci>
+                                    </apply>
+                                    <apply>
+                                        <power/>
+                                        <ci> Prb </ci>
+                                        <cn type="integer"> 2 </cn>
+                                    </apply>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <cn type="integer"> 4 </cn>
+                                    <ci> KeqAK </ci>
+                                    <apply>
+                                        <power/>
+                                        <ci> Prb </ci>
+                                        <cn type="integer"> 2 </cn>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <cn> 0.5 </cn>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <minus/>
+                            <cn type="integer"> 2 </cn>
+                            <apply>
+                                <times/>
+                                <cn type="integer"> 8 </cn>
+                                <ci> KeqAK </ci>
+                            </apply>
+                        </apply>
+                        <ci> KmGLKATP </ci>
+                    </apply>
+                </apply>
+            </apply>
+        </apply>
+    </apply>
+</math>
