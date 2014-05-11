@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
@@ -11,11 +11,11 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
  *
  * @author Martin Scharm
  */
-public class CRNSubstance
-extends CRNEntity
+public class ReactionNetworkSubstance
+extends ReactionNetworkEntity
 {
 	/** The compartments hosting this substance in the original/modified version. */
-	private CRNCompartment compartmentA, compartmentB;
+	private ReactionNetworkCompartment compartmentA, compartmentB;
 
 	/**
 	 * Instantiates a new substance in a chemical reaction network.
@@ -28,7 +28,7 @@ extends CRNEntity
 	 * @param compartmentA the compartment a
 	 * @param compartmentB the compartment b
 	 */
-	public CRNSubstance (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, CRNCompartment compartmentA, CRNCompartment compartmentB)
+	public ReactionNetworkSubstance (ReactionNetwork crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB)
 	{
 		super ("s" + crn.getNextSubstanceID (), labelA, labelB, docA, docB);
 		this.compartmentA = compartmentA;
@@ -41,7 +41,7 @@ extends CRNEntity
 	 *
 	 * @param compartment the compartment in original version
 	 */
-	public void setCompartmentA (CRNCompartment compartment)
+	public void setCompartmentA (ReactionNetworkCompartment compartment)
 	{
 		this.compartmentA = compartment;
 	}
@@ -51,7 +51,7 @@ extends CRNEntity
 	 *
 	 * @param compartment the compartment in modified version
 	 */
-	public void setCompartmentB (CRNCompartment compartment)
+	public void setCompartmentB (ReactionNetworkCompartment compartment)
 	{
 		this.compartmentB = compartment;
 	}
@@ -65,7 +65,7 @@ extends CRNEntity
 	 *
 	 * @return the compartment
 	 */
-	public CRNCompartment getCompartment ()
+	public ReactionNetworkCompartment getCompartment ()
 	{
 		if (compartmentA == compartmentB)
 			return compartmentA;

@@ -12,15 +12,15 @@ import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.GraphEntity;
-import de.unirostock.sems.bives.ds.crn.CRN;
-import de.unirostock.sems.bives.ds.crn.CRNCompartment;
-import de.unirostock.sems.bives.ds.crn.CRNReaction;
-import de.unirostock.sems.bives.ds.crn.CRNSubstance;
-import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.ds.rn.ReactionNetwork;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkCompartment;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkReaction;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstance;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
@@ -195,7 +195,7 @@ public class GraphTranslatorGraphML
 	 * .sems.bives.ds.graph.CRN)
 	 */
 	@Override
-	public String translate (CRN crn)
+	public String translate (ReactionNetwork crn)
 	{
 		if (crn == null)
 			return null;
@@ -207,10 +207,10 @@ public class GraphTranslatorGraphML
 		
 		graphRoot = addGraphMLPreamble (graphML);
 		graphDocument = new Document (graphML);
-		HashMap<CRNCompartment, Element> compartments = new HashMap<CRNCompartment, Element> ();
+		HashMap<ReactionNetworkCompartment, Element> compartments = new HashMap<ReactionNetworkCompartment, Element> ();
 		graphid = 1;
 		
-		for (CRNCompartment c : crn.getCompartments ())
+		for (ReactionNetworkCompartment c : crn.getCompartments ())
 		{
 			Element node = createGraphMLNode (graphRoot, c.getId (), null,
 				c.getLabel (), c.getModification () + "");
@@ -219,9 +219,9 @@ public class GraphTranslatorGraphML
 			compartments.put (c, compartment);
 		}
 		
-		for (CRNSubstance s : crn.getSubstances ())
+		for (ReactionNetworkSubstance s : crn.getSubstances ())
 		{
-			CRNCompartment compartment = s.getCompartment ();
+			ReactionNetworkCompartment compartment = s.getCompartment ();
 			if (compartment != null)
 				createGraphMLNode (compartments.get (compartment), s.getId (),
 					"species", s.getLabel (), s.getModification () + "");
@@ -230,9 +230,9 @@ public class GraphTranslatorGraphML
 					s.getModification () + "");
 		}
 		
-		for (CRNReaction r : crn.getReactions ())
+		for (ReactionNetworkReaction r : crn.getReactions ())
 		{
-			CRNCompartment compartment = r.getCompartment ();
+			ReactionNetworkCompartment compartment = r.getCompartment ();
 			if (compartment != null)
 				createGraphMLNode (compartments.get (compartment), r.getId (),
 					"reaction", r.getLabel (), r.getModification () + "");
@@ -240,15 +240,15 @@ public class GraphTranslatorGraphML
 				createGraphMLNode (graphRoot, r.getId (), "reaction", r.getLabel (),
 					r.getModification () + "");
 			
-			for (CRNSubstanceRef s : r.getInputs ())
+			for (ReactionNetworkSubstanceRef s : r.getInputs ())
 				createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
 					s.getModification () + "", SBOTerm.MOD_NONE);
 			
-			for (CRNSubstanceRef s : r.getOutputs ())
+			for (ReactionNetworkSubstanceRef s : r.getOutputs ())
 				createEdge (graphRoot, r.getId (), s.getSubstance ().getId (),
 					s.getModification () + "", SBOTerm.MOD_NONE);
 			
-			for (CRNSubstanceRef s : r.getModifiers ())
+			for (ReactionNetworkSubstanceRef s : r.getModifiers ())
 			{
 				/*if (s.getModification () == CRN.MODIFIED)
 				{

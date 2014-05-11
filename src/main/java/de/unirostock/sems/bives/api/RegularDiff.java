@@ -103,7 +103,7 @@ public class RegularDiff
 	 * ds.graph.GraphTranslator)
 	 */
 	@Override
-	public Object getCRNGraph (GraphTranslator gt) throws Exception
+	public Object getReactionsGraph (GraphTranslator gt) throws Exception
 	{
 		return null;
 	}
@@ -115,7 +115,7 @@ public class RegularDiff
 	 * @see de.unirostock.sems.bives.api.Diff#getGraphML()
 	 */
 	@Override
-	public String getCRNGraphML ()
+	public String getReactionsGraphML ()
 	{
 		return null;
 	}
@@ -127,7 +127,7 @@ public class RegularDiff
 	 * @see de.unirostock.sems.bives.api.Diff#getDotGraph()
 	 */
 	@Override
-	public String getCRNDotGraph ()
+	public String getReactionsDotGraph ()
 	{
 		return null;
 	}
@@ -213,7 +213,7 @@ public class RegularDiff
 	 * @see de.unirostock.sems.bives.api.Diff#getCRNJsonGraph()
 	 */
 	@Override
-	public String getCRNJsonGraph ()
+	public String getReactionsJsonGraph ()
 	{
 		return null;
 	}

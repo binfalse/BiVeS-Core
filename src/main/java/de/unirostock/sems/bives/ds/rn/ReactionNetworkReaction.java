@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,24 +18,24 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
  *
  * @author Martin Scharm
  */
-public class CRNReaction
-extends CRNEntity
+public class ReactionNetworkReaction
+extends ReactionNetworkEntity
 {
 	
 	/** The reversible. */
 	private boolean reversible;
 	
 	/** The compartment b. */
-	private CRNCompartment compartmentA, compartmentB;
+	private ReactionNetworkCompartment compartmentA, compartmentB;
 
 	/** The in. */
-	private HashMap<CRNSubstance, CRNSubstanceRef> in;
+	private HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> in;
 	
 	/** The out. */
-	private HashMap<CRNSubstance, CRNSubstanceRef> out;
+	private HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> out;
 	
 	/** The mod. */
-	private Vector<CRNSubstanceRef> mod;
+	private Vector<ReactionNetworkSubstanceRef> mod;
 	//private HashMap<CRNSubstance, CRNSubstanceRef> mod;
 	
 	/**
@@ -50,12 +50,12 @@ extends CRNEntity
 	 * @param compartmentB the compartment b
 	 * @param reversible the reversible flag
 	 */
-	public CRNReaction (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, CRNCompartment compartmentA, CRNCompartment compartmentB, boolean reversible)
+	public ReactionNetworkReaction (ReactionNetwork crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB, boolean reversible)
 	{
 		super ("r" + crn.getNextReactionID (), labelA, labelB, docA, docB);
-		in = new HashMap<CRNSubstance, CRNSubstanceRef> ();
-		out = new HashMap<CRNSubstance, CRNSubstanceRef> ();
-		mod = new Vector<CRNSubstanceRef> ();
+		in = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
+		out = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
+		mod = new Vector<ReactionNetworkSubstanceRef> ();
 		this.compartmentA = compartmentA;
 		this.compartmentB = compartmentB;
 		singleDoc = false;
@@ -67,7 +67,7 @@ extends CRNEntity
 	 *
 	 * @param compartment the compartment in original version
 	 */
-	public void setCompartmentA (CRNCompartment compartment)
+	public void setCompartmentA (ReactionNetworkCompartment compartment)
 	{
 		this.compartmentA = compartment;
 	}
@@ -77,7 +77,7 @@ extends CRNEntity
 	 *
 	 * @param compartment the compartment in modified version
 	 */
-	public void setCompartmentB (CRNCompartment compartment)
+	public void setCompartmentB (ReactionNetworkCompartment compartment)
 	{
 		this.compartmentB = compartment;
 	}
@@ -92,16 +92,16 @@ extends CRNEntity
 	 *
 	 * @return the compartment
 	 */
-	public CRNCompartment getCompartment ()
+	public ReactionNetworkCompartment getCompartment ()
 	{
 		if (compartmentA != null && compartmentA == compartmentB)
 				return compartmentA;
 		
 		boolean sameCompartment = true;
-		CRNCompartment compartment = null;
+		ReactionNetworkCompartment compartment = null;
 		
 		if (sameCompartment)
-			for (CRNSubstance sub : in.keySet ())
+			for (ReactionNetworkSubstance sub : in.keySet ())
 			{
 				if (compartment == null)
 					compartment = sub.getCompartment ();
@@ -115,7 +115,7 @@ extends CRNEntity
 			}
 		
 		if (sameCompartment)
-			for (CRNSubstance sub : out.keySet ())
+			for (ReactionNetworkSubstance sub : out.keySet ())
 			{
 				if (compartment == null)
 					compartment = sub.getCompartment ();
@@ -129,7 +129,7 @@ extends CRNEntity
 			}
 		
 		if (sameCompartment)
-			for (CRNSubstanceRef sub : mod)
+			for (ReactionNetworkSubstanceRef sub : mod)
 			{
 				if (compartment == null)
 					compartment = sub.subst.getCompartment ();
@@ -154,12 +154,12 @@ extends CRNEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addInputA (CRNSubstance subst, SBOTerm sbo)
+	public void addInputA (ReactionNetworkSubstance subst, SBOTerm sbo)
 	{
-		CRNSubstanceRef r = in.get (subst);
+		ReactionNetworkSubstanceRef r = in.get (subst);
 		if (r == null)
 			try{
-				in.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+				in.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -173,12 +173,12 @@ extends CRNEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addOutputA (CRNSubstance subst, SBOTerm sbo)
+	public void addOutputA (ReactionNetworkSubstance subst, SBOTerm sbo)
 	{
-		CRNSubstanceRef r = out.get (subst);
+		ReactionNetworkSubstanceRef r = out.get (subst);
 		if (r == null)
 			try{
-				out.put (subst, new CRNSubstanceRef (subst, true, false, sbo, null));
+				out.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -193,9 +193,9 @@ extends CRNEntity
 	 * @param sbo the SBOTerm describing the modification
 	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModA (CRNSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
+	public void addModA (ReactionNetworkSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
 	{
-		for (CRNSubstanceRef sub : mod)
+		for (ReactionNetworkSubstanceRef sub : mod)
 			if (sub.subst == subst)
 			{
 				if (SBOTerm.sameModifier (sub.modTermB, sbo))
@@ -206,7 +206,7 @@ extends CRNEntity
 				}
 			}
 		
-		mod.add (new CRNSubstanceRef (subst, true, false, sbo, null));
+		mod.add (new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
 	}
 	
 	/**
@@ -215,12 +215,12 @@ extends CRNEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addInputB (CRNSubstance subst, SBOTerm sbo)
+	public void addInputB (ReactionNetworkSubstance subst, SBOTerm sbo)
 	{
-		CRNSubstanceRef r = in.get (subst);
+		ReactionNetworkSubstanceRef r = in.get (subst);
 		if (r == null)
 			try{
-				in.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+				in.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -234,12 +234,12 @@ extends CRNEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addOutputB (CRNSubstance subst, SBOTerm sbo)
+	public void addOutputB (ReactionNetworkSubstance subst, SBOTerm sbo)
 	{
-		CRNSubstanceRef r = out.get (subst);
+		ReactionNetworkSubstanceRef r = out.get (subst);
 		if (r == null)
 			try{
-				out.put (subst, new CRNSubstanceRef (subst, false, true, null, sbo));
+				out.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -254,9 +254,9 @@ extends CRNEntity
 	 * @param sbo the SBOTerm describing the modification
 	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModB (CRNSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
+	public void addModB (ReactionNetworkSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
 	{
-		for (CRNSubstanceRef sub : mod)
+		for (ReactionNetworkSubstanceRef sub : mod)
 			if (sub.subst == subst)
 			{
 				if (SBOTerm.sameModifier (sub.modTermA, sbo))
@@ -267,7 +267,7 @@ extends CRNEntity
 				}
 			}
 		
-		mod.add (new CRNSubstanceRef (subst, false, true, null, sbo));
+		mod.add (new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
 	}
 	
 	/**
@@ -275,7 +275,7 @@ extends CRNEntity
 	 *
 	 * @return the reactants
 	 */
-	public Collection<CRNSubstanceRef> getInputs ()
+	public Collection<ReactionNetworkSubstanceRef> getInputs ()
 	{
 		return in.values ();
 	}
@@ -285,7 +285,7 @@ extends CRNEntity
 	 *
 	 * @return the products
 	 */
-	public Collection<CRNSubstanceRef> getOutputs ()
+	public Collection<ReactionNetworkSubstanceRef> getOutputs ()
 	{
 		return out.values ();
 	}
@@ -295,7 +295,7 @@ extends CRNEntity
 	 *
 	 * @return the modifiers
 	 */
-	public Collection<CRNSubstanceRef> getModifiers ()
+	public Collection<ReactionNetworkSubstanceRef> getModifiers ()
 	{
 		return mod;
 	}
@@ -331,11 +331,11 @@ extends CRNEntity
 	{
 		singleDoc = true;
 		
-		for (CRNSubstanceRef subst : in.values ())
+		for (ReactionNetworkSubstanceRef subst : in.values ())
 			subst.setSingleDocument ();
-		for (CRNSubstanceRef subst : out.values ())
+		for (ReactionNetworkSubstanceRef subst : out.values ())
 			subst.setSingleDocument ();
-		for (CRNSubstanceRef subst : mod)
+		for (ReactionNetworkSubstanceRef subst : mod)
 			subst.setSingleDocument ();
 	}
 	
@@ -359,9 +359,9 @@ extends CRNEntity
 	 * @param substances the substances
 	 * @return true, if something in this list has changed
 	 */
-	private boolean changes (Collection<CRNSubstanceRef> substances)
+	private boolean changes (Collection<ReactionNetworkSubstanceRef> substances)
 	{
-		for (CRNSubstanceRef substance : substances)
+		for (ReactionNetworkSubstanceRef substance : substances)
 			if (substance.getModification () != UNMODIFIED)
 				return true;
 		return false;

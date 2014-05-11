@@ -14,15 +14,15 @@ import org.junit.runners.JUnit4;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.GraphEntity;
-import de.unirostock.sems.bives.ds.crn.CRN;
-import de.unirostock.sems.bives.ds.crn.CRNCompartment;
-import de.unirostock.sems.bives.ds.crn.CRNReaction;
-import de.unirostock.sems.bives.ds.crn.CRNSubstance;
-import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.ds.rn.ReactionNetwork;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkCompartment;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkReaction;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstance;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
 import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
@@ -59,38 +59,38 @@ public class TestGraphs
 		}
 	}
 	
-	public CRNCompartment addCompartment (DocumentNode node, String label, CRN crn, boolean a)
+	public ReactionNetworkCompartment addCompartment (DocumentNode node, String label, ReactionNetwork crn, boolean a)
 	{
-		CRNCompartment compartment = null;
+		ReactionNetworkCompartment compartment = null;
 		if (a)
-			compartment = new CRNCompartment (crn, label, null, node, null);
+			compartment = new ReactionNetworkCompartment (crn, label, null, node, null);
 		else
-			compartment = new CRNCompartment (crn, null, label, null, node);
+			compartment = new ReactionNetworkCompartment (crn, null, label, null, node);
 		
 		crn.setCompartment (node, compartment);
 		return compartment;
 	}
 	
-	public CRNSubstance addSubstrate (DocumentNode node, String label, CRN crn, CRNCompartment compartment, boolean a)
+	public ReactionNetworkSubstance addSubstrate (DocumentNode node, String label, ReactionNetwork crn, ReactionNetworkCompartment compartment, boolean a)
 	{
-		CRNSubstance subst = null;
+		ReactionNetworkSubstance subst = null;
 		if (a)
-			subst = new CRNSubstance (crn, label, null, node, null, compartment, null);
+			subst = new ReactionNetworkSubstance (crn, label, null, node, null, compartment, null);
 		else
-			subst = new CRNSubstance (crn, null, label, null, node, null, compartment);
+			subst = new ReactionNetworkSubstance (crn, null, label, null, node, null, compartment);
 		
 		crn.setSubstance (node, subst);
 		return subst;
 	}
 	
-	public CRNReaction addReaction (DocumentNode node, String label, CRN crn, CRNCompartment compartment, boolean a)
+	public ReactionNetworkReaction addReaction (DocumentNode node, String label, ReactionNetwork crn, ReactionNetworkCompartment compartment, boolean a)
 	{
 		// NOTE: reversible will always be true
-		CRNReaction react = null;
+		ReactionNetworkReaction react = null;
 		if (a)
-			react = new CRNReaction (crn, label, null, node, null, compartment, null, true);
+			react = new ReactionNetworkReaction (crn, label, null, node, null, compartment, null, true);
 		else
-			react = new CRNReaction (crn, null, label, null, node, null, compartment, true);
+			react = new ReactionNetworkReaction (crn, null, label, null, node, null, compartment, true);
 		
 		crn.setReaction (node, react);
 		return react;
@@ -101,18 +101,18 @@ public class TestGraphs
 	public void testCrn ()
 	{
 		// test the chemical reaction network stuff
-		CRN crn = new CRN ();
+		ReactionNetwork crn = new ReactionNetwork ();
 		
 		// create a dummy node
 		DocumentNode dummy = simpleFile.getRoot ();
 		DocumentNode dummy2 = simpleFile.getNodeById ("messageone");
 
-		CRNCompartment compartment1 = addCompartment (dummy, "compartment in A", crn, true);
-		CRNSubstance substrate1 = addSubstrate (dummy, "substrate in A", crn, compartment1, true);
-		CRNReaction reaction1 = addReaction (dummy, "reaction in A", crn, compartment1, true);
+		ReactionNetworkCompartment compartment1 = addCompartment (dummy, "compartment in A", crn, true);
+		ReactionNetworkSubstance substrate1 = addSubstrate (dummy, "substrate in A", crn, compartment1, true);
+		ReactionNetworkReaction reaction1 = addReaction (dummy, "reaction in A", crn, compartment1, true);
 
-		CRNCompartment compartment2 = addCompartment (dummy2, "compartment in B", crn, false);
-		CRNSubstance substrate2 = addSubstrate (dummy2, "substrate in B", crn, compartment2, false);
+		ReactionNetworkCompartment compartment2 = addCompartment (dummy2, "compartment in B", crn, false);
+		ReactionNetworkSubstance substrate2 = addSubstrate (dummy2, "substrate in B", crn, compartment2, false);
 		//CRNReaction reaction2 = addReaction (dummy2, "reaction in B", crn, compartment2, true);
 		
 		
@@ -259,12 +259,12 @@ public class TestGraphs
 		
 
 		int tmp = 0;
-		for (CRNSubstanceRef ref : reaction1.getInputs ())
+		for (ReactionNetworkSubstanceRef ref : reaction1.getInputs ())
 			tmp += ref.getModification ();
 		assertEquals ("input of reaction doesn't report an insert", GraphEntity.UNMODIFIED + GraphEntity.INSERT, tmp);
 		
 		tmp = 0;
-		for (CRNSubstanceRef ref : reaction1.getOutputs ())
+		for (ReactionNetworkSubstanceRef ref : reaction1.getOutputs ())
 			tmp += ref.getModification ();
 		assertEquals ("input of reaction doesn't report an insert", GraphEntity.UNMODIFIED + GraphEntity.DELETE, tmp);
 		

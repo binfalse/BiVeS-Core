@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  *
  * @author Martin Scharm
  */
-public class CRN
+public class ReactionNetwork
 {
 	
 	/** The reaction id: incremented with every reation to assign ids to reactions. */
@@ -38,25 +38,25 @@ public class CRN
 	private int compartmentID;
 	
 	/** map for reactions. */
-	private HashMap<TreeNode, CRNReaction> crnR;
+	private HashMap<TreeNode, ReactionNetworkReaction> crnR;
 	
 	/** map for substances. */
-	private HashMap<TreeNode, CRNSubstance> crnS;
+	private HashMap<TreeNode, ReactionNetworkSubstance> crnS;
 	
 	/** map for compartments. */
-	private HashMap<TreeNode, CRNCompartment> crnC;
+	private HashMap<TreeNode, ReactionNetworkCompartment> crnC;
 	
 	/**
 	 * Instantiates a new chemical reaction network.
 	 */
-	public CRN ()
+	public ReactionNetwork ()
 	{
 		reactionID = 0;
 		substanceID = 0;
 		compartmentID = 0;
-		crnR = new HashMap<TreeNode, CRNReaction> ();
-		crnS = new HashMap<TreeNode, CRNSubstance> ();
-		crnC = new HashMap<TreeNode, CRNCompartment> ();
+		crnR = new HashMap<TreeNode, ReactionNetworkReaction> ();
+		crnS = new HashMap<TreeNode, ReactionNetworkSubstance> ();
+		crnC = new HashMap<TreeNode, ReactionNetworkCompartment> ();
 	}
 	
 	/**
@@ -64,9 +64,9 @@ public class CRN
 	 *
 	 * @return the substances
 	 */
-	public Collection<CRNSubstance> getSubstances ()
+	public Collection<ReactionNetworkSubstance> getSubstances ()
 	{
-		Set<CRNSubstance> s = new HashSet<CRNSubstance> ();
+		Set<ReactionNetworkSubstance> s = new HashSet<ReactionNetworkSubstance> ();
 		s.addAll (crnS.values ());
 		return s;
 	}
@@ -76,9 +76,9 @@ public class CRN
 	 *
 	 * @return the reactions
 	 */
-	public Collection<CRNReaction> getReactions ()
+	public Collection<ReactionNetworkReaction> getReactions ()
 	{
-		Set<CRNReaction> s = new HashSet<CRNReaction> ();
+		Set<ReactionNetworkReaction> s = new HashSet<ReactionNetworkReaction> ();
 		s.addAll (crnR.values ());
 		return s;
 	}
@@ -88,9 +88,9 @@ public class CRN
 	 *
 	 * @return the compartments
 	 */
-	public Collection<CRNCompartment> getCompartments ()
+	public Collection<ReactionNetworkCompartment> getCompartments ()
 	{
-		Set<CRNCompartment> s = new HashSet<CRNCompartment> ();
+		Set<ReactionNetworkCompartment> s = new HashSet<ReactionNetworkCompartment> ();
 		s.addAll (crnC.values ());
 		return s;
 	}
@@ -133,7 +133,7 @@ public class CRN
 	 * @param node the node
 	 * @param react the react
 	 */
-	public void setReaction (TreeNode node, CRNReaction react)
+	public void setReaction (TreeNode node, ReactionNetworkReaction react)
 	{
 		crnR.put (node, react);
 	}
@@ -144,7 +144,7 @@ public class CRN
 	 * @param node the node
 	 * @param subst the subst
 	 */
-	public void setSubstance (TreeNode node, CRNSubstance subst)
+	public void setSubstance (TreeNode node, ReactionNetworkSubstance subst)
 	{
 		crnS.put (node, subst);
 	}
@@ -155,7 +155,7 @@ public class CRN
 	 * @param node the node
 	 * @param compartment the compartment
 	 */
-	public void setCompartment (TreeNode node, CRNCompartment compartment)
+	public void setCompartment (TreeNode node, ReactionNetworkCompartment compartment)
 	{
 		crnC.put (node, compartment);
 	}
@@ -166,7 +166,7 @@ public class CRN
 	 * @param node the node
 	 * @return the substance
 	 */
-	public CRNSubstance getSubstance (TreeNode node)
+	public ReactionNetworkSubstance getSubstance (TreeNode node)
 	{
 		return crnS.get (node);
 	}
@@ -177,7 +177,7 @@ public class CRN
 	 * @param node the node
 	 * @return the reaction
 	 */
-	public CRNReaction getReaction (TreeNode node)
+	public ReactionNetworkReaction getReaction (TreeNode node)
 	{
 		return crnR.get (node);
 	}
@@ -188,7 +188,7 @@ public class CRN
 	 * @param node the node
 	 * @return the compartment
 	 */
-	public CRNCompartment getCompartment (TreeNode node)
+	public ReactionNetworkCompartment getCompartment (TreeNode node)
 	{
 		return crnC.get (node);
 	}
@@ -198,11 +198,11 @@ public class CRN
 	 */
 	public void setSingleDocument ()
 	{
-		for (CRNReaction r : crnR.values ())
+		for (ReactionNetworkReaction r : crnR.values ())
 			r.setSingleDocument ();
-		for (CRNSubstance s : crnS.values ())
+		for (ReactionNetworkSubstance s : crnS.values ())
 			s.setSingleDocument ();
-		for (CRNCompartment c : crnC.values ())
+		for (ReactionNetworkCompartment c : crnC.values ())
 			c.setSingleDocument ();
 	}
 	

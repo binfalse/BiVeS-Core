@@ -3,8 +3,8 @@
  */
 package de.unirostock.sems.bives.ds.graph;
 
-import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
+import de.unirostock.sems.bives.ds.rn.ReactionNetwork;
 
 
 /**
@@ -24,7 +24,7 @@ public abstract class GraphTranslator
 	 * @return the graph format
 	 * @throws Exception the exception
 	 */
-	public abstract Object translate (CRN crn) throws Exception;
+	public abstract Object translate (ReactionNetwork crn) throws Exception;
 	
 	/**
 	 * Translate a hierarchy network.

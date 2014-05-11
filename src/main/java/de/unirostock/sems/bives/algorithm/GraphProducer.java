@@ -3,8 +3,8 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
-import de.unirostock.sems.bives.ds.crn.CRN;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
+import de.unirostock.sems.bives.ds.rn.ReactionNetwork;
 
 
 /**
@@ -19,7 +19,7 @@ public abstract class GraphProducer
 	protected boolean single;
 	
 	/** The chemical reaction network. */
-	protected CRN crn;
+	protected ReactionNetwork crn;
 	
 	/** The hierarchy network. */
 	protected HierarchyNetwork hn;
@@ -49,11 +49,11 @@ public abstract class GraphProducer
 	 *
 	 * @return the produced chemical reaction network
 	 */
-	public CRN getCRN ()
+	public ReactionNetwork getCRN ()
 	{
 		if (!producedCrn)
 		{
-			crn = new CRN ();
+			crn = new ReactionNetwork ();
 			produceCRN ();
 			producedCrn = true;
 		}

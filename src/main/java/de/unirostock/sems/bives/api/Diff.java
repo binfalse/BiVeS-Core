@@ -159,8 +159,27 @@ public abstract class Diff
 	 * @return the chemical reaction network or null if not available
 	 * @throws Exception
 	 *           the exception
+	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsGraph(de.unirostock.sems.bives.ds.graph.GraphTranslator)}
 	 */
-	public abstract Object getCRNGraph (GraphTranslator gt) throws Exception;
+	@Deprecated
+	public Object getCRNGraph (GraphTranslator gt) throws Exception
+	{
+		return getReactionsGraph (gt);
+	}
+	
+	
+	/**
+	 * Returns the graph of the reaction network providing an own graph
+	 * translator.
+	 * Might return null if not available.
+	 * 
+	 * @param gt
+	 *          the graph translator
+	 * @return the reaction network or null if not available
+	 * @throws Exception
+	 *           the exception
+	 */
+	public abstract Object getReactionsGraph (GraphTranslator gt) throws Exception;
 	
 	
 	/**
@@ -182,8 +201,22 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
+	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsGraphML()}
 	 */
-	public abstract String getCRNGraphML () throws Exception;
+	@Deprecated
+	public String getCRNGraphML () throws Exception
+	{
+		return getReactionsGraphML ();
+	}
+	
+	
+	/**
+	 * Returns the graph of the reaction network encoded in GraphML.
+	 * Might return null if not available.
+	 * 
+	 * @return the reaction network or null if not available
+	 */
+	public abstract String getReactionsGraphML () throws Exception;
 	
 	
 	/**
@@ -200,8 +233,22 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
+	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsDotGraph()}
 	 */
-	public abstract String getCRNDotGraph () throws Exception;
+	@Deprecated
+	public String getCRNDotGraph () throws Exception
+	{
+		return getReactionsDotGraph ();
+	}
+	
+	
+	/**
+	 * Returns the graph of the reaction network encoded in DOT language.
+	 * Might return null if not available.
+	 * 
+	 * @return the reaction network or null if not available
+	 */
+	public abstract String getReactionsDotGraph () throws Exception;
 	
 	
 	/**
@@ -218,8 +265,22 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
+	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsJsonGraph()}
 	 */
-	public abstract String getCRNJsonGraph () throws Exception;
+	@Deprecated
+	public  String getCRNJsonGraph () throws Exception
+	{
+		return getReactionsJsonGraph ();
+	}
+	
+	
+	/**
+	 * Returns the graph of the reaction network encoded in JSON.
+	 * Might return null if not available.
+	 * 
+	 * @return the reaction network or null if not available
+	 */
+	public abstract String getReactionsJsonGraph () throws Exception;
 	
 	
 	/**

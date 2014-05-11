@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
@@ -11,8 +11,8 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
  *
  * @author Martin Scharm
  */
-public class CRNCompartment
-extends CRNEntity
+public class ReactionNetworkCompartment
+extends ReactionNetworkEntity
 {
 
 	/**
@@ -24,7 +24,7 @@ extends CRNEntity
 	 * @param docA the original document
 	 * @param docB the modified document
 	 */
-	public CRNCompartment (CRN crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
+	public ReactionNetworkCompartment (ReactionNetwork crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
 	{
 		super ("c" + crn.getNextCompartmentID (), labelA, labelB, docA, docB);
 	}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
@@ -13,7 +13,7 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  *
  * @author Martin Scharm
  */
-public abstract class CRNEntity
+public abstract class ReactionNetworkEntity
 implements GraphEntity
 {
 	/** The id of this entity. */
@@ -37,7 +37,7 @@ implements GraphEntity
 	 * @param docA the original document
 	 * @param docB the modified document
 	 */
-	public CRNEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
+	public ReactionNetworkEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
 	{
 		this.id = entityId;
 		this.labelA = labelA;

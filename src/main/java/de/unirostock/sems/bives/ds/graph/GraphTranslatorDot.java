@@ -10,15 +10,15 @@ import java.util.List;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.GraphEntity;
-import de.unirostock.sems.bives.ds.crn.CRN;
-import de.unirostock.sems.bives.ds.crn.CRNCompartment;
-import de.unirostock.sems.bives.ds.crn.CRNReaction;
-import de.unirostock.sems.bives.ds.crn.CRNSubstance;
-import de.unirostock.sems.bives.ds.crn.CRNSubstanceRef;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkVariable;
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
+import de.unirostock.sems.bives.ds.rn.ReactionNetwork;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkCompartment;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkReaction;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstance;
+import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
 import de.unirostock.sems.bives.markup.Typesetting;
 
 
@@ -223,7 +223,7 @@ public class GraphTranslatorDot
 	 *          the nodes of that compartment
 	 * @return the string
 	 */
-	private String createCompartment (CRNCompartment compartment,
+	private String createCompartment (ReactionNetworkCompartment compartment,
 		List<String> nodeList)
 	{
 		String ret = "\tsubgraph cluster" + compartment.getId () + " {"
@@ -246,7 +246,7 @@ public class GraphTranslatorDot
 	 * .sems.bives.ds.graph.CRN)
 	 */
 	@Override
-	public String translate (CRN crn)
+	public String translate (ReactionNetwork crn)
 	{
 		if (crn == null)
 			return null;
@@ -254,15 +254,15 @@ public class GraphTranslatorDot
 		dotStr = getDotPreamble ();
 		
 		List<String> edges = new ArrayList<String> ();
-		HashMap<CRNCompartment, List<String>> compartments = new HashMap<CRNCompartment, List<String>> ();
-		for (CRNCompartment c : crn.getCompartments ())
+		HashMap<ReactionNetworkCompartment, List<String>> compartments = new HashMap<ReactionNetworkCompartment, List<String>> ();
+		for (ReactionNetworkCompartment c : crn.getCompartments ())
 		{
 			compartments.put (c, new ArrayList<String> ());
 		}
 		
-		for (CRNSubstance s : crn.getSubstances ())
+		for (ReactionNetworkSubstance s : crn.getSubstances ())
 		{
-			CRNCompartment compartment = s.getCompartment ();
+			ReactionNetworkCompartment compartment = s.getCompartment ();
 			if (compartment != null)
 				compartments.get (compartment).add (
 					addNode (s.getId (), s.getLabel (), s.getModification (), true));
@@ -271,9 +271,9 @@ public class GraphTranslatorDot
 					true);
 		}
 		
-		for (CRNReaction r : crn.getReactions ())
+		for (ReactionNetworkReaction r : crn.getReactions ())
 		{
-			CRNCompartment compartment = r.getCompartment ();
+			ReactionNetworkCompartment compartment = r.getCompartment ();
 			if (compartment != null)
 				compartments.get (compartment).add (
 					addNode (r.getId (), r.getLabel (), r.getModification (), false));
@@ -281,15 +281,15 @@ public class GraphTranslatorDot
 				dotStr += addNode (r.getId (), r.getLabel (), r.getModification (),
 					false);
 			
-			for (CRNSubstanceRef s : r.getInputs ())
+			for (ReactionNetworkSubstanceRef s : r.getInputs ())
 				edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
 					s.getModification (), SBOTerm.MOD_NONE));
 			
-			for (CRNSubstanceRef s : r.getOutputs ())
+			for (ReactionNetworkSubstanceRef s : r.getOutputs ())
 				edges.add (addEdge (r.getId (), s.getSubstance ().getId (),
 					s.getModification (), SBOTerm.MOD_NONE));
 			
-			for (CRNSubstanceRef s : r.getModifiers ())
+			for (ReactionNetworkSubstanceRef s : r.getModifiers ())
 			{
 				/*if (s.getModification () == CRN.MODIFIED)
 				{
@@ -304,7 +304,7 @@ public class GraphTranslatorDot
 			}
 		}
 		
-		for (CRNCompartment compartment : compartments.keySet ())
+		for (ReactionNetworkCompartment compartment : compartments.keySet ())
 		{
 			dotStr += createCompartment (compartment, compartments.get (compartment));
 		}

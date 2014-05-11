@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unirostock.sems.bives.ds.crn;
+package de.unirostock.sems.bives.ds.rn;
 
 import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.ontology.SBOTerm;
@@ -13,12 +13,12 @@ import de.unirostock.sems.bives.exception.BivesUnsupportedException;
  *
  * @author Martin Scharm
  */
-public class CRNSubstanceRef
+public class ReactionNetworkSubstanceRef
 implements GraphEntity
 {
 	
 	/** The substance. */
-	public CRNSubstance subst;
+	public ReactionNetworkSubstance subst;
 	
 	/** The reference existent in versions A/B. */
 	private boolean refA, refB;
@@ -39,7 +39,7 @@ implements GraphEntity
 	 * @param modTermB the modification type in the original version
 	 * @throws BivesUnsupportedException 
 	 */
-	public CRNSubstanceRef (CRNSubstance subst, boolean flagA, boolean flagB, SBOTerm modTermA, SBOTerm modTermB)
+	public ReactionNetworkSubstanceRef (ReactionNetworkSubstance subst, boolean flagA, boolean flagB, SBOTerm modTermA, SBOTerm modTermB)
 		throws BivesUnsupportedException
 	{
 		this.subst = subst;
@@ -87,7 +87,7 @@ implements GraphEntity
 	 *
 	 * @return the substance
 	 */
-	public CRNSubstance getSubstance ()
+	public ReactionNetworkSubstance getSubstance ()
 	{
 		return subst;
 	}
