@@ -7,7 +7,7 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 
 /**
- * The Class CRNSubstance representing a substance in a chemical reaction network.
+ * The Class ReactionNetworkSubstance representing a substance in a reaction network.
  *
  * @author Martin Scharm
  */
@@ -18,9 +18,9 @@ extends ReactionNetworkEntity
 	private ReactionNetworkCompartment compartmentA, compartmentB;
 
 	/**
-	 * Instantiates a new substance in a chemical reaction network.
+	 * Instantiates a new substance in a reaction network.
 	 *
-	 * @param crn the chemical reaction network
+	 * @param rn the reaction network
 	 * @param labelA the label of that compartment in the original document
 	 * @param labelB the label of that compartment in the modified document
 	 * @param docA the original document
@@ -28,9 +28,9 @@ extends ReactionNetworkEntity
 	 * @param compartmentA the compartment a
 	 * @param compartmentB the compartment b
 	 */
-	public ReactionNetworkSubstance (ReactionNetwork crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB)
+	public ReactionNetworkSubstance (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB)
 	{
-		super ("s" + crn.getNextSubstanceID (), labelA, labelB, docA, docB);
+		super ("s" + rn.getNextSubstanceID (), labelA, labelB, docA, docB);
 		this.compartmentA = compartmentA;
 		this.compartmentB = compartmentB;
 		singleDoc = false;

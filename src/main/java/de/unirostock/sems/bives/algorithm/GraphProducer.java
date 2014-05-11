@@ -18,14 +18,14 @@ public abstract class GraphProducer
 	/** The single flag. */
 	protected boolean single;
 	
-	/** The chemical reaction network. */
-	protected ReactionNetwork crn;
+	/** The reaction network. */
+	protected ReactionNetwork rn;
 	
 	/** The hierarchy network. */
 	protected HierarchyNetwork hn;
 
-	/** The flag for a produced chemical reaction network. */
-	private boolean producedCrn;
+	/** The flag for a produced reaction network. */
+	private boolean producedRn;
 	
 	/** The flag for a produced hierarchy network. */
 	private boolean producedHn;
@@ -39,7 +39,7 @@ public abstract class GraphProducer
 	{
 		this.single = single;
 
-		producedCrn = false;
+		producedRn = false;
 		producedHn = false;
 	}
 	
@@ -48,16 +48,29 @@ public abstract class GraphProducer
 	 * Might return null if not available.
 	 *
 	 * @return the produced chemical reaction network
+	 * @deprecated As of 1.3.3 replaced by {@link #getReactionNetwork()}
 	 */
+	@Deprecated
 	public ReactionNetwork getCRN ()
 	{
-		if (!producedCrn)
+		return getReactionNetwork ();
+	}
+	
+	/**
+	 * Gets the reaction network graph. Calling it for the first time takes a bit longer to compute the network ;-)
+	 * Might return null if not available.
+	 *
+	 * @return the produced reaction network
+	 */
+	public ReactionNetwork getReactionNetwork ()
+	{
+		if (!producedRn)
 		{
-			crn = new ReactionNetwork ();
-			produceCRN ();
-			producedCrn = true;
+			rn = new ReactionNetwork ();
+			produceReactionNetwork ();
+			producedRn = true;
 		}
-		return crn;
+		return rn;
 	}
 	
 	/**
@@ -78,9 +91,9 @@ public abstract class GraphProducer
 	}
 	
 	/**
-	 * Produce the chemical reaction network.
+	 * Produce the reaction network.
 	 */
-	protected abstract void produceCRN ();
+	protected abstract void produceReactionNetwork ();
 	
 	/**
 	 * Produce hierarchy graph.

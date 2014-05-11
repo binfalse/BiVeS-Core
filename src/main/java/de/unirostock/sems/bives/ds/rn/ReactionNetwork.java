@@ -13,13 +13,13 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
- * The Class CRN representing a chemical reaction network.
+ * The Class ReactionNetwork representing a reaction network.
  * 
  * <p>
- * A CRN contains compartments, which may contain species and reactions.
+ * A ReactionNetwork contains compartments, which may contain species and reactions.
  * There may be directed connections between species and reactions representing relationships like reactants, products, modifiers etc.
  * <br>
- * see also <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/ChemicalReactionNetwork">ChemicalReactionNetwork</a>
+ * see also <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/ReactionNetwork">ReactionNetwork</a>
  * </p>
  * 
  *
@@ -38,25 +38,25 @@ public class ReactionNetwork
 	private int compartmentID;
 	
 	/** map for reactions. */
-	private HashMap<TreeNode, ReactionNetworkReaction> crnR;
+	private HashMap<TreeNode, ReactionNetworkReaction> rnR;
 	
 	/** map for substances. */
-	private HashMap<TreeNode, ReactionNetworkSubstance> crnS;
+	private HashMap<TreeNode, ReactionNetworkSubstance> rnS;
 	
 	/** map for compartments. */
-	private HashMap<TreeNode, ReactionNetworkCompartment> crnC;
+	private HashMap<TreeNode, ReactionNetworkCompartment> rnC;
 	
 	/**
-	 * Instantiates a new chemical reaction network.
+	 * Instantiates a new reaction network.
 	 */
 	public ReactionNetwork ()
 	{
 		reactionID = 0;
 		substanceID = 0;
 		compartmentID = 0;
-		crnR = new HashMap<TreeNode, ReactionNetworkReaction> ();
-		crnS = new HashMap<TreeNode, ReactionNetworkSubstance> ();
-		crnC = new HashMap<TreeNode, ReactionNetworkCompartment> ();
+		rnR = new HashMap<TreeNode, ReactionNetworkReaction> ();
+		rnS = new HashMap<TreeNode, ReactionNetworkSubstance> ();
+		rnC = new HashMap<TreeNode, ReactionNetworkCompartment> ();
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class ReactionNetwork
 	public Collection<ReactionNetworkSubstance> getSubstances ()
 	{
 		Set<ReactionNetworkSubstance> s = new HashSet<ReactionNetworkSubstance> ();
-		s.addAll (crnS.values ());
+		s.addAll (rnS.values ());
 		return s;
 	}
 	
@@ -79,7 +79,7 @@ public class ReactionNetwork
 	public Collection<ReactionNetworkReaction> getReactions ()
 	{
 		Set<ReactionNetworkReaction> s = new HashSet<ReactionNetworkReaction> ();
-		s.addAll (crnR.values ());
+		s.addAll (rnR.values ());
 		return s;
 	}
 	
@@ -91,7 +91,7 @@ public class ReactionNetwork
 	public Collection<ReactionNetworkCompartment> getCompartments ()
 	{
 		Set<ReactionNetworkCompartment> s = new HashSet<ReactionNetworkCompartment> ();
-		s.addAll (crnC.values ());
+		s.addAll (rnC.values ());
 		return s;
 	}
 	
@@ -135,7 +135,7 @@ public class ReactionNetwork
 	 */
 	public void setReaction (TreeNode node, ReactionNetworkReaction react)
 	{
-		crnR.put (node, react);
+		rnR.put (node, react);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ public class ReactionNetwork
 	 */
 	public void setSubstance (TreeNode node, ReactionNetworkSubstance subst)
 	{
-		crnS.put (node, subst);
+		rnS.put (node, subst);
 	}
 	
 	/**
@@ -157,7 +157,7 @@ public class ReactionNetwork
 	 */
 	public void setCompartment (TreeNode node, ReactionNetworkCompartment compartment)
 	{
-		crnC.put (node, compartment);
+		rnC.put (node, compartment);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class ReactionNetwork
 	 */
 	public ReactionNetworkSubstance getSubstance (TreeNode node)
 	{
-		return crnS.get (node);
+		return rnS.get (node);
 	}
 	
 	/**
@@ -179,7 +179,7 @@ public class ReactionNetwork
 	 */
 	public ReactionNetworkReaction getReaction (TreeNode node)
 	{
-		return crnR.get (node);
+		return rnR.get (node);
 	}
 	
 	/**
@@ -190,7 +190,7 @@ public class ReactionNetwork
 	 */
 	public ReactionNetworkCompartment getCompartment (TreeNode node)
 	{
-		return crnC.get (node);
+		return rnC.get (node);
 	}
 
 	/**
@@ -198,11 +198,11 @@ public class ReactionNetwork
 	 */
 	public void setSingleDocument ()
 	{
-		for (ReactionNetworkReaction r : crnR.values ())
+		for (ReactionNetworkReaction r : rnR.values ())
 			r.setSingleDocument ();
-		for (ReactionNetworkSubstance s : crnS.values ())
+		for (ReactionNetworkSubstance s : rnS.values ())
 			s.setSingleDocument ();
-		for (ReactionNetworkCompartment c : crnC.values ())
+		for (ReactionNetworkCompartment c : rnC.values ())
 			c.setSingleDocument ();
 	}
 	

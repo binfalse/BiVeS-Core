@@ -192,12 +192,12 @@ public class GraphTranslatorGraphML
 	 * 
 	 * @see
 	 * de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock
-	 * .sems.bives.ds.graph.CRN)
+	 * .sems.bives.ds.graph.rn.ReactionNetwork)
 	 */
 	@Override
-	public String translate (ReactionNetwork crn)
+	public String translate (ReactionNetwork rn)
 	{
-		if (crn == null)
+		if (rn == null)
 			return null;
 		
 		/*graphDocument = DocumentBuilderFactory.newInstance ().newDocumentBuilder ()
@@ -210,7 +210,7 @@ public class GraphTranslatorGraphML
 		HashMap<ReactionNetworkCompartment, Element> compartments = new HashMap<ReactionNetworkCompartment, Element> ();
 		graphid = 1;
 		
-		for (ReactionNetworkCompartment c : crn.getCompartments ())
+		for (ReactionNetworkCompartment c : rn.getCompartments ())
 		{
 			Element node = createGraphMLNode (graphRoot, c.getId (), null,
 				c.getLabel (), c.getModification () + "");
@@ -219,7 +219,7 @@ public class GraphTranslatorGraphML
 			compartments.put (c, compartment);
 		}
 		
-		for (ReactionNetworkSubstance s : crn.getSubstances ())
+		for (ReactionNetworkSubstance s : rn.getSubstances ())
 		{
 			ReactionNetworkCompartment compartment = s.getCompartment ();
 			if (compartment != null)
@@ -230,7 +230,7 @@ public class GraphTranslatorGraphML
 					s.getModification () + "");
 		}
 		
-		for (ReactionNetworkReaction r : crn.getReactions ())
+		for (ReactionNetworkReaction r : rn.getReactions ())
 		{
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			if (compartment != null)
@@ -250,12 +250,12 @@ public class GraphTranslatorGraphML
 			
 			for (ReactionNetworkSubstanceRef s : r.getModifiers ())
 			{
-				/*if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == ReactionNetwork.MODIFIED)
 				{
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
-						CRN.DELETE + "", s.getModTermA ());
+						ReactionNetwork.DELETE + "", s.getModTermA ());
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),
-						CRN.INSERT + "", s.getModTermB ());
+						ReactionNetwork.INSERT + "", s.getModTermB ());
 				}
 				else*/
 					createEdge (graphRoot, s.getSubstance ().getId (), r.getId (),

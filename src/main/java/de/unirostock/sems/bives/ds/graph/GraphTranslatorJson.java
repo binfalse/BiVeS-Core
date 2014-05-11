@@ -276,21 +276,21 @@ public class GraphTranslatorJson
 	 * 
 	 * @see
 	 * de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock
-	 * .sems.bives.ds.graph.CRN)
+	 * .sems.bives.ds.graph.rn.ReactionNetwork)
 	 */
 	@Override
-	public String translate (ReactionNetwork crn)
+	public String translate (ReactionNetwork rn)
 	{
-		if (crn == null)
+		if (rn == null)
 			return null;
 		
 		startNewGraph ();
-		for (ReactionNetworkCompartment c : crn.getCompartments ())
+		for (ReactionNetworkCompartment c : rn.getCompartments ())
 		{
 			createCompartment (c.getId (), c.getLabel (), c.getModification ());
 		}
 		
-		for (ReactionNetworkSubstance s : crn.getSubstances ())
+		for (ReactionNetworkSubstance s : rn.getSubstances ())
 		{
 			ReactionNetworkCompartment compartment = s.getCompartment ();
 			if (compartment != null)
@@ -300,7 +300,7 @@ public class GraphTranslatorJson
 				addNode (null, s.getId (), s.getLabel (), s.getModification (), true);
 		}
 		
-		for (ReactionNetworkReaction r : crn.getReactions ())
+		for (ReactionNetworkReaction r : rn.getReactions ())
 		{
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			if (compartment != null)
@@ -319,11 +319,11 @@ public class GraphTranslatorJson
 			
 			for (ReactionNetworkSubstanceRef s : r.getModifiers ())
 			{
-				/*if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == ReactionNetwork.MODIFIED)
 				{
-					addEdge (s.getSubstance ().getId (), r.getId (), CRN.DELETE,
+					addEdge (s.getSubstance ().getId (), r.getId (), ReactionNetwork.DELETE,
 						s.getModTermA ());
-					addEdge (s.getSubstance ().getId (), r.getId (), CRN.INSERT,
+					addEdge (s.getSubstance ().getId (), r.getId (), ReactionNetwork.INSERT,
 						s.getModTermB ());
 				}
 				else*/

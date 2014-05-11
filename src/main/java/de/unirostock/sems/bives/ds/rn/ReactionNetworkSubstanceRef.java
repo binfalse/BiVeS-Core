@@ -9,7 +9,7 @@ import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 
 
 /**
- * The Class CRNSubstanceRef representing a reference to a CRNSubstance.
+ * The Class ReactionNetworkSubstanceRef representing a reference to a {@link de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstance}.
  *
  * @author Martin Scharm
  */

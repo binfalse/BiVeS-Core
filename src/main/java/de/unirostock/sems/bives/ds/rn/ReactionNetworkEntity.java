@@ -9,7 +9,7 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 
 
 /**
- * The Class CRNEntity representing an entity in a chemical reaction network.
+ * The Class ReactionNetworkEntity representing an entity in a reaction network.
  *
  * @author Martin Scharm
  */

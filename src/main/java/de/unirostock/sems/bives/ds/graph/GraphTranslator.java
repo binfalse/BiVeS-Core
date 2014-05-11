@@ -17,14 +17,14 @@ public abstract class GraphTranslator
 {
 	
 	/**
-	 * Translate a chemical reaction network.
+	 * Translate a reaction network.
 	 * Might return null if not available.
 	 *
-	 * @param crn the internal chemical reaction network
+	 * @param rn the internal reaction network
 	 * @return the graph format
 	 * @throws Exception the exception
 	 */
-	public abstract Object translate (ReactionNetwork crn) throws Exception;
+	public abstract Object translate (ReactionNetwork rn) throws Exception;
 	
 	/**
 	 * Translate a hierarchy network.

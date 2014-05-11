@@ -14,7 +14,7 @@ import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class CRNReaction representing a reaction in a chemical reaction network.
+ * The Class ReactionNetworkReaction representing a reaction in a reaction network.
  *
  * @author Martin Scharm
  */
@@ -36,12 +36,11 @@ extends ReactionNetworkEntity
 	
 	/** The mod. */
 	private Vector<ReactionNetworkSubstanceRef> mod;
-	//private HashMap<CRNSubstance, CRNSubstanceRef> mod;
 	
 	/**
-	 * Instantiates a new cRN reaction.
+	 * Instantiates a new ReactionNetwork reaction.
 	 *
-	 * @param crn the chemical reaction network
+	 * @param rn the reaction network
 	 * @param labelA the label of that reaction in the original document
 	 * @param labelB the label of that reaction in the modified document
 	 * @param docA the original document
@@ -50,9 +49,9 @@ extends ReactionNetworkEntity
 	 * @param compartmentB the compartment b
 	 * @param reversible the reversible flag
 	 */
-	public ReactionNetworkReaction (ReactionNetwork crn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB, boolean reversible)
+	public ReactionNetworkReaction (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB, boolean reversible)
 	{
-		super ("r" + crn.getNextReactionID (), labelA, labelB, docA, docB);
+		super ("r" + rn.getNextReactionID (), labelA, labelB, docA, docB);
 		in = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
 		out = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
 		mod = new Vector<ReactionNetworkSubstanceRef> ();
@@ -341,7 +340,7 @@ extends ReactionNetworkEntity
 	
 	
 	/* (non-Javadoc)
-	 * @see de.unirostock.sems.bives.ds.crn.CRNEntity#getModification()
+	 * @see de.unirostock.sems.bives.ds.rn.ReactionNetworkEntity#getModification()
 	 */
 	public int getModification ()
 	{

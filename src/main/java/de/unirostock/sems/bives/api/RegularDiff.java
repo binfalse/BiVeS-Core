@@ -99,7 +99,7 @@ public class RegularDiff
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * de.unirostock.sems.bives.api.Diff#getCRNGraph(de.unirostock.sems.bives.
+	 * de.unirostock.sems.bives.api.Diff#getReactionsGraph(de.unirostock.sems.bives.
 	 * ds.graph.GraphTranslator)
 	 */
 	@Override
@@ -112,7 +112,7 @@ public class RegularDiff
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.unirostock.sems.bives.api.Diff#getGraphML()
+	 * @see de.unirostock.sems.bives.api.Diff#getReactionsGraphML()
 	 */
 	@Override
 	public String getReactionsGraphML ()
@@ -124,7 +124,7 @@ public class RegularDiff
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.unirostock.sems.bives.api.Diff#getDotGraph()
+	 * @see de.unirostock.sems.bives.api.Diff#getReactionsDotGraph()
 	 */
 	@Override
 	public String getReactionsDotGraph ()
@@ -210,7 +210,7 @@ public class RegularDiff
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.unirostock.sems.bives.api.Diff#getCRNJsonGraph()
+	 * @see de.unirostock.sems.bives.api.Diff#getReactionsJsonGraph()
 	 */
 	@Override
 	public String getReactionsJsonGraph ()

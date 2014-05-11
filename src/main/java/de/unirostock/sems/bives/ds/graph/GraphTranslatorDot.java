@@ -218,7 +218,7 @@ public class GraphTranslatorDot
 	 * Creates a compartment.
 	 * 
 	 * @param compartment
-	 *          the compartment as found in the chemical reaction network
+	 *          the compartment as found in the reaction network
 	 * @param nodeList
 	 *          the nodes of that compartment
 	 * @return the string
@@ -243,24 +243,24 @@ public class GraphTranslatorDot
 	 * 
 	 * @see
 	 * de.unirostock.sems.bives.ds.graph.GraphTranslator#translate(de.unirostock
-	 * .sems.bives.ds.graph.CRN)
+	 * .sems.bives.ds.graph.rn.ReactionNetwork)
 	 */
 	@Override
-	public String translate (ReactionNetwork crn)
+	public String translate (ReactionNetwork rn)
 	{
-		if (crn == null)
+		if (rn == null)
 			return null;
 		
 		dotStr = getDotPreamble ();
 		
 		List<String> edges = new ArrayList<String> ();
 		HashMap<ReactionNetworkCompartment, List<String>> compartments = new HashMap<ReactionNetworkCompartment, List<String>> ();
-		for (ReactionNetworkCompartment c : crn.getCompartments ())
+		for (ReactionNetworkCompartment c : rn.getCompartments ())
 		{
 			compartments.put (c, new ArrayList<String> ());
 		}
 		
-		for (ReactionNetworkSubstance s : crn.getSubstances ())
+		for (ReactionNetworkSubstance s : rn.getSubstances ())
 		{
 			ReactionNetworkCompartment compartment = s.getCompartment ();
 			if (compartment != null)
@@ -271,7 +271,7 @@ public class GraphTranslatorDot
 					true);
 		}
 		
-		for (ReactionNetworkReaction r : crn.getReactions ())
+		for (ReactionNetworkReaction r : rn.getReactions ())
 		{
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			if (compartment != null)
@@ -291,12 +291,12 @@ public class GraphTranslatorDot
 			
 			for (ReactionNetworkSubstanceRef s : r.getModifiers ())
 			{
-				/*if (s.getModification () == CRN.MODIFIED)
+				/*if (s.getModification () == ReactionNetwork.MODIFIED)
 				{
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
-						CRN.DELETE, s.getModTermA ()));
+						ReactionNetwork.DELETE, s.getModTermA ()));
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
-						CRN.INSERT, s.getModTermB ()));
+						ReactionNetwork.INSERT, s.getModTermB ()));
 				}
 				else*/
 					edges.add (addEdge (s.getSubstance ().getId (), r.getId (),
