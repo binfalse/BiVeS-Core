@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by JWS2SBML on 2011/04/04 15:53:02-->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
+	<model name="BSA">
+		<listOfCompartments>
+			<compartment id="compartment1" name="compartment" size="1"/>
+		</listOfCompartments>
+		<listOfSpecies>
+			<species id="IPTG" name="IPTG" compartment="compartment1" initialConcentration="100" boundaryCondition="true" constant="true"/>
+			<species id="sigb" name="sigb" compartment="compartment1" initialConcentration="0"/>
+			<species id="lacz" name="lacz" compartment="compartment1" initialConcentration="0"/>
+			<species id="x" name="x" compartment="compartment1" initialConcentration="0"/>
+		</listOfSpecies>
+		<listOfParameters>
+			<parameter id="compartment" name="compartment" value="1"/>
+			<parameter id="EXTERNAL" name="EXTERNAL" value="0"/>
+			<parameter id="kbd" name="kbd" value="4.4"/>
+			<parameter id="kbs" name="kbs" value="100"/>
+			<parameter id="kxd" name="kxd" value="608.2"/>
+			<parameter id="kxs" name="kxs" value="0.18"/>
+			<parameter id="kzd" name="kzd" value="0.028"/>
+			<parameter id="kzs" name="kzs" value="0.00035"/>
+		</listOfParameters>
+		<listOfReactions>
+			<reaction id="v1" name="sigb syn">
+				<listOfProducts>
+					<speciesReference species="sigb"/>
+				</listOfProducts>
+				<listOfModifiers>
+					<modifierSpeciesReference species="IPTG" sboTerm="SBO:0000459"/>
+				</listOfModifiers>
+			</reaction>
+			<reaction id="v2" name="lacz syn">
+				<listOfProducts>
+					<speciesReference species="lacz"/>
+				</listOfProducts>
+				<listOfModifiers>
+					<modifierSpeciesReference species="sigb" sboTerm="SBO:0000459"/>
+				</listOfModifiers>
+			</reaction>
+			<reaction id="v3" name="x syn">
+				<listOfProducts>
+					<speciesReference species="x"/>
+				</listOfProducts>
+			</reaction>
+			<reaction id="v4" name="sigb degr">
+				<listOfReactants>
+					<speciesReference species="sigb"/>
+				</listOfReactants>
+			</reaction>
+			<reaction id="v5" name="lacz degr">
+				<listOfReactants>
+					<speciesReference species="lacz"/>
+				</listOfReactants>
+				<listOfModifiers>
+					<modifierSpeciesReference species="x" sboTerm="SBO:0000459"/>
+				</listOfModifiers>
+			</reaction>
+		</listOfReactions>
+		</model>
+</sbml>

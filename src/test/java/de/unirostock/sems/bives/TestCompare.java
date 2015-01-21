@@ -6,7 +6,9 @@ package de.unirostock.sems.bives;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.jdom2.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,7 @@ import de.unirostock.sems.bives.api.RegularDiff;
 import de.unirostock.sems.bives.ds.Patch;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
+import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 import de.unirostock.sems.xmlutils.tools.DocumentTools;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
 
@@ -34,6 +37,9 @@ public class TestCompare
 
 	private static TreeDocument simpleFile;
 
+	/**
+	 * Read files.
+	 */
 	@BeforeClass
 	public static void readFiles ()
 	{
@@ -54,6 +60,76 @@ public class TestCompare
 		}
 	}
 	
+	
+	/**
+	 * Test mod compare liebal stuff.
+	 */
+	@Test
+	public void testModCompareLiebal ()
+	{
+		try
+		{
+			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/liebal-2012/BSA-laczsynth-2012-11-10")), null);
+			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/liebal-2012/BSA-laczsynth-2012-11-11")), null);
+			
+			
+		// ok, let's ask bives for its opinion on that
+			Diff diff = new RegularDiff (supp1, supp2);
+			diff.mapTrees ();
+			Patch patch = diff.getPatch ();
+			TestPatching.checkPatch (patch);
+			
+			assertEquals ("expected 3 inserts", 3, patch.getNumInserts ());
+			assertEquals ("expected 0 deletes|updates|moves", 0, patch.getNumDeletes () + patch.getNumUpdates () + patch.getNumMoves ());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail ("unexpected error comparing paper supplementals: " + e);
+		}
+	}
+	
+	
+	/**
+	 * Test mod compare supp paper.
+	 */
+	@Test
+	public void testModCompareSuppPaper ()
+	{
+		try
+		{
+			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/paper-supp-1.xml")), null);
+			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/paper-supp-2.xml")), null);
+			assertFalse ("copy and original do not differ!?", supp1.equals (supp2));
+			
+		// ok, let's ask bives for its opinion on that
+			Diff diff = new RegularDiff (supp1, supp2);
+			diff.mapTrees ();
+			Patch patch = diff.getPatch ();
+			TestPatching.checkPatch (patch);
+			
+			assertEquals ("expected 5 deletes", 5, patch.getNumDeletes ());
+			assertEquals ("expected 8 inserts", 8, patch.getNumInserts ());
+			// TODO
+			if (0 != patch.getNumMoves ())
+			{
+				LOGGER.warn (diff.getDiff ());
+				LOGGER.warn ("I don't want a move here!");
+				/*assertEquals ("I don't want a move here!", 0, 
+					patch.getNumMoves ());*/
+			}
+			assertEquals ("expected 0 updates", 0, patch.getNumUpdates ());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail ("unexpected error comparing paper supplementals: " + e);
+		}
+	}
+	
+	/**
+	 * Test mod compare.
+	 */
 	@Test
 	public void testModCompare ()
 	{

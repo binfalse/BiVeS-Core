@@ -1,0 +1,35 @@
+    <listOfReactions>
+      <reaction metaid="metaid_0000063" id="R3" name="cyclin-cdc2 dimer formation" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/" >
+<rdf:Description rdf:about="#metaid_0000063">
+<bqbiol:isVersionOf>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0030332"/>
+</rdf:Bag>
+</bqbiol:isVersionOf>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+
+        <listOfReactants>
+          <speciesReference species="cyclin"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="dimer"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="cdc2"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k3 </ci>
+              <ci> cyclin </ci>
+              <ci> cdc2 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
