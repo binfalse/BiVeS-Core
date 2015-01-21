@@ -41,6 +41,8 @@ public class XyDiffConnector
 
 	/**
 	 * Instantiates a new XyDiffConnector. In this setting we'll run an ID mapper before we do our work.
+	 * @param docA the original document
+	 * @param docB the modified document
 	 */
 	public XyDiffConnector (TreeDocument docA, TreeDocument docB)
 	{
