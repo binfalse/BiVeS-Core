@@ -18,12 +18,16 @@ implements GraphEntity
 {
 	/** The id of this entity. */
 	protected String id;
-	
-	/** The labels in docs A and B. */
-	protected String labelA, labelB;
-	
-	/** The documents A and B. */
-	protected DocumentNode docA, docB;
+
+	/** The labels in original doc. */
+	protected String labelA;
+	/** The labels in modified doc. */
+	protected String labelB;
+
+	/** The original document. */
+	protected DocumentNode docA;
+	/** The modified document. */
+	protected DocumentNode docB;
 	
 	/** The single doc flag if in single-doc-operation-mode. */
 	protected boolean singleDoc;

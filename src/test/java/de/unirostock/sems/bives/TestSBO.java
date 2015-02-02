@@ -18,6 +18,10 @@ import de.unirostock.sems.bives.ds.ontology.SBOTerm;
 @RunWith(JUnit4.class)
 public class TestSBO
 {
+	
+	/**
+	 * Test statics.
+	 */
 	@Test
 	public void testStatics ()
 	{

@@ -199,8 +199,9 @@ public abstract class Diff
 	/**
 	 * Returns the graph of the chemical reaction network encoded in GraphML.
 	 * Might return null if not available.
-	 * 
+	 *
 	 * @return the chemical reaction network or null if not available
+	 * @throws Exception the exception
 	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsGraphML()}
 	 */
 	@Deprecated
@@ -213,8 +214,9 @@ public abstract class Diff
 	/**
 	 * Returns the graph of the reaction network encoded in GraphML.
 	 * Might return null if not available.
-	 * 
+	 *
 	 * @return the reaction network or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getReactionsGraphML () throws Exception;
 	
@@ -222,8 +224,9 @@ public abstract class Diff
 	/**
 	 * Returns the component's hierarchy graph encoded in GraphML.
 	 * Might return null if not available.
-	 * 
+	 *
 	 * @return the hierarchy graph or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getHierarchyGraphML () throws Exception;
 	
@@ -231,8 +234,9 @@ public abstract class Diff
 	/**
 	 * Returns the graph of the chemical reaction network encoded in DOT language.
 	 * Might return null if not available.
-	 * 
+	 *
 	 * @return the chemical reaction network or null if not available
+	 * @throws Exception the exception
 	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsDotGraph()}
 	 */
 	@Deprecated
@@ -245,8 +249,9 @@ public abstract class Diff
 	/**
 	 * Returns the graph of the reaction network encoded in DOT language.
 	 * Might return null if not available.
-	 * 
+	 *
 	 * @return the reaction network or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getReactionsDotGraph () throws Exception;
 	
@@ -256,6 +261,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getHierarchyDotGraph () throws Exception;
 	
@@ -265,6 +271,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the chemical reaction network or null if not available
+	 * @throws Exception the exception
 	 * @deprecated As of 1.3.3 replaced by {@link #getReactionsJsonGraph()}
 	 */
 	@Deprecated
@@ -279,6 +286,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the reaction network or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getReactionsJsonGraph () throws Exception;
 	
@@ -288,6 +296,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the hierarchy graph or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getHierarchyJsonGraph () throws Exception;
 	
@@ -299,6 +308,7 @@ public abstract class Diff
 	 * @param ts
 	 *          the ts
 	 * @return the report or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getReport (Typesetting ts) throws Exception;
 	
@@ -308,6 +318,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the hTML report or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getHTMLReport () throws Exception;
 	
@@ -317,6 +328,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the mark down report or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getMarkDownReport () throws Exception;
 	
@@ -326,6 +338,7 @@ public abstract class Diff
 	 * Might return null if not available.
 	 * 
 	 * @return the ReStructured text report or null if not available
+	 * @throws Exception the exception
 	 */
 	public abstract String getReStructuredTextReport () throws Exception;
 	

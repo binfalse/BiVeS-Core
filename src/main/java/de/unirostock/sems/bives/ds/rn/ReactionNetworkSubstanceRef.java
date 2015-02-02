@@ -23,8 +23,11 @@ implements GraphEntity
 	/** The reference existent in versions A/B. */
 	private boolean refA, refB;
 	
-	/** The optional modification terms in versions A/B. */
-	public SBOTerm modTermA, modTermB;
+	/** The optional modification terms in original doc. */
+	public SBOTerm modTermA;
+	
+	/** The optional modification terms in modified doc. */
+	public SBOTerm modTermB;
 	
 	/** The single doc flag if in single-doc-operation-mode. */
 	protected boolean singleDoc;
@@ -71,7 +74,7 @@ implements GraphEntity
 	/**
 	 * Sets the SBOTerm as defined in the modified version.
 	 *
-	 * @param modTermA the SBOTerm of version B
+	 * @param modTermB the SBOTerm of version B
 	 * @throws BivesUnsupportedException indicating that this edge has two different modification properties.
 	 */
 	public void setSboB (SBOTerm modTermB) throws BivesUnsupportedException
@@ -143,7 +146,6 @@ implements GraphEntity
 	/**
 	 * Gets the modification.
 	 *
-	 * @param singleDoc the single doc
 	 * @return the modification
 	 */
 	public int getModification ()

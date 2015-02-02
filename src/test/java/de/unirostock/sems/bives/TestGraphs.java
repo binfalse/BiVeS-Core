@@ -39,6 +39,9 @@ public class TestGraphs
 
 	private static TreeDocument simpleFile;
 
+	/**
+	 * Read files.
+	 */
 	@BeforeClass
 	public static void readFiles ()
 	{
@@ -59,6 +62,15 @@ public class TestGraphs
 		}
 	}
 	
+	/**
+	 * Adds the compartment.
+	 *
+	 * @param node the node
+	 * @param label the label
+	 * @param crn the crn
+	 * @param a the a
+	 * @return the reaction network compartment
+	 */
 	public ReactionNetworkCompartment addCompartment (DocumentNode node, String label, ReactionNetwork crn, boolean a)
 	{
 		ReactionNetworkCompartment compartment = null;
@@ -71,6 +83,16 @@ public class TestGraphs
 		return compartment;
 	}
 	
+	/**
+	 * Adds the substrate.
+	 *
+	 * @param node the node
+	 * @param label the label
+	 * @param crn the crn
+	 * @param compartment the compartment
+	 * @param a the a
+	 * @return the reaction network substance
+	 */
 	public ReactionNetworkSubstance addSubstrate (DocumentNode node, String label, ReactionNetwork crn, ReactionNetworkCompartment compartment, boolean a)
 	{
 		ReactionNetworkSubstance subst = null;
@@ -83,6 +105,16 @@ public class TestGraphs
 		return subst;
 	}
 	
+	/**
+	 * Adds the reaction.
+	 *
+	 * @param node the node
+	 * @param label the label
+	 * @param crn the crn
+	 * @param compartment the compartment
+	 * @param a the a
+	 * @return the reaction network reaction
+	 */
 	public ReactionNetworkReaction addReaction (DocumentNode node, String label, ReactionNetwork crn, ReactionNetworkCompartment compartment, boolean a)
 	{
 		// NOTE: reversible will always be true
@@ -97,6 +129,9 @@ public class TestGraphs
 	}
 	
 	
+	/**
+	 * Test crn.
+	 */
 	@Test
 	public void testCrn ()
 	{
@@ -287,6 +322,9 @@ public class TestGraphs
 		
 	}
 	
+	/**
+	 * Test hrn.
+	 */
 	@Test
 	public void testHrn ()
 	{

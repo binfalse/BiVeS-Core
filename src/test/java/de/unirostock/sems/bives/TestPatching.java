@@ -23,6 +23,9 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
+/**
+ * The Class TestPatching.
+ */
 @RunWith(JUnit4.class)
 public class TestPatching
 {
@@ -30,6 +33,9 @@ public class TestPatching
 
 	private static TreeDocument simpleFile;
 
+	/**
+	 * Read files.
+	 */
 	@BeforeClass
 	public static void readFiles ()
 	{
@@ -50,6 +56,9 @@ public class TestPatching
 		}
 	}
 
+	/**
+	 * Test patch producer1.
+	 */
 	@Test
 	public void testPatchProducer1 ()
 	{
@@ -102,6 +111,9 @@ public class TestPatching
 		checkPatch (p);
 	}
 
+	/**
+	 * Test patch producer2.
+	 */
 	@Test
 	public void testPatchProducer2 ()
 	{
@@ -158,6 +170,9 @@ public class TestPatching
 		checkPatch (p);
 	}
 
+	/**
+	 * Test patch producer3.
+	 */
 	@Test
 	public void testPatchProducer3 ()
 	{
@@ -216,6 +231,9 @@ public class TestPatching
 	}
 	
 	
+	/**
+	 * Test patch.
+	 */
 	@Test
 	public void testPatch ()
 	{
@@ -284,6 +302,11 @@ public class TestPatching
 		}
 	}
 
+	/**
+	 * Check patch.
+	 *
+	 * @param patch the patch
+	 */
 	public static void checkPatch (Patch patch)
 	{
 		assertNotNull ("patch shouldn't be null", patch);

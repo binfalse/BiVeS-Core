@@ -28,9 +28,11 @@ extends HierarchyNetworkEntity
 	 */
 	public class VarConnection
 	{
-		
-		/** The existence flags for original/modified document. */
-		public boolean a, b;
+
+		/** The existence flags for original document. */
+		public boolean a;
+		/** The existence flags for modified document. */
+		public boolean b;
 		
 		/**
 		 * Instantiates a new connection to another variable.

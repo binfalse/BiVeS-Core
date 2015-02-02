@@ -3,6 +3,7 @@
  */
 package de.unirostock.sems.bives.markup;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Typesetting to convert markup documents to certain formats.
  * 
@@ -10,15 +11,35 @@ package de.unirostock.sems.bives.markup;
  */
 public abstract class Typesetting
 {
+	
+	/** The Constant CSS_CLASS_INSERT. */
 	public static final String CSS_CLASS_INSERT = "bives-insert";
+	
+	/** The Constant CSS_CLASS_DELETE. */
 	public static final String CSS_CLASS_DELETE = "bives-delete";
+	
+	/** The Constant CSS_CLASS_MOVE. */
 	public static final String CSS_CLASS_MOVE = "bives-move";
+	
+	/** The Constant CSS_CLASS_UPDATE. */
 	public static final String CSS_CLASS_UPDATE = "bives-update";
+	
+	/** The Constant CSS_CLASS_ATTRIBUTE. */
 	public static final String CSS_CLASS_ATTRIBUTE = "bives-attr";
+	
+	/** The Constant CSS_CLASS_MATH. */
 	public static final String CSS_CLASS_MATH = "bives-math";
+	
+	/** The Constant CSS_CLASS_MATH_ORIGINAL. */
 	public static final String CSS_CLASS_MATH_ORIGINAL = "bives-math-original";
+	
+	/** The Constant CSS_CLASS_MATH_MODIFIED. */
 	public static final String CSS_CLASS_MATH_MODIFIED = "bives-math-modified";
+	
+	/** The Constant CSS_CLASS_TABLE_LEFT_COLUMN. */
 	public static final String CSS_CLASS_TABLE_LEFT_COLUMN = "bives-table-left";
+	
+	/** The Constant CSS_CLASS_TABLE_RIGHT_COLUMN. */
 	public static final String CSS_CLASS_TABLE_RIGHT_COLUMN = "bives-table-right";
 	// plus various classes ala `bives-table-SECTIONNAME`,
 	// e.g. `bives-table-Species` to address the table containing changes in the species.

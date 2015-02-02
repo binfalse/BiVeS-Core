@@ -26,6 +26,12 @@ public class SimpleConnectionManager implements ConnectionManager
 	private HashMap<TreeNode, Connection> conByTree1, conByTree2;
 	private TreeDocument docA, docB;
 	
+	/**
+	 * Instantiates a new simple connection manager.
+	 *
+	 * @param docA the original document
+	 * @param docB the modified document
+	 */
 	public SimpleConnectionManager (TreeDocument docA, TreeDocument docB)
 	{
 		this.docA = docA;
@@ -53,16 +59,33 @@ public class SimpleConnectionManager implements ConnectionManager
 	}
 	
 
+	/**
+	 * Scale the weight of all connections.
+	 *
+	 * @param value the scale
+	 */
 	public void scaleWeightOfAllConnections (double value)
 	{
 		for (Connection c : connections)
 			c.scaleWeight (value);
 	}
+	
+	/**
+	 * Add weight to all connections.
+	 *
+	 * @param value the value to add
+	 */
 	public void addWeightToAllConnections (double value)
 	{
 		for (Connection c : connections)
 			c.addWeight (value);
 	}
+	
+	/**
+	 * Sets the weight of all connections.
+	 *
+	 * @param value the new weight of all connections
+	 */
 	public void setWeightOfAllConnections (double value)
 	{
 		for (Connection c : connections)
@@ -260,6 +283,11 @@ public class SimpleConnectionManager implements ConnectionManager
 			connections.remove (c);
 	}
 	
+	/**
+	 * Drop a certain connection.
+	 *
+	 * @param c the connection
+	 */
 	public void dropConnection (Connection c)
 	{
 		if (connections.remove (c))

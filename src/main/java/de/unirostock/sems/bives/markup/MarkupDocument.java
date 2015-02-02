@@ -117,6 +117,7 @@ public class MarkupDocument
 	 * Container for modified math.
 	 *
 	 * @param s the string representing math
+	 * @param original the is that the original document?
 	 * @return the container containing the math
 	 */
 	public static final String math (String s, boolean original)

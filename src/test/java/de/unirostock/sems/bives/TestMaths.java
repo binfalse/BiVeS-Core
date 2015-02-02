@@ -36,6 +36,14 @@ public class TestMaths
 	private static final File	StuartMathTwo	= new File ("test/stuarts-math-v2.xml");
 	
 
+	/**
+	 * Test math diff1.
+	 *
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	@Test
 	public void testMathDiff1 () throws XmlDocumentParseException, IOException, JDOMException, BivesConnectionException
 	{
@@ -59,6 +67,14 @@ public class TestMaths
 		//	System.out.println (">>> \t " + el);
 	}
 
+	/**
+	 * Test math diff stuart.
+	 *
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
+	 * @throws BivesConnectionException the bives connection exception
+	 */
 	@Test
 	public void testMathDiffStuart () throws XmlDocumentParseException, IOException, JDOMException, BivesConnectionException
 	{

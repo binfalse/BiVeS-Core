@@ -18,8 +18,10 @@ public abstract class Connector
 	/** The connection manager, holding node-mappings. */
 	protected SimpleConnectionManager conMgmt;
 	
-	/** The documents in versions a and b. */
-	protected TreeDocument docA, docB;
+	/** The original document. */
+	protected TreeDocument docA;
+	/** The modified document. */
+	protected TreeDocument docB;
 	
 	/**
 	 * Instantiates a new connector.
@@ -57,11 +59,15 @@ public abstract class Connector
 	
 	/**
 	 * Initializes the extension.
+	 *
+	 * @throws BivesConnectionException the bives connection exception
 	 */
 	protected abstract void init () throws BivesConnectionException;
 	
 	/**
 	 * Inherit to search for connections.
+	 *
+	 * @throws BivesConnectionException the bives connection exception
 	 */
 	protected abstract void connect () throws BivesConnectionException;
 	
