@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml level="2" metaid="metaid_0000001" version="1" xmlns="http://www.sbml.org/sbml/level2">
+  <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#metaid_0000001">
+<dc:contributor rdf:parseType="Resource">
+<vCard:N rdf:parseType="Resource">
+<vCard:Family>Le Novère</vCard:Family>
+<vCard:Given>Nicolas</vCard:Given>
+</vCard:N>
+<vCard:EMAIL>lenov@ebi.ac.uk</vCard:EMAIL>
+<vCard:ORG>
+<vCard:Orgname>EMBL-EBI</vCard:Orgname>
+</vCard:ORG>
+</dc:contributor>
+<dcterms:created rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-05-26T09:52:02</dcterms:W3CDTF>
+</dcterms:created>
+<dcterms:modified rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-05-27T17:51:48</dcterms:W3CDTF>
+</dcterms:modified>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<model id="Markevich2004_MAPK_orderedMM2kinases" metaid="metaid_0000002" name="Markevich2004_MAPK_orderedMM2kinases">
+    <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#metaid_0000002">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/biomodels/#BIOMD0000000031"/>
+<rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/PubMed/#14744999"/>
+<rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/#8355"/>
+</rdf:Bag>
+</dc:relation>
+<dc:creator rdf:parseType="Resource">
+<rdf:Bag>
+<rdf:li rdf:parseType="Resource">
+<vCard:N rdf:parseType="Resource">
+<vCard:Family>Le Novère</vCard:Family>
+<vCard:Given>Nicolas</vCard:Given>
+</vCard:N>
+<vCard:EMAIL>lenov@ebi.ac.uk</vCard:EMAIL>
+<vCard:ORG>
+<vCard:Orgname>EMBL-EBI</vCard:Orgname>
+</vCard:ORG>
+</rdf:li>
+</rdf:Bag>
+</dc:creator>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfUnitDefinitions>
+<unitDefinition id="substance" metaid="metaid_0000038" name="nanomole (default)">
+<listOfUnits>
+<unit kind="mole" scale="-9"/>
+</listOfUnits>
+</unitDefinition>
+</listOfUnitDefinitions>
+<listOfCompartments>
+      <compartment id="uVol" metaid="metaid_0000028" size="1"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species compartment="uVol" id="M" initialAmount="500" metaid="metaid_0000029">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000029">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P26696"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="uVol" id="Mp" initialAmount="0" metaid="metaid_0000030">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000030">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P26696"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="uVol" id="Mpp" initialAmount="0" metaid="metaid_0000031">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000031">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P26696"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species boundaryCondition="false" compartment="uVol" constant="true" id="MAPKK1" initialAmount="100" metaid="metaid_0000032" name="MAPKK1">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000032">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#Q05116"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species boundaryCondition="false" compartment="uVol" constant="true" id="MAPKK2" initialAmount="1" metaid="metaid_0000132" name="MAPKK2">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000132">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#Q05116"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species boundaryCondition="false" compartment="uVol" constant="true" id="MKP3" initialAmount="100" metaid="metaid_0000033">
+<annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000033">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#Q90W58"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="k1cat" metaid="metaid_0000019" value="0.01"/>
+      <parameter constant="false" id="Km1" metaid="metaid_0000020" value="50"/>
+      <parameter id="k2cat" metaid="metaid_0000021" value="15"/>
+      <parameter id="Km2" metaid="metaid_0000022" value="500"/>
+      <parameter id="k3cat" metaid="metaid_0000023" value="0.084"/>
+      <parameter id="Km3" metaid="metaid_0000024" value="5"/>
+      <parameter id="k4cat" metaid="metaid_0000025" value="0.06"/>
+      <parameter id="Km5" metaid="metaid_0000027" value="78"/>
+      <parameter id="Km4" metaid="metaid_0000026" value="18"/>
+    </listOfParameters>
+    
+    <listOfReactions>
+      <reaction id="v1" metaid="metaid_0000043" name="phosphorylation of MAPK" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000043">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 2.7.1.37"/>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0004708"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="M"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mp"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="MAPKK1"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci>uVol</ci>
+            <apply>
+              <divide/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <ci> k1cat </ci>
+                  <ci> MAPKK1 </ci>
+                  <ci> M </ci>
+                </apply>
+                <ci> Km1 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> M </ci>
+                  <ci> Km1 </ci>
+                </apply>
+              </apply>
+            </apply>
+</apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v2" metaid="metaid_0000044" name="phosphorylation of P-MAPK" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000044">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 2.7.1.37"/>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0004708"/>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0000187"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="Mp"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mpp"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="MAPKK2"/>
+          <modifierSpeciesReference species="M"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci>uVol</ci>
+            <apply>
+              <divide/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <ci> k2cat </ci>
+                  <ci> MAPKK2 </ci>
+                  <ci> Mp </ci>
+                </apply>
+                <ci> Km2 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> Mp </ci>
+                  <ci> Km2 </ci>
+                </apply>
+              </apply>
+            </apply>
+</apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v3" metaid="metaid_0000045" name="dephosphorylation of PP-MAPK" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000045">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 3.1.3.16"/>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0000188"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="Mpp"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mp"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="MKP3"/>
+          <modifierSpeciesReference species="M"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci>uVol</ci>
+            <apply>
+              <divide/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <ci> k3cat </ci>
+                  <ci> MKP3 </ci>
+                  <ci> Mpp </ci>
+                </apply>
+                <ci> Km3 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> Mpp </ci>
+                  <ci> Km3 </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> Mp </ci>
+                  <ci> Km4 </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> M </ci>
+                  <ci> Km5 </ci>
+                </apply>
+              </apply>
+            </apply>
+</apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v4" metaid="metaid_0000046" name="dephosphorylation of P-MAPK" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<rdf:Description rdf:about="#metaid_0000046">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 3.1.3.16"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="Mp"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="MKP3"/>
+          <modifierSpeciesReference species="Mpp"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci>uVol</ci>
+            <apply>
+              <divide/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <ci> k4cat </ci>
+                  <ci> MKP3 </ci>
+                  <ci> Mp </ci>
+                </apply>
+                <ci> Km4 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> Mpp </ci>
+                  <ci> Km3 </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> Mp </ci>
+                  <ci> Km4 </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> M </ci>
+                  <ci> Km5 </ci>
+                </apply>
+              </apply>
+            </apply>
+</apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
