@@ -18,6 +18,7 @@ import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.NodeDistance;
 import de.unirostock.sems.xmlutils.ds.NodeDistanceComparator;
+import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 import de.unirostock.sems.xmlutils.ds.TreeNodeComparatorBySubtreeSize;
@@ -298,31 +299,29 @@ public class XyDiffConnector
 			DocumentNode nodeB = (DocumentNode) tnb;
 			
 			// Get Free nodes in v0
-			HashMap<String, ArrayList<DocumentNode>> kidsMapA = new HashMap<String, ArrayList<DocumentNode>> ();
+			HashMap<String, ArrayList<TreeNode>> kidsMapA = new HashMap<String, ArrayList<TreeNode>> ();
 			List<TreeNode> kidsA = nodeA.getChildren ();
 			for (TreeNode node : kidsA)
 			{
-				if (node.getType () != TreeNode.DOC_NODE || conMgmt.getConnectionForNode (node) != null)
+				if (conMgmt.getConnectionForNode (node) != null)
 					continue;
-				DocumentNode dnode = (DocumentNode) node;
-				String tag = dnode.getTagName ();
+				String tag = node.getTagName ();
 				if (kidsMapA.get (tag) == null)
-					kidsMapA.put (tag, new ArrayList<DocumentNode> ());
-				kidsMapA.get (tag).add (dnode);
+					kidsMapA.put (tag, new ArrayList<TreeNode> ());
+				kidsMapA.get (tag).add (node);
 			}
 			
 			// Look for similar nodes in v1
-			HashMap<String, List<DocumentNode>> kidsMapB = new HashMap<String, List<DocumentNode>> ();
+			HashMap<String, List<TreeNode>> kidsMapB = new HashMap<String, List<TreeNode>> ();
 			List<TreeNode> kidsB = nodeB.getChildren ();
 			for (TreeNode node : kidsB)
 			{
-				if (node.getType () != TreeNode.DOC_NODE || conMgmt.getConnectionForNode (node) != null)
+				if (conMgmt.getConnectionForNode (node) != null)
 					continue;
-				DocumentNode dnode = (DocumentNode) node;
-				String tag = dnode.getTagName ();
+				String tag = node.getTagName ();
 				if (kidsMapB.get (tag) == null)
-					kidsMapB.put (tag, new ArrayList<DocumentNode> ());
-				kidsMapB.get (tag).add (dnode);
+					kidsMapB.put (tag, new ArrayList<TreeNode> ());
+				kidsMapB.get (tag).add (node);
 			}
 
 			// Now match unique children
@@ -362,29 +361,52 @@ public class XyDiffConnector
 	 * @param nodesB the nodes b
 	 * @throws BivesConnectionException the bives connection exception
 	 */
-	private void optimize (List<DocumentNode> nodesA, List<DocumentNode> nodesB) throws BivesConnectionException
+	private void optimize (List<TreeNode> nodesA, List<TreeNode> nodesB) throws BivesConnectionException
 	{
 		// try to find mappings of children w/ same tag name and same parents
 		if (nodesA == null || nodesB == null || nodesA.size () == 0 || nodesB.size () == 0)
 			return;
 		
+		boolean textNodes = nodesA.get (0).getType () == TreeNode.TEXT_NODE;
+		
 		if (nodesA.size () == 1 && nodesB.size () == 1)
 		{
 			// lets match both if they are not too different
-			DocumentNode nodeA = nodesA.get (0), nodeB = nodesB.get (0);
-			if (nodeA.getAttributeDistance (nodeB) < .9)
+			TreeNode nodeA = nodesA.get (0), nodeB = nodesB.get (0);
+			if (!textNodes)
 			{
-				LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
-				conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
+				DocumentNode dnodeA = (DocumentNode) nodeA, dnodeB = (DocumentNode) nodeB;
+				if (dnodeA.getAttributeDistance (dnodeB) < .9)
+				{
+					LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
+					conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
+				}
+			}
+			else if (textNodes)
+			{
+				TextNode tnodeA = (TextNode) nodeA, tnodeB = (TextNode) nodeB;
+				if (tnodeA.getTextDistance (tnodeB) < .5)
+				{
+					LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
+					conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
+				}
 			}
 			return;
 		}
 		
 		// calculate distances between nodes
 		List<NodeDistance> distances = new ArrayList<NodeDistance> ();
-		for (DocumentNode nodeA : nodesA)
-			for (DocumentNode nodeB : nodesB)
-				distances.add (new NodeDistance (nodeA, nodeB, nodeA.getAttributeDistance (nodeB)));
+		for (TreeNode nodeA : nodesA)
+			for (TreeNode nodeB : nodesB)
+			{
+				if (nodeA.getType () == TreeNode.TEXT_NODE)
+				{
+					TextNode tnodeA = (TextNode) nodeA, tnodeB = (TextNode) nodeB;
+					distances.add (new NodeDistance (nodeA, nodeB, tnodeA.getTextDistance (tnodeB)));
+				}
+				else
+					distances.add (new NodeDistance (nodeA, nodeB, ((DocumentNode) nodeA).getAttributeDistance ((DocumentNode) nodeB)));
+			}
 		// sort by distance
 		Collections.sort (distances, new NodeDistanceComparator (false));
 		
@@ -392,7 +414,7 @@ public class XyDiffConnector
 		for (NodeDistance comp : distances)
 		{
 			// stop at too different nodes
-			if (comp.distance > 0.9)
+			if ((textNodes &&  comp.distance > 0.5) || (!textNodes && comp.distance > 0.9))
 				break;
 			TreeNode na = comp.nodeA, nb = comp.nodeB;
 			if (conMgmt.getConnectionForNode (na) == null && conMgmt.getConnectionForNode (nb) == null)

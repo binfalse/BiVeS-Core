@@ -72,17 +72,15 @@ public class TestCompare
 			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/bloedsinn1")), null);
 			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/bloedsinn2")), null);
 			
-			
 		// ok, let's ask bives for its opinion on that
 			Diff diff = new RegularDiff (supp1, supp2);
 			diff.mapTrees ();
 			Patch patch = diff.getPatch ();
 			TestPatching.checkPatch (patch);
-			System.out.println (XmlTools.prettyPrintDocument (patch.getDocument ()));
-			// TODO!!!
-			LOGGER.warn ("I want to see a single update here!");
-			/*assertEquals ("expected 1 update", 1, patch.getNumUpdates ());
-			assertEquals ("expected 0 deletes|inserts|moves", 0, patch.getNumDeletes () + patch.getNumInserts () + patch.getNumMoves ());*/
+			//System.out.println (XmlTools.prettyPrintDocument (patch.getDocument ()));
+			assertEquals ("expected 1 update", 1, patch.getNumUpdates ());
+			assertEquals ("expected 0 deletes|inserts|moves", 2, patch.getNumMoves ());
+			assertEquals ("expected 0 deletes|inserts|moves", 0, patch.getNumDeletes () + patch.getNumInserts ());
 		}
 		catch (Exception e)
 		{
