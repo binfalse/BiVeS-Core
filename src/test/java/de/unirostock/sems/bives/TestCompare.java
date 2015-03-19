@@ -62,7 +62,47 @@ public class TestCompare
 	
 	
 	/**
-	 * Test mod compare liebal stuff.
+	 * Test annotation stuff
+	 */
+	@Test
+	public void testAnnotation ()
+	{
+		try
+		{
+			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-1")), null);
+			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-2")), null);
+			/*TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("/home/martin/unisonSyncPrivate/education/stuff/diffonto/BIOMD0000000056/2008-03-28")), null);
+			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("/home/martin/unisonSyncPrivate/education/stuff/diffonto/BIOMD0000000056/2008-08-21")), null);*/
+			
+		// ok, let's ask bives for its opinion on that
+			Diff diff = new RegularDiff (supp1, supp2);
+			//LOGGER.setMinLevel (LOGGER.DEBUG);
+			//LOGGER.setLogFile (new File ("/tmp/bives/annotationlog-again"));
+			//LOGGER.setLogToFile (true);
+			diff.mapTrees ();
+			//LOGGER.setMinLevel (LOGGER.WARN);
+			//LOGGER.setLogToFile (false);
+			Patch patch = diff.getPatch ();
+			TestPatching.checkPatch (patch);
+			//System.out.println (XmlTools.prettyPrintDocument (patch.getDocument ()));
+			assertEquals ("expected 2 moves", 2, patch.getNumMoves ());
+			//assertEquals ("expected 0 deletes|inserts|moves", 2, patch.getNumMoves ());
+			//assertEquals ("expected 0 deletes|inserts|moves", 0, patch.getNumDeletes () + patch.getNumInserts ());*/
+			
+			
+			
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail ("unexpected error comparing annotations: " + e);
+		}
+		
+	}
+	
+	
+	/**
+	 * Test fun stuff
 	 */
 	@Test
 	public void testBloedsinn ()
@@ -85,7 +125,7 @@ public class TestCompare
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail ("unexpected error comparing paper supplementals: " + e);
+			fail ("unexpected error comparing bloedsinn: " + e);
 		}
 	}
 	
@@ -114,7 +154,7 @@ public class TestCompare
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail ("unexpected error comparing paper supplementals: " + e);
+			fail ("unexpected error comparing liebal models: " + e);
 		}
 	}
 	

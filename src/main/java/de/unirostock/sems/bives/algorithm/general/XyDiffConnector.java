@@ -35,7 +35,7 @@ public class XyDiffConnector
 {
 	
 	/** The level we definitely walk up (at least). */
-	private final int MIN_CANDIDATEPARENT_LEVEL = 4;
+	private final int MIN_CANDIDATEPARENT_LEVEL = 6;
 	
 	/** The preprocessor. */
 	private Connector preprocessor;
