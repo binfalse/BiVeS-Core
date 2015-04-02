@@ -165,7 +165,11 @@ public class XyDiffConnector
 				if (childMatch != null)
 				{
 					// get the parent of this node
+					//LOGGER.error (childMatch.getTagName ());
 					TreeNode v0childParent = conMgmt.getConnectionForNode (childMatch).getTreeA ().getParent ();
+					/*Connection c = conMgmt.getConnectionForNode (childMatch);
+					TreeNode node = c.getTreeA ();
+					TreeNode v0childParent = node.getParent ();*/
 					if (v0childParent != null)
 					{
 						if (weightByCandidate.get (v0childParent) == null)
@@ -214,8 +218,9 @@ public class XyDiffConnector
 			return null;
 		
 		LOGGER.debug ("best parent is v0 node ", bestMatch.getXPath (), " with total weight among children of ", max);
-		nodeAssign (bestMatch, nodeB);
-		return bestMatch;
+		if (nodeAssign (bestMatch, nodeB))
+			return bestMatch;
+		return null;
 	}
 	
 	/**

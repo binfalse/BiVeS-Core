@@ -100,6 +100,36 @@ public class TestCompare
 		
 	}
 	
+	/**
+	 * Test model6.
+	 */
+	@Test
+	public void testModel6 ()
+	{
+		try
+		{
+			TreeDocument a = new TreeDocument (XmlTools.readDocument (new File ("test/BIOMD0000000006-2012-12-12.xml")), null);
+			TreeDocument b = new TreeDocument (XmlTools.readDocument (new File ("test/BIOMD0000000006-2009-03-25.xml")), null);
+			
+		// ok, let's ask bives for its opinion on that
+			Diff diff = new RegularDiff (a, b);
+			//LOGGER.setMinLevel (LOGGER.DEBUG);
+			diff.mapTrees ();
+			Patch patch = diff.getPatch ();
+			TestPatching.checkPatch (patch);
+			//System.out.println (XmlTools.prettyPrintDocument (patch.getDocument ()));
+			assertEquals ("expected 1 update", 7, patch.getNumUpdates ());
+			assertEquals ("expected 10 moves", 10, patch.getNumMoves ());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail ("unexpected error comparing bloedsinn: " + e);
+		}
+
+		LOGGER.setMinLevel (LOGGER.WARN);
+	}
+	
 	
 	/**
 	 * Test fun stuff
@@ -119,7 +149,7 @@ public class TestCompare
 			TestPatching.checkPatch (patch);
 			//System.out.println (XmlTools.prettyPrintDocument (patch.getDocument ()));
 			assertEquals ("expected 1 update", 1, patch.getNumUpdates ());
-			assertEquals ("expected 0 deletes|inserts|moves", 2, patch.getNumMoves ());
+			assertEquals ("expected 2 moves", 2, patch.getNumMoves ());
 			assertEquals ("expected 0 deletes|inserts|moves", 0, patch.getNumDeletes () + patch.getNumInserts ());
 		}
 		catch (Exception e)
