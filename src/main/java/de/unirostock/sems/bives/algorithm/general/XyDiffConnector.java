@@ -427,35 +427,6 @@ public class XyDiffConnector
 		}
 	}
 	
-	/**
-	 * Assign two nodes to each other, as long as they don't have a connection.
-	 *
-	 * @param a the node from the original tree
-	 * @param b the node from the modified tree
-	 * @return true, if successfully connected
-	 * @throws BivesConnectionException the bives connection exception
-	 */
-	private boolean nodeAssign (TreeNode a, TreeNode b) throws BivesConnectionException
-	{
-		LOGGER.debug ("Matching old: ", a.getXPath (), " with new: ", b.getXPath ());
-		if (conMgmt.getConnectionForNode (a) != null || conMgmt.getConnectionForNode (b) != null)
-		{
-			LOGGER.debug ("already assigned");
-			return true;
-		}
-		
-		if (a.getType () != b.getType ())
-			return false;
-		
-		if ((a.getType () == TreeNode.DOC_NODE && ((DocumentNode) b).getTagName ().equals (((DocumentNode) a).getTagName ())) || a.getType () == TreeNode.TEXT_NODE)
-		{
-			conMgmt.addConnection (new NodeConnection (a, b));
-			return true;
-		}
-		return false;
-		// statsCantMatchDifferentOwnHash
-	}
-	
 //From a number of old nodes that have the exact same signature, one has to choose which one
 //will be considered 'matching' the new node
 //Basically, the best is the old node somehow related to new node: parents are matching for example
