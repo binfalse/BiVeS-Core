@@ -130,8 +130,16 @@ public class BivesTools
 				Element updates = p.getUpdates ();
 				for (Element el : updates.getChildren ())
 				{
-					updateMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
-					updateMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+					if (el.getName ().equals ("attribute"))
+					{
+						updateMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						updateMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+					}
+					else
+					{
+						updateMath ((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						updateMath ((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+					}
 				}
 				
 				
@@ -162,6 +170,13 @@ public class BivesTools
 		// do not overwrite class -> delete/insert has higher priority
 		if (dn.getAttribute ("class") == null)
 			dn.setAttribute ("class", Typesetting.CSS_CLASS_MOVE);
+	}
+	
+	private static void updateMath (TextNode dn)
+	{
+		// do not overwrite class -> delete/insert has higher priority
+		if (dn.getParent ().getAttribute ("class") == null)
+			dn.getParent ().setAttribute ("class", Typesetting.CSS_CLASS_UPDATE);
 	}
 	
 	private static void updateMath (DocumentNode dn)
