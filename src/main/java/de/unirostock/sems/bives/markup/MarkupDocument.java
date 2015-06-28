@@ -92,6 +92,17 @@ public class MarkupDocument
 	}
 	
 	/**
+	 * Highlights supplementary information.
+	 *
+	 * @param s the string to highlight
+	 * @return the highlighted string
+	 */
+	public static final String supplemental (String s)
+	{
+		return "{{supp}}" + s + "}}supp{{";
+	}
+	
+	/**
 	 * Highlights an attribute.
 	 *
 	 * @param s the string to highlight
@@ -214,6 +225,19 @@ public class MarkupDocument
 	public static final String replaceDeletes (String s, String pre, String post)
 	{
 		return replace (s, "{{delete}}", "}}delete{{", pre, post);
+	}
+	
+	/**
+	 * Replaces supplementary information.
+	 *
+	 * @param s the string containing supp info
+	 * @param pre the opening, e.g. &lt;supp&gt;
+	 * @param post the closing, e.g. &lt;/supp&gt;
+	 * @return the final string
+	 */
+	public static final String replaceSupplementals (String s, String pre, String post)
+	{
+		return replace (s, "{{supp}}", "}}supp{{", pre, post);
 	}
 	
 	/**

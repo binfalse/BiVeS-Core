@@ -44,6 +44,8 @@ public class TypesettingHTML
 			"</span>");
 		s = MarkupDocument.replaceDeletes (s, "<span class='" + CSS_CLASS_DELETE + "'>",
 			"</span>");
+		s = MarkupDocument.replaceSupplementals (s, "<span class='" + CSS_CLASS_SUPP + "'>",
+			"</span>");
 		s = MarkupDocument.replaceAttributes (s, "<span class='" + CSS_CLASS_ATTRIBUTE + "'>",
 			"</span>");
 		s = MarkupDocument.replaceOriginalMaths (s, "<div class='" + CSS_CLASS_MATH + " " + CSS_CLASS_MATH_ORIGINAL + "'>",

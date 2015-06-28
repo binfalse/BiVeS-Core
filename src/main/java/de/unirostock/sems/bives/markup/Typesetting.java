@@ -18,6 +18,9 @@ public abstract class Typesetting
 	/** The Constant CSS_CLASS_DELETE. */
 	public static final String CSS_CLASS_DELETE = "bives-delete";
 	
+	/** The Constant CSS_CLASS_DELETE. */
+	public static final String CSS_CLASS_SUPP = "bives-suppl";
+	
 	/** The Constant CSS_CLASS_MOVE. */
 	public static final String CSS_CLASS_MOVE = "bives-move";
 	

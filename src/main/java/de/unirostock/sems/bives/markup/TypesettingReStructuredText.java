@@ -42,6 +42,7 @@ public class TypesettingReStructuredText
 		s = MarkupDocument.replaceHighlights (s, "*", "*");
 		s = MarkupDocument.replaceInserts (s, ":" + CSS_CLASS_INSERT + ":`", "`");
 		s = MarkupDocument.replaceDeletes (s, ":" + CSS_CLASS_DELETE + ":`", "`");
+		s = MarkupDocument.replaceSupplementals (s, ":" + CSS_CLASS_SUPP + ":`","`");
 		s = MarkupDocument.replaceAttributes (s, ":" + CSS_CLASS_ATTRIBUTE + ":`", "`");
 		s = MarkupDocument.replaceAllMaths (s, ":" + CSS_CLASS_MATH + ":`", "`");
 		s = MarkupDocument.replaceRightArrow (s, "->");

@@ -6,6 +6,10 @@ package de.unirostock.sems.bives.ds;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.unirostock.sems.bives.algorithm.DiffReporter;
+import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
+import de.unirostock.sems.bives.markup.MarkupDocument;
+import de.unirostock.sems.bives.markup.MarkupElement;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
@@ -44,8 +48,8 @@ import de.unirostock.sems.xmlutils.tools.DocumentTools;
 public class Xhtml
 {
 	
-	/** The nodes. */
-	private List<TreeNode>	nodes;
+	/** The node. */
+	private DocumentNode	node;
 	
 	
 	/**
@@ -53,7 +57,7 @@ public class Xhtml
 	 */
 	public Xhtml ()
 	{
-		nodes = new ArrayList<TreeNode> ();
+		node = null;
 	}
 	
 	
@@ -63,9 +67,9 @@ public class Xhtml
 	 * @param node
 	 *          the node that roots the subtree
 	 */
-	public void addXhtml (TreeNode node)
+	public void setXhtml (DocumentNode node)
 	{
-		nodes.add (node);
+		this.node = node;
 	}
 	
 	
@@ -76,13 +80,43 @@ public class Xhtml
 	 */
 	public String toString ()
 	{
-		StringBuilder ret = new StringBuilder ();
-		for (TreeNode node : nodes)
-			if (node.getType () == TreeNode.DOC_NODE)
-				ret.append (DocumentTools.printPrettySubDoc ((DocumentNode) node));
-			else if (node.getType () == TreeNode.TEXT_NODE)
-				ret.append (((TextNode) node).getText ());
-		return ret.toString ();
+		if (node == null)
+			return "";
+		return DocumentTools.printPrettySubDoc (node);
+	}
+
+
+	public void reportModification (SimpleConnectionManager conMgmt,
+		Xhtml a, Xhtml b, MarkupElement me)
+	{
+		if (a.node.getModification () == 0 && b.node.getModification () == 0)
+			return;
+		
+
+		// if the nodes are simply moved..
+		if (a.node.getModification () == TreeNode.SWAPPEDKID && b.node.getModification () == TreeNode.SWAPPEDKID)
+			return;
+		
+		String valA = a.toString ();
+		String valB = b.toString ();
+		
+		if (valA.equals (valB))
+			return;
+		
+		me.addValue (MarkupDocument.supplemental (
+			MarkupDocument.delete ("previous notes: <pre>"+valA+"</pre>") + " "+MarkupDocument.rightArrow ()+" " + MarkupDocument.insert ("new notes: <pre>"+valB+"</pre>")));
+	}
+
+
+	public void reportInsert (MarkupElement me)
+	{
+		me.addValue (MarkupDocument.supplemental (MarkupDocument.insert ("inserted notes: <pre>"+toString ()+"</pre>")));
+	}
+
+
+	public void reportDelete (MarkupElement me)
+	{
+		me.addValue (MarkupDocument.supplemental (MarkupDocument.delete ("deleted notes: <pre>"+toString ()+"</pre>")));
 	}
 	
 }

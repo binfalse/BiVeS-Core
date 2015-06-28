@@ -203,10 +203,12 @@ public class TestCompare
 			
 		// ok, let's ask bives for its opinion on that
 			Diff diff = new RegularDiff (supp1, supp2);
+			//LOGGER.setMinLevel (LOGGER.DEBUG);
 			diff.mapTrees ();
+			//LOGGER.setMinLevel (LOGGER.WARN);
 			Patch patch = diff.getPatch ();
 			TestPatching.checkPatch (patch);
-			
+			System.out.println (diff.getDiff ());
 			assertEquals ("expected 5 deletes", 5, patch.getNumDeletes ());
 			assertEquals ("expected 8 inserts", 8, patch.getNumInserts ());
 			// TODO

@@ -242,8 +242,10 @@ public class XyDiffConnector
 			String v1hash = nodeID.getSubTreeHash ();
 			LOGGER.debug ("Trying new node ", nodeID.getXPath (), ", hash=", v1hash);
 			
-			TreeNode matcher = null;
-			
+			//CandidateResult matcher = null;
+			CandidateResult matchInA = null;
+					TreeNode nodeInB = nodeID;
+					String nodeInBHash = nodeID.getSubTreeHash ();
 		  // consistency check: has it already been done ???
 			
 			if (conMgmt.getConnectionForNode (nodeID) != null)
@@ -260,13 +262,86 @@ public class XyDiffConnector
 				}
 				else
 				{
-					matcher = getBestCandidate(nodeID, v1hash);
+					
+					matchInA = getBestCandidate(nodeInB, nodeInBHash);
 				}
 			}
 			
-			if (matcher != null)
+			
+			
+			
+					if (matchInA != null)
+					{
+						if (matchInA.level > 1)
+						{
+							// try to find a better option for matchInA
+							
+							CandidateResult betterB = getBestCandidateOw (matchInA.candidate, matchInA.candidate.getSubTreeHash (), matchInA.level);
+							
+							if (betterB != null)
+							{
+								// those are our candidates
+								if (betterB.level > 1)
+								{
+									LOGGER.debug ("    level>1 so forcing parents matching in the hierarchie");
+									forceParentsAssign(matchInA.candidate, betterB.candidate, betterB.level);
+								}
+									recursiveAssign (matchInA.candidate, betterB.candidate);
+									toMatch.add (nodeInB);
+									continue;
+								
+							}
+							
+						LOGGER.debug ("    level>1 so forcing parents matching in the hierarchie");
+						forceParentsAssign(matchInA.candidate, nodeInB, matchInA.level);
+						}
+						
+						// otherwise we match matchInA and nodeInB
+						
+
+						recursiveAssign (matchInA.candidate, nodeInB);
+						
+						
+					}
+					// If not found, children will have to be investigated
+					else
+					{
+						// put children in the vector so they'll be taken care of later
+						LOGGER.debug ("Subtree rooted at ", nodeID.getXPath (), " not fully matched, programming children");
+						if (nodeID.getType () == TreeNode.DOC_NODE)
+						{
+							List<TreeNode> children = ((DocumentNode) nodeID).getChildren ();
+							for (TreeNode child : children)
+							{
+								toMatch.add (child);
+							}
+						}
+					}
+					
+					
+					
+					//matcher = getBestCandidate(nodeID, v1hash);
+				}
+			//}
+			
+			/*if (matcher != null)
 			{
-				recursiveAssign (matcher, nodeID);
+				
+				// try the other way around
+				
+				
+				//CandidateResult opposite = getBestCandidate(matcher.candidate, matcher.candidate.getXPath ());
+				
+				
+				
+				if (matcher.level > 1)
+				{
+					LOGGER.debug ("    level>1 so forcing parents matching in the hierarchie");
+					forceParentsAssign(matcher.candidate, v1nodeID, matcher.level);
+				}
+				recursiveAssign (matcher.candidate, nodeID);
+				
+				
 			}
 			// If not found, children will have to be investigated
 			else
@@ -281,9 +356,9 @@ public class XyDiffConnector
 						toMatch.add (child);
 					}
 				}
-			}
+			}*/
 			// Next node to investigate
-		}
+		
 	}
 	
 	/**
@@ -427,6 +502,47 @@ public class XyDiffConnector
 		}
 	}
 	
+	
+
+	class CandidateResult implements Comparable<CandidateResult>
+	{
+		TreeNode candidate;
+		int level;
+		int dist;
+		String xPath;
+		public CandidateResult (TreeNode candidate, int level, String xPath)
+		{
+			this.candidate = candidate;
+			this.level = level;
+			this.dist = -1;
+			this.xPath = xPath;
+		}
+		public int getDist ()
+		{
+			if (dist == -1)
+				dist = GeneralTools.computeLevenshteinDistance (xPath, candidate.getXPath ());
+			return dist;
+		}
+		@Override
+		public int compareTo (CandidateResult cr)
+		{
+			if (level < cr.level)
+				return -1;
+			if (level > cr.level)
+				return 1;
+			
+			if (getDist () < cr.getDist ())
+				return -1;
+			
+			if (getDist () > cr.getDist ())
+				return 1;
+			
+			return 0;
+		}
+	}
+	
+	
+	
 //From a number of old nodes that have the exact same signature, one has to choose which one
 //will be considered 'matching' the new node
 //Basically, the best is the old node somehow related to new node: parents are matching for example
@@ -440,8 +556,22 @@ public class XyDiffConnector
  * @return the best candidate
  * @throws BivesConnectionException the bives connection exception
  */
-private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws BivesConnectionException
+private CandidateResult getBestCandidate (TreeNode v1nodeID, String selfkey) throws BivesConnectionException
 	{
+	//LOGGER.error ("best candidate for: ", v1nodeID.getXPath ());
+	
+	/*if (v1nodeID.getType () == TreeNode.DOC_NODE)
+	{
+		DocumentNode tmp = ((DocumentNode)v1nodeID);
+		if(tmp.getTagName ().equals ("kineticLaw"))// && tmp.getParent ().getId ().equals ("EX_cpd00066_e"))
+		{
+			LOGGER.setMinLevel (LOGGER.DEBUG);
+			System.out.println (" ------------------------------------------ ");
+			System.out.println (" ------------------------------------------ ");
+			System.out.println (tmp.getXPath ());
+			System.out.println (" ------------------------------------------ ");
+		}
+	}*/
 
 		// nodeRange.first==nodeRange.second) return 0;
 
@@ -497,45 +627,13 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 						LOGGER.warn ("it seems that there are too many candidates (", theList.size (), ") for a match of ", v1nodeID.getXPath (), " (", selfkey, ")");
 					
 					final String xPath = v1nodeID.getXPath ();
-					class CandidateResult implements Comparable<CandidateResult>
-					{
-						TreeNode candidate;
-						int level;
-						int dist;
-						public CandidateResult (TreeNode candidate, int level)
-						{
-							this.candidate = candidate;
-							this.level = level;
-							this.dist = -1;
-						}
-						public int getDist ()
-						{
-							if (dist == -1)
-								dist = GeneralTools.computeLevenshteinDistance (xPath, candidate.getXPath ());
-							return dist;
-						}
-						@Override
-						public int compareTo (CandidateResult cr)
-						{
-							if (level < cr.level)
-								return -1;
-							if (level > cr.level)
-								return 1;
-							
-							if (getDist () < cr.getDist ())
-								return -1;
-							
-							if (getDist () > cr.getDist ())
-								return 1;
-							
-							return 0;
-						}
-					}
 					List<CandidateResult> candidates = new ArrayList<CandidateResult> ();
 					
 					//for (int i = 0; i < theList.size (); i++)
 					for (TreeNode candidate : theList)
 					{
+						
+						LOGGER.debug ("    trying " + candidate.getXPath ());
 						//TreeNode candidate = theList.get (i);
 						if (conMgmt.getConnectionForNode (candidate) == null)
 						{// Node still not assigned
@@ -552,9 +650,27 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 							{
 								if (conMgmt.getConnectionOfNodes (candidateRelative, v1nodeRelative) != null)
 								{
+									
+									// check if there is a better option for candidate...
+									
+									
+									
+									
 									LOGGER.debug (" adding candidate because some relatives ( level= ", candidateRelativeLevel, " ) are matching");
+									if (LOGGER.isDebugEnabled ())
+									{
+										DocumentNode tmp = ((DocumentNode)v1nodeID);
+											//LOGGER.setMinLevel (LOGGER.DEBUG);
+											System.out.println (" ------------------------------------------ ");
+											System.out.println (" ------------------------------------------ ");
+											System.out.println (" ------------------------------------------ ");
+											System.out.println (tmp.getParent ().getId ());
+											DocumentNode match = ((DocumentNode)candidate);
+											System.out.println (match.getParent ().getId ());
+											System.out.println (candidateRelativeLevel);
+									}
 									//return candidate;
-									candidates.add (new CandidateResult (candidate, candidateRelativeLevel));
+									candidates.add (new CandidateResult (candidate, candidateRelativeLevel, xPath));
 								}
 							}
 						}
@@ -566,6 +682,18 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 						Collections.sort (candidates);
 						// get min
 						CandidateResult candidate = candidates.get (0);
+						
+						/*if (candidate.level > 1)
+						{
+							TreeNode betterOption = getBestCandidateOw (candidate.candidate, candidate.candidate.getSubTreeHash (), candidate.level - 1);
+							if (betterOption != null)
+							{
+								//LOGGER.error ("found better option.. blacklisting...");
+								blacklist.add (candidate.candidate);
+								return getBestCandidate (v1nodeID, selfkey, blacklist);
+							}
+						}*/
+						
 						LOGGER.debug (" took candidate: ", candidate.candidate.getXPath ());
 						/*if (candidates.size () == 2)
 						{
@@ -576,13 +704,18 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 							}
 						}*/
 			
-						if (candidate.level > 1)
+						/*if (candidate.level > 1)
 						{
 							LOGGER.debug ("    level>1 so forcing parents matching in the hierarchie");
 							forceParentsAssign(candidate.candidate, v1nodeID, candidateRelativeLevel );
-						}
+						}*/
 						
-						return candidate.candidate;
+						
+						//System.exit (2);
+
+						
+						LOGGER.setLevel (LOGGER.ERROR);
+						return candidate;
 					}
 					
 				}//end MIN(Precomputed)<relativelevel<MAX
@@ -592,6 +725,169 @@ private TreeNode getBestCandidate (TreeNode v1nodeID, String selfkey) throws Biv
 		} // endwhile: next level
 		return null;
 	}
+
+
+
+/**
+* Gets the best candidate the other way around.
+*
+* @param v1nodeID the v1node id
+* @param selfkey the selfkey
+* @return the best candidate
+* @throws BivesConnectionException the bives connection exception
+*/
+private CandidateResult getBestCandidateOw (TreeNode v0nodeID, String selfkey, int maxLevel) throws BivesConnectionException
+{
+	LOGGER.debug (">>> starting other way around!!");
+
+/*if (v1nodeID.getType () == TreeNode.DOC_NODE)
+{
+	DocumentNode tmp = ((DocumentNode)v1nodeID);
+	if(tmp.getTagName ().equals ("kineticLaw"))// && tmp.getParent ().getId ().equals ("EX_cpd00066_e"))
+	{
+		LOGGER.setMinLevel (LOGGER.DEBUG);
+		System.out.println (" ------------------------------------------ ");
+		System.out.println (" ------------------------------------------ ");
+		System.out.println (tmp.getXPath ());
+		System.out.println (" ------------------------------------------ ");
+	}
+}*/
+
+	// nodeRange.first==nodeRange.second) return 0;
+
+	// first pass : finds a node which parent matches v1node parent (usefull because documents roots always match or parent may be matched thanks to its unique label)
+	int candidateRelativeLevel = 1 ;
+	TreeNode v0nodeRelative = v0nodeID ;
+
+  /* The relative weight correspond to the ratio of the weight of the subtree over the weight of the entire document */
+	double relativeWeight = v0nodeID.getWeight () / docA.getRoot ().getWeight ();
+	int maxLevelPath = MIN_CANDIDATEPARENT_LEVEL + (int) (5.0*Math.log((double)docA.getNumNodes ())*relativeWeight) ;
+
+	if (maxLevelPath > maxLevel)
+		maxLevelPath = maxLevel;
+	/* Try to attach subtree to existing match among ancesters
+	 * up to maximum level of ancester, depending on subtree weight
+	 */
+	
+	LOGGER.debug ("maxLevel=", maxLevelPath);
+	
+	while ( candidateRelativeLevel <= maxLevelPath )
+	{
+		LOGGER.debug ("    pass parentLevel=", candidateRelativeLevel);
+		
+		v0nodeRelative = v0nodeRelative.getParent ();
+		if (v0nodeRelative == null)
+		{
+			LOGGER.debug ("but node doesn't not have ancesters up to this level\n");
+			return null;
+		}
+		LOGGER.debug ("    pass v0nodeRelative=", v0nodeRelative.getXPath ());
+		
+		if (conMgmt.getConnectionForNode (v0nodeRelative) == null)
+		{
+			LOGGER.debug ("but v0 relative at this level has no match");
+		}
+		else
+		{
+			/* For the lower levels, use precomputed index tables to acces candidates given the parent */
+			
+			if (false && candidateRelativeLevel<=MIN_CANDIDATEPARENT_LEVEL)
+			{
+				// TODO: no idea...
+			}
+			/* For higher levels, try every candidate and this if its ancestor is a match for us */
+			else
+			{
+				List<TreeNode> theList = docB.getNodesByHash (selfkey);
+				if (theList == null || theList.size () < 1)
+				{
+					LOGGER.debug ("  no candidates for hash");
+					return null;
+				}
+				LOGGER.debug ("  num candidates: ", theList.size ());
+				if (theList.size () > 50)
+					LOGGER.warn ("it seems that there are too many candidates (", theList.size (), ") for a match of ", v0nodeID.getXPath (), " (", selfkey, ")");
+				
+				final String xPath = v0nodeID.getXPath ();
+				List<CandidateResult> candidates = new ArrayList<CandidateResult> ();
+				
+				//for (int i = 0; i < theList.size (); i++)
+				for (TreeNode candidate : theList)
+				{
+					LOGGER.debug ("    trying " + candidate.getXPath ());
+					//TreeNode candidate = theList.get (i);
+					if (conMgmt.getConnectionForNode (candidate) == null)
+					{// Node still not assigned
+						LOGGER.debug ("(", candidate.getXPath (), ")");
+						TreeNode candidateRelative = candidate;
+						for (int j = 0; j < candidateRelativeLevel; j++)
+						{
+							candidateRelative = candidateRelative.getParent ();
+							if (candidateRelative == null)
+								break;
+						}
+						// if relative is ok at required level, test matching
+						if (candidateRelative != null)
+						{
+							if (conMgmt.getConnectionOfNodes (v0nodeRelative, candidateRelative) != null)
+							{
+								
+								// check if there is a better option for candidate...
+								
+								
+								
+								
+								LOGGER.debug (" adding candidate because some relatives ( level= ", candidateRelativeLevel, " ) are matching");
+								if (LOGGER.isDebugEnabled ())
+								{
+									DocumentNode tmp = ((DocumentNode)v0nodeID);
+										System.out.println (" ------------------------------------------ ");
+										System.out.println (" ------------------------------------------ ");
+										System.out.println (" ------------------------------------------ ");
+										System.out.println (tmp.getParent ().getId ());
+										DocumentNode match = ((DocumentNode)candidate);
+										System.out.println (match.getParent ().getId ());
+										System.out.println (candidateRelativeLevel);
+								}
+								//return candidate;
+								candidates.add (new CandidateResult (candidate, candidateRelativeLevel, xPath));
+							}
+						}
+					}
+				} //try next candidate
+				
+				if (candidates.size () > 0)
+				{
+					// sort
+					Collections.sort (candidates);
+					// get min
+					CandidateResult candidate = candidates.get (0);
+					LOGGER.debug (" took candidate: ", candidate.candidate.getXPath ());
+					/*if (candidates.size () == 2)
+					{
+						LOGGER.debug ("    all candidates");
+						for (CandidateResult c : candidates)
+						{
+							LOGGER.debug ("    candidate: " + c.level + "/" + c.dist + " -> " + c.candidate.getXPath ());
+						}
+					}*/
+					
+					
+					//System.exit (2);
+
+					
+					LOGGER.setLevel (LOGGER.ERROR);
+					return candidate;
+				}
+				
+			}//end MIN(Precomputed)<relativelevel<MAX
+			
+		} //end ancestor is matched
+		candidateRelativeLevel++;
+	} // endwhile: next level
+	return null;
+}
+
 	
 	/**
 	 * Recursively assign subtrees to each other.

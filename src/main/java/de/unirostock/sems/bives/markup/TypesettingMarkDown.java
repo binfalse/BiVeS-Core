@@ -43,6 +43,8 @@ public class TypesettingMarkDown
 			"</span>");
 		s = MarkupDocument.replaceDeletes (s, "<span class='" + CSS_CLASS_DELETE + "'>",
 			"</span>");
+		s = MarkupDocument.replaceSupplementals (s, "<span class='" + CSS_CLASS_SUPP + "'>",
+			"</span>");
 		s = MarkupDocument.replaceAttributes (s, "<span class='" + CSS_CLASS_ATTRIBUTE + "'>",
 			"</span>");
 		s = MarkupDocument.replaceAllMaths (s, "<span class='" + CSS_CLASS_MATH + "'>",
