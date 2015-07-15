@@ -42,7 +42,7 @@ public class IdConnector
 	public IdConnector (TreeDocument docA, TreeDocument docB,
 		boolean requireSameLabel)
 	{
-		super (docA, docB);
+		super (docA, docB, false, false, false);
 		this.requireSameLabel = requireSameLabel;
 	}
 	

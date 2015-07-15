@@ -82,15 +82,15 @@ public class BivesTools
 					
 					if (el.getName ().equals ("node"))
 					{
-						deleteMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						markDeleted ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
 					}
 					else if (el.getName ().equals ("attribute"))
 					{
-						updateMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						markUpdated ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
 					}
 					else
 					{
-						deleteMath (((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath"))).getParent ());
+						markDeleted (((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath"))).getParent ());
 					}
 				}
 
@@ -100,15 +100,15 @@ public class BivesTools
 					
 					if (el.getName ().equals ("node"))
 					{
-						insertMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+						markInserted ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
 					}
 					else if (el.getName ().equals ("attribute"))
 					{
-						updateMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+						markUpdated ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
 					}
 					else
 					{
-						insertMath (((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath"))).getParent ());
+						markInserted (((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath"))).getParent ());
 					}
 				}
 				
@@ -117,13 +117,13 @@ public class BivesTools
 				{
 					if (el.getName ().equals ("node"))
 					{
-						moveMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
-						moveMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+						markMoved ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						markMoved ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
 					}
 					else
 					{
-						moveMath (((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath"))).getParent ());
-						moveMath (((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath"))).getParent ());
+						markMoved (((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath"))).getParent ());
+						markMoved (((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath"))).getParent ());
 					}
 				}
 				
@@ -132,13 +132,13 @@ public class BivesTools
 				{
 					if (el.getName ().equals ("attribute"))
 					{
-						updateMath ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
-						updateMath ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+						markUpdated ((DocumentNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						markUpdated ((DocumentNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
 					}
 					else
 					{
-						updateMath ((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
-						updateMath ((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
+						markUpdated ((TextNode) tdA.getNodeByPath (el.getAttributeValue ("oldPath")));
+						markUpdated ((TextNode) tdB.getNodeByPath (el.getAttributeValue ("newPath")));
 					}
 				}
 				
@@ -155,31 +155,56 @@ public class BivesTools
 		}
 	}
 	
-	private static void deleteMath (DocumentNode dn)
+	/**
+	 * Mark a document node as deleted.
+	 *
+	 * @param dn the document node
+	 */
+	public static void markDeleted (DocumentNode dn)
 	{
 		dn.setAttribute ("class", Typesetting.CSS_CLASS_DELETE);
 	}
 	
-	private static void insertMath (DocumentNode dn)
+	/**
+	 * Mark a document node as inserted.
+	 *
+	 * @param dn the document node
+	 */
+	public static void markInserted (DocumentNode dn)
 	{
 		dn.setAttribute ("class", Typesetting.CSS_CLASS_INSERT);
 	}
 	
-	private static void moveMath (DocumentNode dn)
+	/**
+	 * Mark a document node as moved.
+	 *
+	 * @param dn the document node
+	 */
+	public static void markMoved (DocumentNode dn)
 	{
 		// do not overwrite class -> delete/insert has higher priority
 		if (dn.getAttribute ("class") == null)
 			dn.setAttribute ("class", Typesetting.CSS_CLASS_MOVE);
 	}
 	
-	private static void updateMath (TextNode dn)
+	/**
+	 * Mark a text node as updated.
+	 *
+	 * @param tn the text node
+	 */
+	public static void markUpdated (TextNode tn)
 	{
 		// do not overwrite class -> delete/insert has higher priority
-		if (dn.getParent ().getAttribute ("class") == null)
-			dn.getParent ().setAttribute ("class", Typesetting.CSS_CLASS_UPDATE);
+		if (tn.getParent ().getAttribute ("class") == null)
+			tn.getParent ().setAttribute ("class", Typesetting.CSS_CLASS_UPDATE);
 	}
 	
-	private static void updateMath (DocumentNode dn)
+	/**
+	 * Mark a document node as updated.
+	 *
+	 * @param dn the document node
+	 */
+	public static void markUpdated (DocumentNode dn)
 	{
 		// do not overwrite class -> delete/insert has higher priority
 		if (dn.getAttribute ("class") == null)

@@ -48,7 +48,7 @@ public class LabelConnector
 	 */
 	public LabelConnector (TreeDocument docA, TreeDocument docB)
 	{
-		super (docA, docB);
+		super (docA, docB, true, false, false);
 	}
 
 	/*

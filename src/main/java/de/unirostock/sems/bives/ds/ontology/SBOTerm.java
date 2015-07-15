@@ -3,7 +3,6 @@
  */
 package de.unirostock.sems.bives.ds.ontology;
 
-import de.unirostock.sems.bives.exception.BivesUnsupportedException;
 
 
 /**

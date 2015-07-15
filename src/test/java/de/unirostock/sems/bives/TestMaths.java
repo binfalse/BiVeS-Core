@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import de.unirostock.sems.bives.api.Diff;
 import de.unirostock.sems.bives.api.RegularDiff;
 import de.unirostock.sems.bives.ds.Patch;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
@@ -51,7 +52,7 @@ public class TestMaths
 		TreeDocument td2 = new TreeDocument (XmlTools.readDocument (MathTwo), MathTwo.toURI ());
 		
 		RegularDiff differ = new RegularDiff (td1, td2);
-		differ.mapTrees ();
+		differ.mapTrees (Diff.ALLOW_DIFFERENT_IDS, Diff.CARE_ABOUT_NAMES, Diff.STRICTER_NAMES);
 		
 		Patch p = differ.getPatch ();
 		assertEquals ("expected to see 3 deletes", 3, p.getNumDeletes ());
@@ -82,7 +83,7 @@ public class TestMaths
 		TreeDocument td2 = new TreeDocument (XmlTools.readDocument (StuartMathTwo), MathTwo.toURI ());
 		
 		RegularDiff differ = new RegularDiff (td1, td2);
-		differ.mapTrees ();
+		differ.mapTrees (Diff.ALLOW_DIFFERENT_IDS, Diff.CARE_ABOUT_NAMES, Diff.STRICTER_NAMES);
 		
 		Patch p = differ.getPatch ();
 		/*assertEquals ("expected to see 3 deletes", 3, p.getNumDeletes ());

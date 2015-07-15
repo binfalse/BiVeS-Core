@@ -13,6 +13,7 @@ import de.binfalse.bflog.LOGGER;
 import de.binfalse.bfutils.GeneralTools;
 import de.unirostock.sems.bives.algorithm.Connector;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
+import de.unirostock.sems.bives.api.Diff;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
 import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
@@ -41,23 +42,62 @@ public class XyDiffConnector
 	private Connector preprocessor;
 
 	/**
-	 * Instantiates a new XyDiffConnector. In this setting we'll run an ID mapper before we do our work.
+	 * Instantiates a new XyDiffConnector.
+	 * 
+	 * In this setting we'll run an ID mapper before we do our work.
+	 *
+	 * @param docA the original document
+	 * @param docB the modified document
+	 * @param allowDifferentIds may mapped entities have different ids? see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}
+	 * @param careAboutNames should we care about names? see {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}
+	 * @param stricterNames should we handle the names very strictly? see {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}
+	 */
+	public XyDiffConnector (TreeDocument docA, TreeDocument docB, boolean allowDifferentIds, boolean careAboutNames, boolean stricterNames)
+	{
+		super (docA, docB, allowDifferentIds, careAboutNames, stricterNames);
+	}
+
+	/**
+	 * Instantiates a new XyDiffConnector.
+	 * 
+	 * In this setting we'll run an ID mapper before we do our work.
+	 * Uses default values for the mapping, see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}, {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}, and {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}.
+	 * 
 	 * @param docA the original document
 	 * @param docB the modified document
 	 */
 	public XyDiffConnector (TreeDocument docA, TreeDocument docB)
 	{
-		super (docA, docB);
+		super (docA, docB, Diff.ALLOW_DIFFERENT_IDS, Diff.CARE_ABOUT_NAMES, Diff.STRICTER_NAMES);
 	}
 	
 	/**
-	 * Instantiates a new XyDiffConnector. Here we'll use `preprocessor` to find some connections before we start.
+	 * Instantiates a new XyDiffConnector.
+	 * 
+	 * Here we'll use `preprocessor` to find some connections before we start.
+	 *
+	 * @param preprocessor the connector to initiate the connections
+	 * @param allowDifferentIds may mapped entities have different ids? see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}
+	 * @param careAboutNames should we care about names? see {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}
+	 * @param stricterNames should we handle the names very strictly? see {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}
+	 */
+	public XyDiffConnector (Connector preprocessor, boolean allowDifferentIds, boolean careAboutNames, boolean stricterNames)
+	{
+		super (preprocessor.getDocA (), preprocessor.getDocB (), allowDifferentIds, careAboutNames, stricterNames);
+		this.preprocessor = preprocessor;
+	}
+	
+	/**
+	 * Instantiates a new XyDiffConnector.
+	 * 
+	 * Here we'll use `preprocessor` to find some connections before we start.
+	 * Uses default values for the mapping, see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}, {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}, and {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}.
 	 *
 	 * @param preprocessor the connector to initiate the connections
 	 */
 	public XyDiffConnector (Connector preprocessor)
 	{
-		super (preprocessor.getDocA (), preprocessor.getDocB ());
+		super (preprocessor.getDocA (), preprocessor.getDocB (), Diff.ALLOW_DIFFERENT_IDS, Diff.CARE_ABOUT_NAMES, Diff.STRICTER_NAMES);
 		this.preprocessor = preprocessor;
 	}
 	
@@ -456,7 +496,7 @@ public class XyDiffConnector
 			if (!textNodes)
 			{
 				DocumentNode dnodeA = (DocumentNode) nodeA, dnodeB = (DocumentNode) nodeB;
-				if (dnodeA.getAttributeDistance (dnodeB) < .9)
+				if (dnodeA.getAttributeDistance (dnodeB, allowDifferentIds, careAboutNames, stricterNames) < .9)
 				{
 					LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
 					conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
@@ -485,7 +525,7 @@ public class XyDiffConnector
 					distances.add (new NodeDistance (nodeA, nodeB, tnodeA.getTextDistance (tnodeB)));
 				}
 				else
-					distances.add (new NodeDistance (nodeA, nodeB, ((DocumentNode) nodeA).getAttributeDistance ((DocumentNode) nodeB)));
+					distances.add (new NodeDistance (nodeA, nodeB, ((DocumentNode) nodeA).getAttributeDistance ((DocumentNode) nodeB, allowDifferentIds, careAboutNames, stricterNames)));
 			}
 		// sort by distance
 		Collections.sort (distances, new NodeDistanceComparator (false));

@@ -4,6 +4,7 @@
 package de.unirostock.sems.bives.algorithm;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.api.Diff;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
@@ -18,6 +19,15 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
 public abstract class Connector
 {
 	
+	/** Are mappings of nodes with different ids allowed? see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS} */
+	protected boolean allowDifferentIds = true;
+	
+	/** Do we care about names? see {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES} */
+	protected boolean careAboutNames = true;
+	
+	/** Should we handle names very strictly? see {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES} */
+	protected boolean stricterNames = false;
+	
 	/** The connection manager, holding node-mappings. */
 	protected SimpleConnectionManager conMgmt;
 	
@@ -31,12 +41,36 @@ public abstract class Connector
 	 *
 	 * @param docA the original document
 	 * @param docB the modified document
+	 * @param allowDifferentIds may mapped entities have different ids? see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}
+	 * @param careAboutNames should we care about names? see {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}
+	 * @param stricterNames should we handle the names very strictly? see {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}
+	 */
+	public Connector (TreeDocument docA, TreeDocument docB, boolean allowDifferentIds, boolean careAboutNames, boolean stricterNames)
+	{
+		this.docA = docA;
+		this.docB = docB;
+		conMgmt = new SimpleConnectionManager (docA, docB);
+		this.careAboutNames = careAboutNames;
+		this.stricterNames = stricterNames;
+		this.allowDifferentIds = allowDifferentIds;
+	}
+	
+	/**
+	 * Instantiates a new connector.
+	 *
+	 * Uses default values for the mapping, see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}, {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}, and {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}.
+	 * 
+	 * @param docA the original document
+	 * @param docB the modified document
 	 */
 	public Connector (TreeDocument docA, TreeDocument docB)
 	{
 		this.docA = docA;
 		this.docB = docB;
 		conMgmt = new SimpleConnectionManager (docA, docB);
+		this.careAboutNames = Diff.CARE_ABOUT_NAMES;
+		this.stricterNames = Diff.STRICTER_NAMES;
+		this.allowDifferentIds = Diff.ALLOW_DIFFERENT_IDS;
 	}
 	
 	/**

@@ -13,6 +13,7 @@ import de.unirostock.sems.bives.algorithm.general.PatchProducer;
 import de.unirostock.sems.bives.ds.Patch;
 import de.unirostock.sems.bives.ds.graph.GraphTranslator;
 import de.unirostock.sems.bives.markup.Typesetting;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TreeDocument;
 import de.unirostock.sems.xmlutils.exception.XmlDocumentParseException;
 import de.unirostock.sems.xmlutils.tools.XmlTools;
@@ -27,6 +28,34 @@ import de.unirostock.sems.xmlutils.tools.XmlTools;
  */
 public abstract class Diff
 {
+	/**
+	 * Are mappings of nodes with different ids allowed?
+	 * 
+	 * At the first glimpse that might sound stupid, but ids are generally arbitrary and say nothing valuable about the entities. they just need to be unique.. Look at the following two species:
+	 * <pre>
+	 * &lt;species id="s1" name="glucose" initial_concentration="0.1" compartment="cell" initialAmount="1" hasOnlySubstanceUnits="true" boundaryCondition="true" /&gt;
+	 * &lt;species id="species1" name="glucose" initial_concentration="0.1" compartment="cell" initialAmount="1" hasOnlySubstanceUnits="true" boundaryCondition="true" /&gt;
+	 * </pre>
+	 * The id attribute might just be assigned by two different tools, everything else is the same. Should we map these entities?
+	 * By default this is <code>true</code>.
+	 * 
+	 * @see de.unirostock.sems.xmlutils.ds.DocumentNode#getAttributeDistance(DocumentNode, boolean, boolean, boolean)
+	 */
+	public static final boolean ALLOW_DIFFERENT_IDS = true;
+	
+	/**
+	 * Do we care about names?
+	 * Should we treat names differently? They often provide more information than other attributes.
+	 * @see de.unirostock.sems.xmlutils.ds.DocumentNode#getAttributeDistance(DocumentNode, boolean, boolean, boolean)
+	 */
+	public static final boolean CARE_ABOUT_NAMES = true;
+	
+	/**
+	 * Should we handle names very strictly?
+	 * Go for this option if you're sure that you're names are very similar. 
+	 * @see de.unirostock.sems.xmlutils.ds.DocumentNode#getAttributeDistance(DocumentNode, boolean, boolean, boolean)
+	 */
+	public static final boolean STRICTER_NAMES = false;
 	
 	/** The tree corresponding to the former version. */
 	protected TreeDocument						treeA;
@@ -142,11 +171,36 @@ public abstract class Diff
 	/**
 	 * Map both trees.
 	 * 
+	 * This method let's you decide whether
+	 * <ul>
+	 * <li>mapped entities may have different ids,</li>
+	 * <li>we specially treat name attributes,</li>
+	 * <li>we handle names very strictly.</li>
+	 * </ul>
+	 * For default values see {@link de.unirostock.sems.bives.api.Diff#ALLOW_DIFFERENT_IDS}, {@link de.unirostock.sems.bives.api.Diff#CARE_ABOUT_NAMES}, and {@link de.unirostock.sems.bives.api.Diff#STRICTER_NAMES}.
+	 *
+	 * @param allowDifferentIds are mapped entities allowed to have different ids?
+	 * @param careAboutNames should we care about names?
+	 * @param stricterNames should we handle names very strictly?
+	 * @return true, if successful mapped
+	 * @throws Exception the exception
+	 */
+	public abstract boolean mapTrees (boolean allowDifferentIds, boolean careAboutNames, boolean stricterNames) throws Exception;
+	
+	
+	/**
+	 * Map both trees.
+	 * 
+	 * This method by default allows different ids, better cares about names (that means, different names are worse than different concentrations) but doesn't handle the names too strict. Compare {@link de.unirostock.sems.xmlutils.ds.DocumentNode#getAttributeDistance(DocumentNode, boolean, boolean, boolean)}.
+	 * 
 	 * @return true, if successful
 	 * @throws Exception
 	 *           the exception
 	 */
-	public abstract boolean mapTrees () throws Exception;
+	public boolean mapTrees () throws Exception
+	{
+		return mapTrees (ALLOW_DIFFERENT_IDS, CARE_ABOUT_NAMES, STRICTER_NAMES);
+	}
 	
 	
 	/**

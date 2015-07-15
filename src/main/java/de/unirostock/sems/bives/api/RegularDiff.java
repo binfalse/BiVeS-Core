@@ -73,15 +73,13 @@ public class RegularDiff
 	}
 	
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.unirostock.sems.bives.api.Diff#mapTrees()
+	/* (non-Javadoc)
+	 * @see de.unirostock.sems.bives.api.Diff#mapTrees(boolean, boolean, boolean)
 	 */
 	@Override
-	public boolean mapTrees () throws BivesConnectionException
+	public boolean mapTrees (boolean allowDifferentIds, boolean careAboutNames, boolean stricterNames) throws BivesConnectionException
 	{
-		XyDiffConnector con = new XyDiffConnector (treeA, treeB);
+		XyDiffConnector con = new XyDiffConnector (treeA, treeB, allowDifferentIds, careAboutNames, stricterNames);
 		con.findConnections ();
 		connections = con.getConnections ();
 		
