@@ -35,6 +35,8 @@ public class XyDiffConnector
 	extends Connector
 {
 	
+	public static double MAX_ATTR_DIST = .8;
+	
 	/** The level we definitely walk up (at least). */
 	private final int MIN_CANDIDATEPARENT_LEVEL = 6;
 	
@@ -496,7 +498,7 @@ public class XyDiffConnector
 			if (!textNodes)
 			{
 				DocumentNode dnodeA = (DocumentNode) nodeA, dnodeB = (DocumentNode) nodeB;
-				if (dnodeA.getAttributeDistance (dnodeB, allowDifferentIds, careAboutNames, stricterNames) < .9)
+				if (dnodeA.getAttributeDistance (dnodeB, allowDifferentIds, careAboutNames, stricterNames) < MAX_ATTR_DIST)
 				{
 					LOGGER.debug ("connect unambiguos nodes during optimization: ", nodeA.getXPath (), " --> ", nodeB.getXPath ());
 					conMgmt.addConnection (new NodeConnection (nodeA, nodeB));
@@ -534,7 +536,7 @@ public class XyDiffConnector
 		for (NodeDistance comp : distances)
 		{
 			// stop at too different nodes
-			if ((textNodes &&  comp.distance > 0.5) || (!textNodes && comp.distance > 0.9))
+			if ((textNodes &&  comp.distance > 0.5) || (!textNodes && comp.distance > MAX_ATTR_DIST))
 				break;
 			TreeNode na = comp.nodeA, nb = comp.nodeB;
 			if (conMgmt.getConnectionForNode (na) == null && conMgmt.getConnectionForNode (nb) == null)
