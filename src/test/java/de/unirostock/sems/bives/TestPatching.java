@@ -221,6 +221,7 @@ public class TestPatching
 		prod.init (conMgmt, doc1, doc2);
 		String patch = prod.produce ();
 		assertFalse ("XML patch shouldn't be empty", patch.isEmpty ());
+		assertTrue ("XML patch should contain bives version", patch.contains ("BiVeS compiled with"));
 		
 		Patch p = prod.getPatch ();
 		assertEquals ("expected 4 updates", 4, p.getNumUpdates ());
@@ -309,6 +310,7 @@ public class TestPatching
 	 */
 	public static void checkPatch (Patch patch)
 	{
+		
 		assertNotNull ("patch shouldn't be null", patch);
 		assertTrue ("#inserts in patch needs to be >= 0", 0 <= patch.getNumInserts ());
 		assertTrue ("#deletes in patch needs to be >= 0", 0 <= patch.getNumDeletes ());
