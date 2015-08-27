@@ -6,11 +6,13 @@ package de.unirostock.sems.bives.ds;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jdom2.Comment;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
+import de.unirostock.sems.bives.tools.BivesTools;
 import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
@@ -202,6 +204,8 @@ public class Patch
 		xmlDoc = new Document (rootElement);
 		
 		rootElement.setAttribute ("type", "fullDiff");// TODO: implement shortDiff
+		
+		rootElement.addContent (new Comment (BivesTools.getBivesVersion ()));
 		
 		// create nodes for inserts/updates/moves tec
 		update = new Element("update");
