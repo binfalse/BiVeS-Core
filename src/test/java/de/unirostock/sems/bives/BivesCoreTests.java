@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TestCompare.class, TestGraphs.class, TestMaths.class, TestPatching.class, TestSBO.class })
+@SuiteClasses({ TestCompare.class, TestGraphs.class, TestMaths.class, TestPatching.class, TestSBO.class, RdfTests.class })
 public class BivesCoreTests
 {
 	
