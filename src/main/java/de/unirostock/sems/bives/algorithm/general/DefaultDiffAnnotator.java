@@ -9,8 +9,8 @@ import de.unirostock.sems.bives.algorithm.DiffAnnotator;
 import de.unirostock.sems.comodi.Change;
 import de.unirostock.sems.comodi.ChangeFactory;
 import de.unirostock.sems.comodi.branches.ComodiChangeType;
-import de.unirostock.sems.comodi.branches.ComodiEntity;
 import de.unirostock.sems.comodi.branches.ComodiTarget;
+import de.unirostock.sems.comodi.branches.ComodiXmlEntity;
 import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
@@ -32,17 +32,17 @@ public class DefaultDiffAnnotator
 		ChangeFactory changeFac)
 	{
 		Change change = changeFac.createChange (diffNode)
-			.changeType (ComodiChangeType.getDeletion ());
+			.hasChangeType (ComodiChangeType.getDeletion ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
-			change.changeType (ComodiChangeType.getTriggered ());
+			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
 		
 		if (diffNode.getName ().equals ("attribute"))
-			change.appliedTo (ComodiEntity.getAttribute ());
+			change.appliesTo (ComodiXmlEntity.getAttribute ());
 		else if (diffNode.getName ().equals ("node"))
-			change.appliedTo (ComodiEntity.getNode ());
+			change.appliesTo (ComodiXmlEntity.getNode ());
 		else if (diffNode.getName ().equals ("text"))
-			change.appliedTo (ComodiEntity.getText ());
+			change.appliesTo (ComodiXmlEntity.getText ());
 		
 		return change;
 	}
@@ -56,77 +56,81 @@ public class DefaultDiffAnnotator
 		ChangeFactory changeFac)
 	{
 		Change change = changeFac.createChange (diffNode)
-			.changeType (ComodiChangeType.getInsertion ());
+			.hasChangeType (ComodiChangeType.getInsertion ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
-			change.changeType (ComodiChangeType.getTriggered ());
+			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
 		
 		if (diffNode.getName ().equals ("attribute"))
-			change.appliedTo (ComodiEntity.getAttribute ());
+			change.appliesTo (ComodiXmlEntity.getAttribute ());
 		else if (diffNode.getName ().equals ("node"))
-			change.appliedTo (ComodiEntity.getNode ());
+			change.appliesTo (ComodiXmlEntity.getNode ());
 		else if (diffNode.getName ().equals ("text"))
-			change.appliedTo (ComodiEntity.getText ());
+			change.appliesTo (ComodiXmlEntity.getText ());
 		
 		return change;
 	}
 	
 	
 	/* (non-Javadoc)
-	 * @see de.unirostock.sems.bives.algorithm.DiffAnnotator#annotateMove(de.unirostock.sems.xmlutils.ds.TreeNode, de.unirostock.sems.xmlutils.ds.TreeNode, org.jdom2.Element, de.unirostock.sems.comodi.ChangeBundle)
+	 * @see de.unirostock.sems.bives.algorithm.DiffAnnotator#annotateMove(de.unirostock.sems.xmlutils.ds.TreeNode, de.unirostock.sems.xmlutils.ds.TreeNode, org.jdom2.Element, de.unirostock.sems.comodi.ChangeFactory, boolean)
 	 */
 	@Override
 	public Change annotateMove (TreeNode nodeA, TreeNode nodeB, Element diffNode,
 		ChangeFactory changeFac, boolean permutation)
 	{
-		Change change = changeFac.createChange (diffNode)
-			.changeType (ComodiChangeType.getMove ());
+		Change change = changeFac.createChange (diffNode);
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
-			change.changeType (ComodiChangeType.getTriggered ());
+			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
 		
 		if (diffNode.getName ().equals ("node"))
-			change.appliedTo (ComodiEntity.getNode ());
+			change.appliesTo (ComodiXmlEntity.getNode ());
 		else if (diffNode.getName ().equals ("text"))
-			change.appliedTo (ComodiEntity.getText ());
+			change.appliesTo (ComodiXmlEntity.getText ());
 		else if (diffNode.getName ().equals ("attribute"))
-			change.appliedTo (ComodiEntity.getAttribute ());
+			change.appliesTo (ComodiXmlEntity.getAttribute ());
 		
 		if (permutation)
-			change.affected (ComodiTarget.getPermutationOfEntities ());
+			change.hasChangeType (ComodiChangeType.getPermutationOfEntities ());
+		else
+			change.hasChangeType (ComodiChangeType.getMove ());
 		
 		return change;
 	}
 	
 	
 	/* (non-Javadoc)
-	 * @see de.unirostock.sems.bives.algorithm.DiffAnnotator#annotateUpdateAttibute(de.unirostock.sems.xmlutils.ds.TreeNode, de.unirostock.sems.xmlutils.ds.TreeNode, java.lang.String, org.jdom2.Element, de.unirostock.sems.comodi.ChangeBundle)
+	 * @see de.unirostock.sems.bives.algorithm.DiffAnnotator#annotateUpdateAttribute(de.unirostock.sems.xmlutils.ds.TreeNode, de.unirostock.sems.xmlutils.ds.TreeNode, java.lang.String, org.jdom2.Element, de.unirostock.sems.comodi.ChangeFactory)
 	 */
 	@Override
 	public Change annotateUpdateAttribute (TreeNode nodeA, TreeNode nodeB,
 		String attributeName, Element diffNode, ChangeFactory changeFac)
 	{
 		Change change = changeFac.createChange (diffNode)
-			.appliedTo (ComodiEntity.getAttribute ())
-			.changeType (ComodiChangeType.getAttributeValue ());
+			.appliesTo (ComodiXmlEntity.getAttribute ())
+			.hasChangeType (ComodiChangeType.getAttributeValue ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
-			change.changeType (ComodiChangeType.getTriggered ());
+			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
 		
 		return change;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see de.unirostock.sems.bives.algorithm.DiffAnnotator#annotateUpdateText(de.unirostock.sems.xmlutils.ds.TextNode, de.unirostock.sems.xmlutils.ds.TextNode, org.jdom2.Element, de.unirostock.sems.comodi.ChangeFactory)
+	 */
 	@Override
 	public Change annotateUpdateText (TextNode nodeA, TextNode nodeB,
 		Element diffNode, ChangeFactory changeFac)
 	{
 		Change change = changeFac.createChange (diffNode)
-			.changeType (ComodiChangeType.getDeletion ())
-			.appliedTo (ComodiEntity.getText ());
+			.hasChangeType (ComodiChangeType.getDeletion ())
+			.appliesTo (ComodiXmlEntity.getText ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
-			change.changeType (ComodiChangeType.getTriggered ());
+			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
 		
 		return change;
 	}

@@ -3,6 +3,7 @@
  */
 package de.unirostock.sems.bives.ds;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,21 +12,38 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.algorithm.DiffAnnotator;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
+import de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator;
 import de.unirostock.sems.bives.tools.BivesTools;
+import de.unirostock.sems.comodi.ChangeFactory;
 import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
+import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 
 /**
  * The Class Patch storing all operations necessary to transfer one document into another.
  *
  * @author Martin Scharm
+ * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta">delta documentation</a>
  */
 public class Patch
 {
+	
+	/** The default file name of the path. This name will be used in the annotations to refer to elements in the path file. */
+	public static URI PATCH_FILE_NAME = URI.create ("file://bives-differences.patch");
+	
+	/** The actual current patch file name. */
+	private URI patchFileName;
+	
+	/** The change annotation factory. */
+	private ChangeFactory changeAnnotationFactory;
+	
+	/** The annotator for differences. */
+	private DiffAnnotator diffAnnotator;
 	
 	/** The latest used id in this document. */
 	private int id;
@@ -33,37 +51,154 @@ public class Patch
 	/** The XML document that will contain all operations. */
 	private Document xmlDoc;
 	
-	/** The nodes rooting subtrees for different kind of operations. */
-	private Element insert, delete, update, move;//, copy, glue;
+	/** The nodes rooting insert operations. */
+	private Element insert;
+	/** The nodes rooting delete operations. */
+	private Element delete;
+	/** The nodes rooting update operations. */
+	private Element update;
+	/** The nodes rooting move operations. */
+	private Element move;
+	//, copy, glue;
 	
-	/** The fullDiff flag indication whether this diff is a full diff. */
+	/** The fullDiff flag indicating whether this diff is a full diff. */
 	private boolean fullDiff;
+	
+	
+	/**
+	 * Instantiates a new patch specifying the file name of the resulting patch and an annotator to annotate the differences.
+	 * This will result in a patch of type fullDiff.
+	 * 
+	 * @param patchFileName the file name of the final patch
+	 * @param diffAnnotator the annotator for detected differences
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (URI patchFileName, DiffAnnotator diffAnnotator)
+	{
+		fullDiff = true;
+		init (patchFileName, diffAnnotator);
+	}
+	
+	/**
+	 * Instantiates a new patch specifying. an annotator to annotate the differences.
+	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This will result in a patch of type fullDiff.
+	 *
+	 * @param diffAnnotator the annotator for detected differences
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (DiffAnnotator diffAnnotator)
+	{
+		fullDiff = true;
+		init (PATCH_FILE_NAME, diffAnnotator);
+	}
+	
+	/**
+	 * Instantiates a new patch specifying the fullDiff flag, the file name of the resulting patch, and an annotator to annotate the differences.
+	 * If the fullDiff flag is set to false only a partially delta will be generated.
+	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
+	 * Set it to true to obtain a full delta.
+	 *
+	 * @param fullDiff the fullDiff flag
+	 * @param patchFileName the file name of the final patch
+	 * @param diffAnnotator the annotator for detected differences
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (boolean fullDiff, URI patchFileName, DiffAnnotator diffAnnotator)
+	{
+		this.fullDiff = fullDiff;
+		init (patchFileName, diffAnnotator);
+	}
+	
+	/**
+	 * Instantiates a new patch specifying the fullDiff flag and an annotator to annotate the differences.
+	 * If the fullDiff flag is set to false only a partial delta will be generated.
+	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
+	 * Set it to true to obtain a full delta.
+	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 *
+	 * @param fullDiff the fullDiff flag
+	 * @param diffAnnotator the annotator for detected differences
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (boolean fullDiff, DiffAnnotator diffAnnotator)
+	{
+		this.fullDiff = fullDiff;
+		init (PATCH_FILE_NAME, diffAnnotator);
+	}
+	
+	
+	/**
+	 * Instantiates a new patch specifying the file name of the resulting patch.
+	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
+	 * This will result in a patch of type fullDiff.
+	 * 
+	 * @param patchFileName the file name of the final patch
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (URI patchFileName)
+	{
+		fullDiff = true;
+		init (patchFileName, new DefaultDiffAnnotator ());
+	}
 	
 	/**
 	 * Instantiates a new patch.
+	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
+	 * This will result in a patch of type fullDiff.
+	 * 
+	 * 
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 * 
 	 */
 	public Patch ()
 	{
 		fullDiff = true;
-		init ();
+		init (PATCH_FILE_NAME, new DefaultDiffAnnotator ());
 	}
 	
 	/**
-	 * Instantiates a new patch. If the fullDiff flag is set to false only a partially diff will be generated.
-	 * This diff briefly describes the modifications, but cannot be used to transform one version of a document into another.
+	 * Instantiates a new patch specifying the fullDiff flag and the file name of the resulting patch.
+	 * If the fullDiff flag is set to false only a partial delta will be generated.
+	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
+	 * Set it to true to obtain a full delta.
+	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
+	 * 
 	 *
 	 * @param fullDiff the fullDiff flag
+	 * @param patchFileName the file name of the final patch
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
+	 */
+	public Patch (boolean fullDiff, URI patchFileName)
+	{
+		this.fullDiff = fullDiff;
+		init (patchFileName, new DefaultDiffAnnotator ());
+	}
+	
+	/**
+	 * Instantiates a new patch specifying the fullDiff flag.
+	 * If the fullDiff flag is set to false only a partial delta will be generated.
+	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
+	 * Set it to true to obtain a full delta.
+	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
+	 * 
+	 * 
+	 * @param fullDiff the fullDiff flag
+	 * @see <a href="https://sems.uni-rostock.de/trac/bives-core/wiki/BivesDelta#fulldiff">fullDiff documentation</a>
 	 */
 	public Patch (boolean fullDiff)
 	{
 		this.fullDiff = fullDiff;
-		init ();
+		init (PATCH_FILE_NAME, new DefaultDiffAnnotator ());
 	}
 	
 	/**
 	 * Gets the number of stored move operations.
 	 *
-	 * @return the number moves
+	 * @return the number of moves
 	 */
 	public int getNumMoves ()
 	{
@@ -73,7 +208,7 @@ public class Patch
 	/**
 	 * Gets the number of stored update operations.
 	 *
-	 * @return the number updates
+	 * @return the number of updates
 	 */
 	public int getNumUpdates ()
 	{
@@ -83,7 +218,7 @@ public class Patch
 	/**
 	 * Gets the number of stored delete operations.
 	 *
-	 * @return the number deletes
+	 * @return the number of deletes
 	 */
 	public int getNumDeletes ()
 	{
@@ -93,7 +228,7 @@ public class Patch
 	/**
 	 * Gets the number of stored insert operations.
 	 *
-	 * @return the number inserts
+	 * @return the number of inserts
 	 */
 	public int getNumInserts ()
 	{
@@ -142,6 +277,7 @@ public class Patch
 	
 	/**
 	 * Gets the number of node changes.
+	 * That is the number of differences in this patch that affect XML nodes.
 	 *
 	 * @return the number of node changes
 	 */
@@ -156,6 +292,7 @@ public class Patch
 	
 	/**
 	 * Gets the number of text changes.
+	 * That is the number of differences in this patch that affect XML text nodes.
 	 *
 	 * @return the number of text changes
 	 */
@@ -170,6 +307,7 @@ public class Patch
 	
 	/**
 	 * Gets the number of attribute changes.
+	 * That is the number of differences in this patch that affect XML attributes.
 	 *
 	 * @return the number of attribute changes
 	 */
@@ -183,22 +321,13 @@ public class Patch
 	
 	/**
 	 * Gets the document containing all changes.
+	 * If <code>inclAnnotations</code> is set to true the patch will have an embedded RDF subtree with annotations of the differences.
 	 *
+	 * @param inclAnnotations should the annotations be embedded into the patch
 	 * @return the document
 	 */
-	public Document getDocument ()
+	public Document getDocument (boolean inclAnnotations)
 	{
-		return xmlDoc;
-	}
-	
-	/**
-	 * Initializes the patch. Creates the XML document and the nodes which will root the different kinds of operations.
-	 */
-	private void init ()
-	{
-		LOGGER.info ("initializing patch w/ fullDiff = ", fullDiff);
-		id = 0;
-		
 		// add root element <bives type="fullDiff">
 		Element rootElement = new Element ("bives");
 		xmlDoc = new Document (rootElement);
@@ -207,21 +336,89 @@ public class Patch
 		
 		rootElement.addContent (new Comment (BivesTools.getBivesVersion ()));
 		
+		rootElement.addContent (update);
+		rootElement.addContent (delete);
+		rootElement.addContent (insert);
+		rootElement.addContent (move);
+		
+		if (inclAnnotations && changeAnnotationFactory.getNumStatements () > 0)
+		{
+			String xml = changeAnnotationFactory.getRdfXml ();
+			try
+			{
+				rootElement.addContent (XmlTools.readDocument (xml.replaceAll (patchFileName.toString (), "")).getRootElement ().detach ());
+			}
+			catch (Exception e)
+			{
+				LOGGER.error (e, "wasn't able to read rdf-annotations subtree to add it to the diff");
+			}
+		}
+		
+		return xmlDoc;
+	}
+	
+	
+	/**
+	 * Gets the number of annotations for the differences in this patch.
+	 *
+	 * @return the number annotations
+	 */
+	public int getNumAnnotations ()
+	{
+		return changeAnnotationFactory.getNumStatements ();
+	}
+	
+	/**
+	 * Gets the document containing all changes.
+	 *
+	 * @return the document
+	 */
+	public Document getDocument ()
+	{
+		return getDocument (true);
+	}
+	
+	/**
+	 * Gets the annotation document encoded in XML.
+	 *
+	 * @return the annotation document
+	 */
+	public String getAnnotationDocumentXml ()
+	{
+		return changeAnnotationFactory.getRdfXml ();
+	}
+	
+	/**
+	 * Gets the actual annotations.
+	 *
+	 * @return the annotations
+	 */
+	public ChangeFactory getAnnotations ()
+	{
+		return changeAnnotationFactory;
+	}
+	
+	/**
+	 * Initializes the patch.
+	 * Creates the the nodes which will root the different kinds of operations.
+	 * 
+	 * @param patchFileName the file name of the final patch
+	 * @param diffAnnotator the annotator to be used to annotate the differences
+	 */
+	private void init (URI patchFileName, DiffAnnotator diffAnnotator)
+	{
+		this.patchFileName = patchFileName;
+		this.diffAnnotator = diffAnnotator;
+		LOGGER.info ("initializing patch w/ fullDiff = ", fullDiff);
+		id = 0;
+		
 		// create nodes for inserts/updates/moves tec
 		update = new Element("update");
-		rootElement.addContent (update);
-		
-		
 		delete = new Element("delete");
-		rootElement.addContent (delete);
-		
-		
 		insert = new Element("insert");
-		rootElement.addContent (insert);
-		
-		
 		move = new Element("move");
-		rootElement.addContent (move);
+		
+		changeAnnotationFactory = new ChangeFactory (this.patchFileName);
 		
 		LOGGER.info ("initialized patch");
 	}
@@ -436,7 +633,10 @@ public class Patch
 	{
 		LOGGER.info ("deleting node ", toDelete.getXPath ());
 		int nodeId = ++id;
-		delete.addContent (createNodeElement (nodeId, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getTagName (), null, chainId));
+		
+		Element diffElement = createNodeElement (nodeId, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getTagName (), null, chainId);
+		delete.addContent (diffElement);
+		diffAnnotator.annotateDeletion (toDelete, diffElement, changeAnnotationFactory);
 		
 		if (!fullDiff)
 			return nodeId;
@@ -457,7 +657,10 @@ public class Patch
 	private void deleteAttribute (DocumentNode node, String attribute, int chainId)
 	{
 		LOGGER.info ("deleting attribute ", attribute, " of ", node.getXPath ());
-		delete.addContent (createAttributeElement (++id, node.getXPath (), null, attribute, node.getAttributeValue (attribute), null, chainId));
+		
+		Element diffElement = createAttributeElement (++id, node.getXPath (), null, attribute, node.getAttributeValue (attribute), null, chainId);
+		delete.addContent (diffElement);
+		diffAnnotator.annotateDeletion (node, diffElement, changeAnnotationFactory);
 	}
 	
 	/**
@@ -469,7 +672,10 @@ public class Patch
 	private void deleteNode (TextNode toDelete, int chainId)
 	{
 		LOGGER.info ("deleting text of ", toDelete.getXPath ());
-		delete.addContent (createTextElement (++id, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getText (), null, chainId));
+		
+		Element diffElement = createTextElement (++id, getParentXpath (toDelete), null, toDelete.getXPath (), null, getChildNo (toDelete), -1, toDelete.getText (), null, chainId); 
+		delete.addContent (diffElement);
+		diffAnnotator.annotateDeletion (toDelete, diffElement, changeAnnotationFactory);
 	}
 	
 	/**
@@ -534,7 +740,10 @@ public class Patch
 	{
 		LOGGER.info ("inserting node ", toInsert.getXPath ());
 		int nodeId = ++id;
-		insert.addContent (createNodeElement (nodeId, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getTagName (), chainId));
+		
+		Element diffElement = createNodeElement (nodeId, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getTagName (), chainId);
+		insert.addContent (diffElement);
+		diffAnnotator.annotateInsertion (toInsert, diffElement, changeAnnotationFactory);
 		
 		if (!fullDiff)
 			return nodeId;
@@ -555,7 +764,10 @@ public class Patch
 	private void insertAttribute (DocumentNode node, String attribute, int chainId)
 	{
 		LOGGER.info ("inserting attribute ", attribute, " of ", node.getXPath ());
-		insert.addContent (createAttributeElement (++id, null, node.getXPath (), attribute, null, node.getAttributeValue (attribute), chainId));
+		
+		Element diffElement = createAttributeElement (++id, null, node.getXPath (), attribute, null, node.getAttributeValue (attribute), chainId);
+		insert.addContent (diffElement);
+		diffAnnotator.annotateInsertion (node, diffElement, changeAnnotationFactory);
 	}
 	
 	/**
@@ -567,7 +779,10 @@ public class Patch
 	private void insertNode (TextNode toInsert, int chainId)
 	{
 		LOGGER.info ("inserting text of ", toInsert.getXPath ());
-		insert.addContent (createTextElement (++id, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getText (), chainId));
+		
+		Element diffElement = createTextElement (++id, null, getParentXpath (toInsert), null, toInsert.getXPath (), -1, getChildNo (toInsert), null, toInsert.getText (), chainId);
+		insert.addContent (diffElement);
+		diffAnnotator.annotateInsertion (toInsert, diffElement, changeAnnotationFactory);
 	}
 	
 	/**
@@ -602,16 +817,24 @@ public class Patch
 			{
 				LOGGER.info ("text differs");
 				Element e = createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), ((TextNode) a).getText (), ((TextNode) b).getText (), -1);
+				diffAnnotator.annotateUpdateText ((TextNode) a, (TextNode) b, e, changeAnnotationFactory);
 				
 				if (moveThem)
+				{
 					move.addContent (e);
+					diffAnnotator.annotateMove (a, b, e, changeAnnotationFactory, conMgmt.parentsConnected (c));
+				}
 				else
+				{
 					update.addContent (e);
+				}
 			}
 			else if (moveThem)
 			{
 				LOGGER.info ("equal text");
-				move.addContent (createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				Element diffElement = createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
+				move.addContent (diffElement);
+				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
 			}
 			return;
 		}
@@ -627,7 +850,10 @@ public class Patch
 			if (moveThem)
 			{
 				LOGGER.info ("nodes unmodified");
-				move.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				
+				Element diffElement = createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
+				move.addContent (diffElement);
+				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
 			}
 		}
 		else
@@ -636,12 +862,17 @@ public class Patch
 			if (!dA.getTagName ().equals (dB.getTagName ()))
 			{
 				LOGGER.info ("label of nodes differ -> updating");
-				update.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), dA.getTagName (), dB.getTagName (), -1));
+				
+				Element diffElement = createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), dA.getTagName (), dB.getTagName (), -1);
+				update.addContent (diffElement);
 			}
 			else if (moveThem)
 			{
 				LOGGER.info ("label of nodes do not differ -> moving");
-				move.addContent (createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1));
+				
+				Element diffElement = createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
+				move.addContent (diffElement);
+				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
 			}
 			
 			if (fullDiff)
@@ -660,7 +891,11 @@ public class Patch
 					else if (bA == null)
 						deleteAttribute (dA, attr, -1);
 					else if (!aA.equals (bA))
-						update.addContent (createAttributeElement (++id, a.getXPath (), b.getXPath (), attr, aA, bA, -1));
+					{
+						Element diffElement = createAttributeElement (++id, a.getXPath (), b.getXPath (), attr, aA, bA, -1);
+						update.addContent (diffElement);
+						diffAnnotator.annotateUpdateAttribute (a, b, attr, diffElement, changeAnnotationFactory);
+					}
 				}
 			}
 		}
