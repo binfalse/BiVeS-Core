@@ -5,19 +5,23 @@ package de.unirostock.sems.bives.ds;
 
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.jdom2.Comment;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.algorithm.DiffAnnotator;
+import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator;
 import de.unirostock.sems.bives.tools.BivesTools;
+import de.unirostock.sems.comodi.Change;
 import de.unirostock.sems.comodi.ChangeFactory;
-import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
 import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
@@ -791,7 +795,7 @@ public class Patch
 	 * @param c the connection between the old version of the node and the new version of it.
 	 * @param conMgmt the connection manager
 	 */
-	public void updateNode (Connection c, SimpleConnectionManager conMgmt)
+	public void updateNode (NodeConnection c, SimpleConnectionManager conMgmt)
 	{
 		TreeNode a = c.getTreeA ();
 		TreeNode b = c.getTreeB ();
@@ -810,6 +814,8 @@ public class Patch
 		if (moveThem && LOGGER.isInfoEnabled ())
 			LOGGER.info ("will move them: par: ", conMgmt.parentsConnected (c), " chNoA: ", getChildNo (a), " chNoB: ", getChildNo (b));
 		
+		Change change = null;
+		
 		// text node
 		if (a.getType () == TreeNode.TEXT_NODE)
 		{
@@ -817,12 +823,12 @@ public class Patch
 			{
 				LOGGER.info ("text differs");
 				Element e = createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), ((TextNode) a).getText (), ((TextNode) b).getText (), -1);
-				diffAnnotator.annotateUpdateText ((TextNode) a, (TextNode) b, e, changeAnnotationFactory);
+				change = diffAnnotator.annotateUpdateText ((TextNode) a, (TextNode) b, e, changeAnnotationFactory);
 				
 				if (moveThem)
 				{
 					move.addContent (e);
-					diffAnnotator.annotateMove (a, b, e, changeAnnotationFactory, conMgmt.parentsConnected (c));
+					change = diffAnnotator.annotateMove (a, b, e, changeAnnotationFactory, conMgmt.parentsConnected (c));
 				}
 				else
 				{
@@ -834,7 +840,12 @@ public class Patch
 				LOGGER.info ("equal text");
 				Element diffElement = createTextElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
 				move.addContent (diffElement);
-				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
+				change = diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
+			}
+			if (change != null)
+			{
+				for (Map.Entry<Property, RDFNode> annotation : c.getAnnotations ())
+					change.addAnnotation (annotation.getKey (), annotation.getValue ());
 			}
 			return;
 		}
@@ -853,7 +864,7 @@ public class Patch
 				
 				Element diffElement = createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
 				move.addContent (diffElement);
-				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
+				change = diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
 			}
 		}
 		else
@@ -872,7 +883,7 @@ public class Patch
 				
 				Element diffElement = createNodeElement (++id, getParentXpath (a), getParentXpath (b), a.getXPath (), b.getXPath (), getChildNo (a), getChildNo (b), null, null, -1);
 				move.addContent (diffElement);
-				diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
+				change = diffAnnotator.annotateMove (a, b, diffElement, changeAnnotationFactory, conMgmt.parentsConnected (c));
 			}
 			
 			if (fullDiff)
@@ -894,10 +905,15 @@ public class Patch
 					{
 						Element diffElement = createAttributeElement (++id, a.getXPath (), b.getXPath (), attr, aA, bA, -1);
 						update.addContent (diffElement);
-						diffAnnotator.annotateUpdateAttribute (a, b, attr, diffElement, changeAnnotationFactory);
+						change = diffAnnotator.annotateUpdateAttribute (a, b, attr, diffElement, changeAnnotationFactory);
 					}
 				}
 			}
+		}
+		if (change != null)
+		{
+			for (Map.Entry<Property, RDFNode> annotation : c.getAnnotations ())
+				change.addAnnotation (annotation.getKey (), annotation.getValue ());
 		}
 	}
 	

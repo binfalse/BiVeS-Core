@@ -3,6 +3,14 @@
  */
 package de.unirostock.sems.bives.algorithm;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+
 import de.unirostock.sems.xmlutils.comparison.Connection;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
 
@@ -13,8 +21,18 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  */
 public class NodeConnection implements  Connection
 {
-	private TreeNode a, b;
+	
+	/** The first node in this connection. */
+	private TreeNode a;
+	
+	/** The second node in this connection. */
+	private TreeNode b;
+	
+	/** The weight of this connection. */
 	private double weight;
+	
+	/** The annotations - a list of predicates and objects describing this connection. */
+	private List<Map.Entry<Property, RDFNode>> annotations;
 	
 	/**
 	 * Instantiates a new connection, implicitly setting the weight to 1.
@@ -27,6 +45,7 @@ public class NodeConnection implements  Connection
 		this.a = a;
 		this.b = b;
 		weight = 1;
+		annotations = new ArrayList<Map.Entry<Property, RDFNode>> ();
 	}
 	
 	
@@ -40,6 +59,7 @@ public class NodeConnection implements  Connection
 		this.a = toCopy.a;
 		this.b = toCopy.b;
 		weight = toCopy.weight;
+		annotations = new ArrayList<Map.Entry<Property, RDFNode>> ();
 	}
 	
 	/**
@@ -54,6 +74,28 @@ public class NodeConnection implements  Connection
 		this.a = a;
 		this.b = b;
 		this.weight = weight;
+		annotations = new ArrayList<Map.Entry<Property, RDFNode>> ();
+	}
+	
+	/**
+	 * Gets the annotations of this mapping. The annotation list is a list of predicates and objects.
+	 *
+	 * @return the annotations
+	 */
+	public List<Map.Entry<Property, RDFNode>> getAnnotations ()
+	{
+		return annotations;
+	}
+	
+	/**
+	 * Adds an annotation describing this node connection.
+	 *
+	 * @param predicate the predicate that relates to an object
+	 * @param object the actual object describing this element
+	 */
+	public void addAnnotation (Property predicate, RDFNode object)
+	{
+		annotations.add (new AbstractMap.SimpleEntry<>(predicate, object));
 	}
 	
 	/**
