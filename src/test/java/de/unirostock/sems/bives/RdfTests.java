@@ -3,11 +3,17 @@
  */
 package de.unirostock.sems.bives;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.List;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,6 +44,21 @@ public class RdfTests
 			{
 				RDF rdf = new RDF (node);
 				assertTrue ("expected different number of rdf statements", 0 < rdf.getDescriptions ().size ());
+				
+				
+				/*
+				String xml = XmlTools.prettyPrintDocument (DocumentTools.getSubDoc (rdf.getNode ()));
+				System.out.println (xml);
+				
+				Model model = ModelFactory.createDefaultModel();
+				model.read(new ByteArrayInputStream(xml.getBytes ()), "test/annotation-1", "RDF/XML");
+				StmtIterator stmts = model.listStatements ();
+				while (stmts.hasNext ())
+				{
+					Statement stmt = stmts.next ();
+					System.out.println (stmt);
+				}
+				*/
 			}
 			
 		}
