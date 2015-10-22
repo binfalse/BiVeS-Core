@@ -4,6 +4,7 @@
 package de.unirostock.sems.bives.algorithm.general;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.algorithm.Producer;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.ds.Patch;
@@ -92,7 +93,7 @@ public class PatchProducer
 				}
 				else
 				{
-					patch.updateNode (conMgmt.getConnectionForNode (node), conMgmt);
+					patch.updateNode ((NodeConnection) conMgmt.getConnectionForNode (node), conMgmt);
 				}
 			}
 			
