@@ -25,6 +25,8 @@ import de.unirostock.sems.xmlutils.tools.XmlTools;
 
 /**
  * The Class TestPatching.
+ * 
+ * TODO: test no patch
  */
 @RunWith(JUnit4.class)
 public class TestPatching
@@ -53,6 +55,28 @@ public class TestPatching
 		else
 		{
 			LOGGER.error ("cannot read ", SIMPLE_DOC, " -> skipping tests");
+		}
+	}
+
+	/**
+	 * Test annotations with comodi.
+	 */
+	@Test
+	public void testPatchAnnotations ()
+	{
+		try
+		{
+			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-1")), null);
+			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-2")), null);
+			
+			// num http://purl.org/net/comodi#Insertion = num children of insert
+			// num http://purl.org/net/comodi#Attribute = num nodes with label attribute
+			// etc
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail ("unexpected error creating patch with annotations: " + e);
 		}
 	}
 
