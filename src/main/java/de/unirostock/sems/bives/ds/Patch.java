@@ -340,10 +340,10 @@ public class Patch
 		
 		rootElement.addContent (new Comment (BivesTools.getBivesVersion ()));
 		
-		rootElement.addContent (update);
-		rootElement.addContent (delete);
-		rootElement.addContent (insert);
-		rootElement.addContent (move);
+		rootElement.addContent (update.clone ());
+		rootElement.addContent (delete.clone ());
+		rootElement.addContent (insert.clone ());
+		rootElement.addContent (move.clone ());
 		
 		if (inclAnnotations && changeAnnotationFactory.getNumStatements () > 0)
 		{
