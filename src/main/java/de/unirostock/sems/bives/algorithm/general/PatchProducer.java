@@ -4,6 +4,7 @@
 package de.unirostock.sems.bives.algorithm.general;
 
 import de.binfalse.bflog.LOGGER;
+import de.unirostock.sems.bives.algorithm.DiffAnnotator;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.algorithm.Producer;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
@@ -29,12 +30,34 @@ public class PatchProducer
 	/** The full-diff-flag. if false we'll produce shorter diffs. somewhen in the future.. ;-) */
 	private boolean fullDiff;
 	
+	/** The annotation infrastructure to store knowledge about the changes. */
+	private DiffAnnotator diffAnnotator;
+	
 	/* (non-Javadoc)
 	 * @see de.unirostock.sems.bives.algorithm.Producer#init(de.unirostock.sems.bives.algorithm.SimpleConnectionManager, de.unirostock.sems.xmlutils.ds.TreeDocument, de.unirostock.sems.xmlutils.ds.TreeDocument)
 	 */
 	public void init (SimpleConnectionManager conMgmt, TreeDocument docA, TreeDocument docB)
 	{
 		super.init (conMgmt, docA, docB);
+		fullDiff = true;
+		LOGGER.info ("creating patch producer: ");// + conMgmt + " " + docA + " " + docB);
+	}
+	
+	
+	/**
+	 * Initialise this patch producer providing a diff annotator.
+	 *
+	 * @param conMgmt the connection manager storing all connections
+	 * @param docA the original document
+	 * @param docB the modified document
+	 * @param annotator the annotator
+	 * 
+	 * @see DiffAnnotator
+	 */
+	public void init (SimpleConnectionManager conMgmt, TreeDocument docA, TreeDocument docB, DiffAnnotator annotator)
+	{
+		super.init (conMgmt, docA, docB);
+		diffAnnotator = annotator;
 		fullDiff = true;
 		LOGGER.info ("creating patch producer: ");// + conMgmt + " " + docA + " " + docB);
 	}
@@ -68,7 +91,10 @@ public class PatchProducer
 	{
 		LOGGER.info ("producing patch -- incl annotations: ", inclAnnotations);
 		
-		patch = new Patch (fullDiff);
+		if (diffAnnotator == null)
+			patch = new Patch (fullDiff);
+		else
+			patch = new Patch (fullDiff, diffAnnotator);
 		
 		// examine original document
 		producePatchA (docA.getRoot ());

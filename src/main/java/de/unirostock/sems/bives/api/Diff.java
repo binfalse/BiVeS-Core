@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.jdom2.JDOMException;
 
+import de.unirostock.sems.bives.algorithm.DiffAnnotator;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.PatchProducer;
 import de.unirostock.sems.bives.ds.Patch;
@@ -77,6 +78,9 @@ public abstract class Diff
 	/** The XML patch including annotations. */
 	private String										xmlPatchInclAnnotations;
 	
+	/** The annotation infrastructure to store knowledge about the changes. */
+	private DiffAnnotator diffAnnotator;
+	
 	
 	/**
 	 * Instantiates a new diff object in order to compare two documents stored in
@@ -126,6 +130,64 @@ public abstract class Diff
 	{
 		this.treeA = treeA;
 		this.treeB = treeB;
+	}
+	
+	
+
+	
+	
+	/**
+	 * Instantiates a new diff object in order to compare two documents stored in
+	 * files fileA and fileB.
+	 *
+	 * @param fileA the file containing the former version
+	 * @param fileB the file containing the later version
+	 * @param diffAnnotator the annotator for identified changes
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
+	 */
+	public Diff (File fileA, File fileB, DiffAnnotator diffAnnotator) throws XmlDocumentParseException, IOException, JDOMException
+	{
+		treeA = new TreeDocument (XmlTools.readDocument (fileA),
+			fileA.toURI ());
+		treeB = new TreeDocument (XmlTools.readDocument (fileB),
+			fileB.toURI ());
+		this.diffAnnotator = diffAnnotator;
+	}
+	
+	
+	/**
+	 * Instantiates a new diff object in order to compare two documents stored in
+	 * strings docA and docB.
+	 *
+	 * @param docA the former version
+	 * @param docB the later version
+	 * @param diffAnnotator the annotator for identified changes
+	 * @throws XmlDocumentParseException the xml document parse exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws JDOMException the jDOM exception
+	 */
+	public Diff (String docA, String docB, DiffAnnotator diffAnnotator) throws XmlDocumentParseException, IOException, JDOMException
+	{
+		treeA = new TreeDocument (XmlTools.readDocument (docA), null);
+		treeB = new TreeDocument (XmlTools.readDocument (docB), null);
+		this.diffAnnotator = diffAnnotator;
+	}
+	
+	
+	/**
+	 * Instantiates a new diff object in order to compare two tree documents.
+	 *
+	 * @param treeA the former version of the tree
+	 * @param treeB the later version of the tree
+	 * @param diffAnnotator the annotator for identified changes
+	 */
+	public Diff (TreeDocument treeA, TreeDocument treeB, DiffAnnotator diffAnnotator)
+	{
+		this.treeA = treeA;
+		this.treeB = treeB;
+		this.diffAnnotator = diffAnnotator;
 	}
 	
 	
@@ -181,7 +243,7 @@ public abstract class Diff
 		if (patchProducer == null)
 		{
 			patchProducer = new PatchProducer ();
-			patchProducer.init (connections, treeA, treeB);
+			patchProducer.init (connections, treeA, treeB, diffAnnotator);
 			xmlPatch = null;
 			xmlPatchInclAnnotations = patchProducer.produce (true);
 			patch = patchProducer.getPatch ();
