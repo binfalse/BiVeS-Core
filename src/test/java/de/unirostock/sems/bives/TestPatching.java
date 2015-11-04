@@ -109,18 +109,16 @@ public class TestPatching
 					i++;
 					String subj = stmt.getSubject ().toString ();
 					String subjId = subj.substring ("file://bives-differences.patch#".length ());
-					//System.out.println (subj);
-					if (map.containsKey (subj))
-						System.err.println ("map already contained key " + stmt.getSubject ());
+					
+					// System.out.println (subj);
+					assertFalse ("two subjects annotated with a deletion", map.containsKey (subj));
 					map.put (subj, subj);
 					
-					if (!myPathDoc.getNodeById (subjId).getXPath ().contains ("delete"))
-						System.err.println (subj + " is not in deletes: " + myPathDoc.getNodeById (subjId).getXPath ());
+					assertTrue ("xpath if annotated with delete", myPathDoc.getNodeById (subjId).getXPath ().contains ("delete"));
 				}
 			}
 
-			System.out.println (patch.getDeletes ().getChildren ().size ());
-			System.out.println (i);
+			assertEquals ("num deletes and del annotations expected to be equal", patch.getDeletes ().getChildren ().size (), i);
 			
 			// num http://purl.org/net/comodi#Insertion = num children of insert
 			assertEquals ("expected as much inserts as insert annotations", patch.getNumInserts (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Insertion"));
