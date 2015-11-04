@@ -104,11 +104,16 @@ public class TestPatching
 			{
 //				System.out.println (stmtIt.next ().getSubject ());
 				Statement stmt = stmtIt.next ();
+				
+				String subj = stmt.getSubject ().toString ();
+				String subjId = subj.substring ("file://bives-differences.patch#".length ());
+				
+				if (stmt.toString ().contains ("http://purl.org/net/comodi#wasTriggeredBy"))
+					assertNotNull ("elements annotated with `wasTriggeredBy` are expected to have a triggered attribute", myPathDoc.getNodeById (subjId).getAttributeValue ("triggeredBy"));
+				
 				if (stmt.toString ().contains ("http://purl.org/net/comodi#Deletion"))
 				{
 					i++;
-					String subj = stmt.getSubject ().toString ();
-					String subjId = subj.substring ("file://bives-differences.patch#".length ());
 					
 					// System.out.println (subj);
 					assertFalse ("two subjects annotated with a deletion", map.containsKey (subj));
