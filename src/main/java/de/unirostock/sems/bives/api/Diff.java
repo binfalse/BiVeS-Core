@@ -71,8 +71,11 @@ public abstract class Diff
 	/** The patch. */
 	private Patch											patch;
 	
-	/** The xml patch. */
+	/** The XML patch. */
 	private String										xmlPatch;
+	
+	/** The XML patch including annotations. */
+	private String										xmlPatchInclAnnotations;
 	
 	
 	/**
@@ -133,9 +136,27 @@ public abstract class Diff
 	 */
 	public String getDiff ()
 	{
-		if (xmlPatch == null)
+		return getDiff (true);
+	}
+	
+	
+	/**
+	 * Gets the differences encoded in an XML string
+	 *
+	 * @param inclAnnotations include annotations in the XML patch
+	 * @return the diff
+	 */
+	public String getDiff (boolean inclAnnotations)
+	{
+		if (patch == null)
 			producePatch ();
-		return xmlPatch;
+		
+		if (inclAnnotations && xmlPatchInclAnnotations == null)
+			xmlPatchInclAnnotations = XmlTools.prettyPrintDocument (patch.getDocument (true));
+		if (!inclAnnotations && xmlPatch == null)
+			xmlPatch = XmlTools.prettyPrintDocument (patch.getDocument (false));
+		
+		return inclAnnotations ? xmlPatchInclAnnotations : xmlPatch;
 	}
 	
 	
@@ -153,7 +174,7 @@ public abstract class Diff
 	
 	
 	/**
-	 * Produce the patch (if it wasn't so far).
+	 * Produce the patch (if it's not there yet).
 	 */
 	private void producePatch ()
 	{
@@ -161,7 +182,8 @@ public abstract class Diff
 		{
 			patchProducer = new PatchProducer ();
 			patchProducer.init (connections, treeA, treeB);
-			xmlPatch = patchProducer.produce ();
+			xmlPatch = null;
+			xmlPatchInclAnnotations = patchProducer.produce (true);
 			patch = patchProducer.getPatch ();
 		}
 		
