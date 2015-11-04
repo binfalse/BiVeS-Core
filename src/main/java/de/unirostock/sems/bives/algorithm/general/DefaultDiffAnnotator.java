@@ -126,7 +126,7 @@ public class DefaultDiffAnnotator
 		Element diffNode, ChangeFactory changeFac)
 	{
 		Change change = changeFac.createChange (diffNode)
-			.hasChangeType (ComodiChangeType.getDeletion ())
+			.hasChangeType (ComodiChangeType.getUpdate ())
 			.appliesTo (ComodiXmlEntity.getText ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
