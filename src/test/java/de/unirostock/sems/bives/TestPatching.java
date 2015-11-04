@@ -127,7 +127,7 @@ public class TestPatching
 			assertTrue ("expected at least one insert", patch.getNumInserts () != 0);
 			assertEquals ("expected as much deletes as delete annotations", patch.getNumDeletes (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Deletion"));
 			assertTrue ("expected at least one delete", patch.getNumDeletes () != 0);
-			assertEquals ("expected as much moves as move annotations", patch.getNumMoves (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Move"));
+			assertEquals ("expected as much moves as move annotations", patch.getNumMoves (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Move") + countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#PermutationOfEntities"));
 			assertTrue ("expected at least one move", patch.getNumMoves () != 0);
 			assertEquals ("expected as much updates as update annotations", patch.getNumUpdates (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Update"));
 			assertTrue ("expected at least one update", patch.getNumUpdates () != 0);
