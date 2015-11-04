@@ -55,7 +55,18 @@ public class PatchProducer
 	@Override
 	public String produce ()
 	{
-		LOGGER.info ("producing patch");
+		return produce (true);
+	}
+	
+	/**
+	 * Produce the patch.
+	 *
+	 * @param inclAnnotations should annotations be included in the path
+	 * @return the string
+	 */
+	public String produce (boolean inclAnnotations)
+	{
+		LOGGER.info ("producing patch -- incl annotations: ", inclAnnotations);
 		
 		patch = new Patch (fullDiff);
 		
@@ -67,8 +78,22 @@ public class PatchProducer
 		
 		LOGGER.info ("patch finished, producing xml output");
 		
-		return XmlTools.prettyPrintDocument (patch.getDocument ());
+		return XmlTools.prettyPrintDocument (patch.getDocument (inclAnnotations));
 	}
+	
+	/**
+	 * Gets the annotations of the patch.
+	 *
+	 * @return the annotations
+	 */
+	public String getAnnotations ()
+	{
+		if (patch == null)
+			return null;
+		return patch.getAnnotationDocumentXml ();
+	}
+	
+	
 	
 	/**
 	 * Produce patch parts of the original document, recursively.
