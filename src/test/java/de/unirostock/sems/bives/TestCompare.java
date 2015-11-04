@@ -208,7 +208,6 @@ public class TestCompare
 			//LOGGER.setMinLevel (LOGGER.WARN);
 			Patch patch = diff.getPatch ();
 			TestPatching.checkPatch (patch);
-			System.out.println (diff.getDiff ());
 			assertEquals ("expected 5 deletes", 5, patch.getNumDeletes ());
 			assertEquals ("expected 8 inserts", 8, patch.getNumInserts ());
 			// TODO
