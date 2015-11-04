@@ -1,20 +1,32 @@
 package de.unirostock.sems.bives;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.jdom2.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import de.binfalse.bflog.LOGGER;
+import de.binfalse.bfutils.GeneralTools;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.PatchProducer;
+import de.unirostock.sems.bives.api.Diff;
+import de.unirostock.sems.bives.api.RegularDiff;
 import de.unirostock.sems.bives.ds.Patch;
 import de.unirostock.sems.bives.exception.BivesConnectionException;
 import de.unirostock.sems.xmlutils.ds.DocumentNode;
@@ -26,7 +38,7 @@ import de.unirostock.sems.xmlutils.tools.XmlTools;
 /**
  * The Class TestPatching.
  * 
- * TODO: test no patch
+ * TODO: test no annotations
  */
 @RunWith(JUnit4.class)
 public class TestPatching
@@ -69,7 +81,57 @@ public class TestPatching
 			TreeDocument supp1 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-1")), null);
 			TreeDocument supp2 = new TreeDocument (XmlTools.readDocument (new File ("test/annotation-2")), null);
 			
+
+			Diff diff = new RegularDiff (supp1, supp2);
+			diff.mapTrees ();
+			Patch patch = diff.getPatch ();
+//			System.out.println (diff.getDiff (false));
+//			GeneralTools.stringToFile (diff.getDiff (false), new File ("/tmp/bives.debug1"));
+//			GeneralTools.stringToFile (patch.getAnnotationDocumentXml (), new File ("/tmp/bives.debug2"));
+			TestPatching.checkPatch (patch);
+
+			Document patchDoc = patch.getDocument (false);
+			TreeDocument annotationsDoc = new TreeDocument (XmlTools.readDocument (patch.getAnnotationDocumentXml ()), null);
+			
+			
+			
+			TreeDocument myPathDoc = new TreeDocument (patchDoc, null);
+			
+			StmtIterator stmtIt = patch.getAnnotations ().getAnnotaions ().listStatements ();
+			int i = 0;
+			Map<String,String> map = new HashMap<String,String> ();
+			while (stmtIt.hasNext ())
+			{
+//				System.out.println (stmtIt.next ().getSubject ());
+				Statement stmt = stmtIt.next ();
+				if (stmt.toString ().contains ("http://purl.org/net/comodi#Deletion"))
+				{
+					i++;
+					String subj = stmt.getSubject ().toString ();
+					String subjId = subj.substring ("file://bives-differences.patch#".length ());
+					//System.out.println (subj);
+					if (map.containsKey (subj))
+						System.err.println ("map already contained key " + stmt.getSubject ());
+					map.put (subj, subj);
+					
+					if (!myPathDoc.getNodeById (subjId).getXPath ().contains ("delete"))
+						System.err.println (subj + " is not in deletes: " + myPathDoc.getNodeById (subjId).getXPath ());
+				}
+			}
+
+			System.out.println (patch.getDeletes ().getChildren ().size ());
+			System.out.println (i);
+			
 			// num http://purl.org/net/comodi#Insertion = num children of insert
+			assertEquals ("expected as much inserts as insert annotations", patch.getNumInserts (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Insertion"));
+			assertTrue ("expected at least one insert", patch.getNumInserts () != 0);
+			assertEquals ("expected as much deletes as delete annotations", patch.getNumDeletes (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Deletion"));
+			assertTrue ("expected at least one delete", patch.getNumDeletes () != 0);
+			assertEquals ("expected as much moves as move annotations", patch.getNumMoves (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Move"));
+			assertTrue ("expected at least one move", patch.getNumMoves () != 0);
+			assertEquals ("expected as much updates as update annotations", patch.getNumUpdates (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Update"));
+			assertTrue ("expected at least one update", patch.getNumUpdates () != 0);
+			
 			// num http://purl.org/net/comodi#Attribute = num nodes with label attribute
 			// etc
 		}
@@ -78,6 +140,19 @@ public class TestPatching
 			e.printStackTrace();
 			fail ("unexpected error creating patch with annotations: " + e);
 		}
+	}
+	
+	private int countAnnotationUrls (DocumentNode dn, String url)
+	{
+		int i = 0;
+		if (dn.getAttribute ("resource") != null && dn.getAttributeValue ("resource").endsWith (url))
+			i++;
+		
+		for (TreeNode tn : dn.getChildren ())
+			if (tn.getType () == TreeNode.DOC_NODE)
+				i += countAnnotationUrls (((DocumentNode) tn), url);
+		
+		return i;
 	}
 
 	/**
