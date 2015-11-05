@@ -85,7 +85,7 @@ public class TestPatching
 			Diff diff = new RegularDiff (supp1, supp2);
 			diff.mapTrees ();
 			Patch patch = diff.getPatch ();
-//			System.out.println (diff.getDiff (false));
+//			System.out.println (diff.getDiff (true));
 //			GeneralTools.stringToFile (diff.getDiff (false), new File ("/tmp/bives.debug1"));
 //			GeneralTools.stringToFile (patch.getAnnotationDocumentXml (), new File ("/tmp/bives.debug2"));
 			TestPatching.checkPatch (patch);

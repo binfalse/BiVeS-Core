@@ -102,6 +102,8 @@ public class PatchProducer
 		// examine modified version
 		producePatchB (docB.getRoot ());
 		
+		
+		patch.annotatePatch ();
 		LOGGER.info ("patch finished, producing xml output");
 		
 		return XmlTools.prettyPrintDocument (patch.getDocument (inclAnnotations));
