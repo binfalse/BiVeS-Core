@@ -337,6 +337,7 @@ public class Patch
 		xmlDoc = new Document (rootElement);
 		
 		rootElement.setAttribute ("type", "fullDiff");// TODO: implement shortDiff
+		rootElement.setAttribute ("id", "bivesPatch");
 		
 		rootElement.addContent (new Comment (BivesTools.getBivesVersion ()));
 		
@@ -937,5 +938,13 @@ public class Patch
 	private String getParentXpath (TreeNode n)
 	{
 		return n.isRoot () ? "" : n.getParent ().getXPath ();
+	}
+
+	/**
+	 * Annotate the whole patch.
+	 */
+	public void annotatePatch ()
+	{
+		diffAnnotator.annotatePatch ("bivesPatch", changeAnnotationFactory);
 	}
 }
