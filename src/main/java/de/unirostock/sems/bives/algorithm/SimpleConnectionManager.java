@@ -377,7 +377,7 @@ public class SimpleConnectionManager implements ConnectionManager
 	}
 	
 	/**
-	 * Check if parents connected. Parents are connected if there exists a connection between the parents of both nodes or both nodes don't have a parent (~> parents of two roots are connected!)
+	 * Check if parents connected. Parents are connected if there exists a connection between the parents of both nodes or both nodes don't have a parent (~&gt; parents of two roots are connected!)
 	 *
 	 * @param c the c
 	 * @return true, if connected

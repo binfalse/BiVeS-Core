@@ -85,7 +85,7 @@ public class Patch
 	
 	/**
 	 * Instantiates a new patch specifying. an annotator to annotate the differences.
-	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This constructor assumes that the final patch will be called {@link #PATCH_FILE_NAME}.
 	 * This will result in a patch of type fullDiff.
 	 *
 	 * @param diffAnnotator the annotator for detected differences
@@ -119,7 +119,7 @@ public class Patch
 	 * If the fullDiff flag is set to false only a partial delta will be generated.
 	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
 	 * Set it to true to obtain a full delta.
-	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This constructor assumes that the final patch will be called {@link #PATCH_FILE_NAME}.
 	 *
 	 * @param fullDiff the fullDiff flag
 	 * @param diffAnnotator the annotator for detected differences
@@ -134,7 +134,7 @@ public class Patch
 	
 	/**
 	 * Instantiates a new patch specifying the file name of the resulting patch.
-	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This constructor assumes that the final patch will be called {@link #PATCH_FILE_NAME}.
 	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
 	 * This will result in a patch of type fullDiff.
 	 * 
@@ -149,7 +149,7 @@ public class Patch
 	
 	/**
 	 * Instantiates a new patch.
-	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This constructor assumes that the final patch will be called {@link #PATCH_FILE_NAME}.
 	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
 	 * This will result in a patch of type fullDiff.
 	 * 
@@ -186,7 +186,7 @@ public class Patch
 	 * If the fullDiff flag is set to false only a partial delta will be generated.
 	 * Thus, the delta will briefly describe the modifications, but cannot be used to transform one version of a document into the other.
 	 * Set it to true to obtain a full delta.
-	 * This constructor assumes that the final patch will be called {@value #PATCH_FILE_NAME}.
+	 * This constructor assumes that the final patch will be called {@link #PATCH_FILE_NAME}.
 	 * To annotate the differences a new instance of the {@link de.unirostock.sems.bives.algorithm.general.DefaultDiffAnnotator DefaultDiffAnnotator} will be created.
 	 * 
 	 * 
@@ -578,7 +578,7 @@ public class Patch
 	 * Mark a whole subtree as deleted.
 	 *
 	 * @param toDelete the node rooting the subtree to delete
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	public void deleteSubtree (TreeNode toDelete, int chainId)
 	{
@@ -607,7 +607,7 @@ public class Patch
 	 * Delete a single node.
 	 *
 	 * @param toDelete the node to delete
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	public void deleteNode (TreeNode toDelete, int chainId)
 	{
@@ -631,7 +631,7 @@ public class Patch
 	 * Delete a single document node.
 	 *
 	 * @param toDelete the node to delete
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 * @return the id of the delete-operation-node in the XML delta
 	 */
 	private int deleteNode (DocumentNode toDelete, int chainId)
@@ -657,7 +657,7 @@ public class Patch
 	 *
 	 * @param node the node carrying the attribute
 	 * @param attribute the attribute to delete
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	private void deleteAttribute (DocumentNode node, String attribute, int chainId)
 	{
@@ -672,7 +672,7 @@ public class Patch
 	 * Delete a single text node.
 	 *
 	 * @param toDelete the node to delete
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	private void deleteNode (TextNode toDelete, int chainId)
 	{
@@ -687,7 +687,7 @@ public class Patch
 	 * Mark a whole subtree as inserted.
 	 *
 	 * @param toInsert the node rooting the subtree to insert
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	public void insertSubtree (TreeNode toInsert, int chainId)
 	{
@@ -714,7 +714,7 @@ public class Patch
 	 * Insert a single node.
 	 *
 	 * @param toInsert the node to insert
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	public void insertNode (TreeNode toInsert, int chainId)
 	{
@@ -738,7 +738,7 @@ public class Patch
 	 * Insert a single node.
 	 *
 	 * @param toInsert the document node to insert
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 * @return the id of the insert-operation-node in the XML delta
 	 */
 	public int insertNode (DocumentNode toInsert, int chainId)
@@ -764,7 +764,7 @@ public class Patch
 	 *
 	 * @param node the node carrying the attribute to insert
 	 * @param attribute the attribute to insert
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	private void insertAttribute (DocumentNode node, String attribute, int chainId)
 	{
@@ -779,7 +779,7 @@ public class Patch
 	 * Insert a single node.
 	 *
 	 * @param toInsert the text node to insert
-	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or <1 otherwise
+	 * @param chainId the chain id: id of the trigger, if this modification was triggered, or &lt;1 otherwise
 	 */
 	private void insertNode (TextNode toInsert, int chainId)
 	{
