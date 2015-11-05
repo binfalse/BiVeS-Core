@@ -19,6 +19,18 @@ import de.unirostock.sems.xmlutils.ds.TreeNode;
  */
 public abstract class DiffAnnotator
 {
+	
+	/**
+	 * Annotate the Patch itself with information about the software used to create this .
+	 * 
+	 * As this function might add an annotation about the aggregation of all changes:
+	 * <strong>This function should be called at the very end of the annotation process!</strong>
+	 * 
+	 * @param rootId the id of the parent node of the patch
+	 * @param changeFac the change factory to produce changes
+	 */
+	public abstract void annotatePatch (String rootId, ChangeFactory changeFac);
+	
 	/**
 	 * Annotate a deletion.
 	 * @param node this node or something in this node was deleted
