@@ -346,7 +346,7 @@ public class Patch
 		rootElement.addContent (insert.clone ());
 		rootElement.addContent (move.clone ());
 		
-		if (inclAnnotations && changeAnnotationFactory.getNumStatements () > 0)
+		if (inclAnnotations)
 		{
 			String xml = changeAnnotationFactory.getRdfXml ();
 			try
