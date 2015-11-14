@@ -198,7 +198,7 @@ public abstract class Diff
 	 */
 	public String getDiff ()
 	{
-		return getDiff (true);
+		return getDiff (false);
 	}
 	
 	
