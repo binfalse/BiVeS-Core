@@ -124,7 +124,7 @@ public class TestPatching
 
 			assertEquals ("num deletes and del annotations expected to be equal", patch.getDeletes ().getChildren ().size (), i);
 			
-			// num http://purl.org/net/comodi#Insertion = num children of insert
+			// num http://purl.uni-rostock.de/comodi/comodi#Insertion = num children of insert
 			assertEquals ("expected as much inserts as insert annotations", patch.getNumInserts (), countAnnotationUrls (annotationsDoc.getRoot (), "Insertion"));
 			assertTrue ("expected at least one insert", patch.getNumInserts () != 0);
 			assertEquals ("expected as much deletes as delete annotations", patch.getNumDeletes (), countAnnotationUrls (annotationsDoc.getRoot (), "Deletion"));
@@ -134,7 +134,7 @@ public class TestPatching
 			assertEquals ("expected as much updates as update annotations", patch.getNumUpdates (), countAnnotationUrls (annotationsDoc.getRoot (), "Update"));
 			assertTrue ("expected at least one update", patch.getNumUpdates () != 0);
 			
-			// num http://purl.org/net/comodi#Attribute = num nodes with label attribute
+			// num http://purl.uni-rostock.de/comodi/comodi#Attribute = num nodes with label attribute
 			// etc
 		}
 		catch (Exception e)
