@@ -11,7 +11,6 @@ import de.unirostock.sems.bives.algorithm.DiffAnnotator;
 import de.unirostock.sems.bives.tools.BivesTools;
 import de.unirostock.sems.comodi.Change;
 import de.unirostock.sems.comodi.ChangeFactory;
-import de.unirostock.sems.comodi.branches.ComodiChangeType;
 import de.unirostock.sems.comodi.branches.ComodiXmlEntity;
 import de.unirostock.sems.xmlutils.ds.TextNode;
 import de.unirostock.sems.xmlutils.ds.TreeNode;
@@ -33,8 +32,7 @@ public class DefaultDiffAnnotator
 	public Change annotateDeletion (TreeNode node, Element diffNode,
 		ChangeFactory changeFac)
 	{
-		Change change = changeFac.createChange (diffNode)
-			.hasChangeType (ComodiChangeType.getDeletion ());
+		Change change = changeFac.createDeletion (ChangeFactory.getSubjectId (diffNode));
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
 			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
@@ -57,8 +55,7 @@ public class DefaultDiffAnnotator
 	public Change annotateInsertion (TreeNode node, Element diffNode,
 		ChangeFactory changeFac)
 	{
-		Change change = changeFac.createChange (diffNode)
-			.hasChangeType (ComodiChangeType.getInsertion ());
+		Change change = changeFac.createInsertion (ChangeFactory.getSubjectId (diffNode));
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
 			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
@@ -81,7 +78,10 @@ public class DefaultDiffAnnotator
 	public Change annotateMove (TreeNode nodeA, TreeNode nodeB, Element diffNode,
 		ChangeFactory changeFac, boolean permutation)
 	{
-		Change change = changeFac.createChange (diffNode);
+		Change change = 
+			permutation ?
+				changeFac.createPermutationOfEntities (ChangeFactory.getSubjectId (diffNode))
+				: changeFac.createMove (ChangeFactory.getSubjectId (diffNode));
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
 			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
@@ -92,11 +92,6 @@ public class DefaultDiffAnnotator
 			change.appliesTo (ComodiXmlEntity.getText ());
 		else if (diffNode.getName ().equals ("attribute"))
 			change.appliesTo (ComodiXmlEntity.getAttribute ());
-		
-		if (permutation)
-			change.hasChangeType (ComodiChangeType.getPermutationOfEntities ());
-		else
-			change.hasChangeType (ComodiChangeType.getMove ());
 		
 		return change;
 	}
@@ -109,9 +104,8 @@ public class DefaultDiffAnnotator
 	public Change annotateUpdateAttribute (TreeNode nodeA, TreeNode nodeB,
 		String attributeName, Element diffNode, ChangeFactory changeFac)
 	{
-		Change change = changeFac.createChange (diffNode)
-			.appliesTo (ComodiXmlEntity.getAttribute ())
-			.hasChangeType (ComodiChangeType.getAttributeValue ());
+		Change change = changeFac.createUpdate (ChangeFactory.getSubjectId (diffNode))
+			.appliesTo (ComodiXmlEntity.getAttribute ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)
 			change.wasTriggeredBy (diffNode.getAttributeValue ("triggeredBy"));
@@ -127,8 +121,7 @@ public class DefaultDiffAnnotator
 	public Change annotateUpdateText (TextNode nodeA, TextNode nodeB,
 		Element diffNode, ChangeFactory changeFac)
 	{
-		Change change = changeFac.createChange (diffNode)
-			.hasChangeType (ComodiChangeType.getUpdate ())
+		Change change = changeFac.createUpdate (ChangeFactory.getSubjectId (diffNode))
 			.appliesTo (ComodiXmlEntity.getText ());
 		
 		if (diffNode.getAttribute ("triggeredBy") != null)

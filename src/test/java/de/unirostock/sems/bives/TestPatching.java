@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import de.binfalse.bflog.LOGGER;
-import de.binfalse.bfutils.GeneralTools;
 import de.unirostock.sems.bives.algorithm.NodeConnection;
 import de.unirostock.sems.bives.algorithm.SimpleConnectionManager;
 import de.unirostock.sems.bives.algorithm.general.PatchProducer;
@@ -108,10 +107,10 @@ public class TestPatching
 				String subj = stmt.getSubject ().toString ();
 				String subjId = subj.substring ("file://bives-differences.patch#".length ());
 				
-				if (stmt.toString ().contains ("http://purl.org/net/comodi#wasTriggeredBy"))
+				if (stmt.toString ().contains ("http://purl.uni-rostock.de/comodi/comodi#wasTriggeredBy"))
 					assertNotNull ("elements annotated with `wasTriggeredBy` are expected to have a triggered attribute", myPathDoc.getNodeById (subjId).getAttributeValue ("triggeredBy"));
 				
-				if (stmt.toString ().contains ("http://purl.org/net/comodi#Deletion"))
+				if (stmt.toString ().contains ("http://purl.uni-rostock.de/comodi/comodi#Deletion"))
 				{
 					i++;
 					
@@ -126,13 +125,13 @@ public class TestPatching
 			assertEquals ("num deletes and del annotations expected to be equal", patch.getDeletes ().getChildren ().size (), i);
 			
 			// num http://purl.org/net/comodi#Insertion = num children of insert
-			assertEquals ("expected as much inserts as insert annotations", patch.getNumInserts (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Insertion"));
+			assertEquals ("expected as much inserts as insert annotations", patch.getNumInserts (), countAnnotationUrls (annotationsDoc.getRoot (), "Insertion"));
 			assertTrue ("expected at least one insert", patch.getNumInserts () != 0);
-			assertEquals ("expected as much deletes as delete annotations", patch.getNumDeletes (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Deletion"));
+			assertEquals ("expected as much deletes as delete annotations", patch.getNumDeletes (), countAnnotationUrls (annotationsDoc.getRoot (), "Deletion"));
 			assertTrue ("expected at least one delete", patch.getNumDeletes () != 0);
-			assertEquals ("expected as much moves as move annotations", patch.getNumMoves (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Move") + countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#PermutationOfEntities"));
+			assertEquals ("expected as much moves as move annotations", patch.getNumMoves (), countAnnotationUrls (annotationsDoc.getRoot (), "Move") + countAnnotationUrls (annotationsDoc.getRoot (), "PermutationOfEntities"));
 			assertTrue ("expected at least one move", patch.getNumMoves () != 0);
-			assertEquals ("expected as much updates as update annotations", patch.getNumUpdates (), countAnnotationUrls (annotationsDoc.getRoot (), "http://purl.org/net/comodi#Update"));
+			assertEquals ("expected as much updates as update annotations", patch.getNumUpdates (), countAnnotationUrls (annotationsDoc.getRoot (), "Update"));
 			assertTrue ("expected at least one update", patch.getNumUpdates () != 0);
 			
 			// num http://purl.org/net/comodi#Attribute = num nodes with label attribute
@@ -149,6 +148,8 @@ public class TestPatching
 	{
 		int i = 0;
 		if (dn.getAttribute ("resource") != null && dn.getAttributeValue ("resource").endsWith (url))
+			i++;
+		if (dn.getTagName ().equals (url))
 			i++;
 		
 		for (TreeNode tn : dn.getChildren ())
