@@ -440,6 +440,16 @@ public abstract class Diff
 	
 	
 	/**
+	 * Returns the graph of the reaction network encoded in an SBGN-JSON format.
+	 * Might return null if not available.
+	 * 
+	 * @return the reaction network or null if not available
+	 * @throws Exception the exception
+	 */
+	public abstract String getReactionsSbgnJsonGraph () throws Exception;
+	
+	
+	/**
 	 * Returns the report providing an on markup processor.
 	 * Might return null if not available.
 	 * 

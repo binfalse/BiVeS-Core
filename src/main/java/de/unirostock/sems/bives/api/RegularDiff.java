@@ -242,4 +242,16 @@ public class RegularDiff
 		return null;
 	}
 	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.unirostock.sems.bives.api.Diff#getReactionsSbgnJsonGraph()
+	 */
+	@Override
+	public String getReactionsSbgnJsonGraph() throws Exception {
+		return null;
+	}
+	
 }
