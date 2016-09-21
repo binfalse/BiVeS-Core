@@ -282,7 +282,7 @@ public class GraphTranslatorSbgnJson
 				
 				if(!modifiers.equals(null)){
 					for (ReactionNetworkSubstanceRef s : r.getModifiers()){
-						addEdge(s.getSubstance().getId(), processId, s.getSBO(), r.getModification());
+						addEdge(s.getSubstance().getId(), processId, s.getModTerm(), r.getModification());
 					}
 				}
 
