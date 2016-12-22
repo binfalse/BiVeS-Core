@@ -46,6 +46,7 @@ public class GraphTranslatorSbgnJson
 	@SuppressWarnings("unchecked")
 	private void addNode (String id, String label, String compartment, int diffClass, String sbo)
 	{
+		System.out.println("" + id + " " + label + " " + compartment + " " + diffClass + " " + sbo);
 		JSONObject node = new JSONObject();
 		
 		node.put("id", id);
@@ -55,7 +56,7 @@ public class GraphTranslatorSbgnJson
 		node.put("class", sbo);
 		
 		String diff;
-		
+		System.out.println("nullpointer test");
 		switch (diffClass) {
         case 0:  diff = "nothing";
                  break;
@@ -122,7 +123,25 @@ public class GraphTranslatorSbgnJson
 		edge.put("target", target);
 		
 		edge.put("class", sbgnClass);
-		edge.put("diffClass", diffClass);
+		
+		String diff;
+		System.out.println("diff "+diffClass);
+		switch (diffClass) {
+        case 0:  diff = "nothing";
+                 break;
+        case -1:  diff = "delete";
+                 break;
+        case 2:  diff = "update";
+                 break;
+        case 3:  diff = "move";
+                 break;
+        case 1:  diff = "insert";
+                 break;
+        default: diff = "bivesClass"+diffClass;
+                 break;
+		}
+		
+		edge.put("bivesClass", diff);
 		edges.add(edge);
 	}
 	
@@ -162,6 +181,7 @@ public class GraphTranslatorSbgnJson
 		//add compartments
 		for (ReactionNetworkCompartment c : rn.getCompartments ()){
 			addCompartment(c.getId(), "null", c.getLabel(), c.getModification(), "SBO:0000290");
+			System.out.println("added " + c.getLabel());
 		}
 		
 		//add species 
@@ -196,16 +216,17 @@ public class GraphTranslatorSbgnJson
 			
 			//add process Node
 			String processId = r.getId();
-			
+			String compartmentId = null;
 			//check if the process assigned to a compartment
 			if (compartment != null){
+				compartmentId = compartment.getId();
 				System.out.println("202 sbo "+r.getSBO());
 				System.out.println(r.getSBO() == null);
 				System.out.println(r.getSBO() == "");
 				System.out.println(r.getSBO().equals(""));
 				if(r.getSBO() == null){
-					addNode(processId, null, compartment.getId(), r.getModification(), "SBO:0000205");
-				} else 	addNode(processId, null, compartment.getId(), r.getModification(), "SBO:0000205");
+					addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
+				} else 	addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
 			} else {
 				if(r.getSBO() == null){
 					addNode(processId, null, null, r.getModification(), "SBO:0000205");
@@ -222,13 +243,16 @@ public class GraphTranslatorSbgnJson
 
 							
 						} else {
-							System.out.println("221 test");
+							System.out.println("221 sourceSink = " +sourceSink);
 							
 							if(sourceSink > 0){
-								addNode("EmptySet" + sourceSink, null, compartment.getId(), r.getModification(), "SBO:0000291");
+								System.out.println("sourceSink > 0 " +compartmentId );//+" "+ r.getModification() +" " +"SBO:0000291");
+								addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
+								System.out.println("sourceSink > 0 add Node done");
 								addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification());
 								sourceSink++;
 							} else {
+								System.out.println("sourceSink 0");
 								addEdge(s.getSubstance().getId(), processId, "SBO:0000015", r.getModification());
 								sourceSink++;
 							}
@@ -238,7 +262,7 @@ public class GraphTranslatorSbgnJson
 				} else {
 					System.out.println("should add an empty set");
 					//add SourceSink node
-					addNode("EmptySet" + sourceSink, null, compartment.getId(), r.getModification(), "SBO:0000291");
+					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					
 					//add edge between SourceSink and process node
 					addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification());
@@ -256,7 +280,7 @@ public class GraphTranslatorSbgnJson
 						} else {
 							System.out.println("253 test test");
 							if(sourceSink > 1){
-								addNode("EmptySet" + sourceSink, null, compartment.getId(), r.getModification(), "SBO:0000291");
+								addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 								addEdge(processId, s.getSubstance().getId(), "SBO:0000393", r.getModification());
 								sourceSink++;
 							} else {
@@ -272,7 +296,7 @@ public class GraphTranslatorSbgnJson
 				} else {
 					System.out.println("269 should add an empty set");
 					//add SourceSink node
-					addNode("sourceSink" + sourceSink, null, compartment.getId(), r.getModification(), "SBO:0000291");
+					addNode("sourceSink" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					
 					//add edge between SourceSink and process node
 					addEdge(processId, "sourceSink" + sourceSink, "SBO:0000393", r.getModification());
@@ -282,7 +306,7 @@ public class GraphTranslatorSbgnJson
 				
 				if(!modifiers.equals(null)){
 					for (ReactionNetworkSubstanceRef s : r.getModifiers()){
-						addEdge(s.getSubstance().getId(), processId, s.getModTerm(), r.getModification());
+						addEdge(s.getSubstance().getId(), processId, s.getModTerm(), s.getModification());
 					}
 				}
 
