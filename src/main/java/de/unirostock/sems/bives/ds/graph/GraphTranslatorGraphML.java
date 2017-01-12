@@ -304,7 +304,7 @@ public class GraphTranslatorGraphML
 	 * &lt;/graphml&gt;
 	 * </pre>
 	 * 
-	 * @param root
+	 * @param graphML
 	 *          the document
 	 * @return the graph node (root for the graph)
 	 */

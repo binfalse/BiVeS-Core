@@ -773,7 +773,7 @@ private CandidateResult getBestCandidate (TreeNode v1nodeID, String selfkey) thr
 /**
 * Gets the best candidate the other way around.
 *
-* @param v1nodeID the v1node id
+* @param v0nodeID the v0node id
 * @param selfkey the selfkey
 * @return the best candidate
 * @throws BivesConnectionException the bives connection exception
