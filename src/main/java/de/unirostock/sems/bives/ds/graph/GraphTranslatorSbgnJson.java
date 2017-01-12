@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import de.binfalse.bflog.LOGGER;
 import de.unirostock.sems.bives.ds.GraphEntity;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetwork;
 import de.unirostock.sems.bives.ds.hn.HierarchyNetworkComponent;
@@ -260,7 +261,8 @@ public class GraphTranslatorSbgnJson
 					}
 					
 				} else {
-					System.out.println("should add an empty set");
+					LOGGER.info("should add an empty set");
+					//System.out.println("should add an empty set");
 					//add SourceSink node
 					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					
