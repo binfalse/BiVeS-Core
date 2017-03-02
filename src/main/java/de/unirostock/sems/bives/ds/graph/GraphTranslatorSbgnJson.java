@@ -25,9 +25,20 @@ import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
 /**
  * The class GraphTranslatorSbgnJson translates the internal graph structure into a JSON
  * which is SBGN PD sufficient. The needed form looks like:
- * 
- *  
- * For more exact information, have a look at the Masterthesis
+ * {"nodes":
+ * 	[
+		{"bivesClass":"...","compartment":"...","id":"...","label":"...","class":"..."},
+		...
+	],
+	"links":
+	[
+		{"bivesClass":"...","source":"...","class":"...","target":"..."},
+		...
+	]
+ * }
+	
+	The elements order is not important
+
  * @author Tom
  *
  */
@@ -44,6 +55,7 @@ public class GraphTranslatorSbgnJson
 	/** The graph. */
 	private JSONObject	graph;
 	
+	//add node
 	@SuppressWarnings("unchecked")
 	private void addNode (String id, String label, String compartment, int diffClass, String sbo)
 	{
@@ -77,6 +89,7 @@ public class GraphTranslatorSbgnJson
 		nodes.add(node);
 	}
 	
+	//add compartment
 	@SuppressWarnings("unchecked")
 	private void addCompartment (String id, String compartment, String label, int diffClass, String sbo)
 	{
@@ -89,7 +102,8 @@ public class GraphTranslatorSbgnJson
 		node.put("class", sbo);
 		
 		String diff;
-
+		
+		//match change types
 		switch (diffClass) {
         case 0:  diff = "nothing";
                  break;
@@ -101,8 +115,8 @@ public class GraphTranslatorSbgnJson
                  break;
         case 1:  diff = "insert";
                  break;
-        default: diff = "diffClass"+diffClass;
-                 break;
+        default: diff = "";
+        		 break;
 		}
 		
 		node.put("bivesClass", diff);
@@ -110,6 +124,7 @@ public class GraphTranslatorSbgnJson
 		nodes.add(node);
 	}
 	
+	//add edge
 	@SuppressWarnings("unchecked")
 	private void addEdge (String source, String target, String sbgnClass, int diffClass)
 	{
@@ -122,6 +137,7 @@ public class GraphTranslatorSbgnJson
 		
 		String diff;
 
+		//match change types
 		switch (diffClass) {
         case 0:  diff = "nothing";
                  break;
@@ -182,14 +198,12 @@ public class GraphTranslatorSbgnJson
 		//add species 
 		for (ReactionNetworkSubstance s : rn.getSubstances ()){
 			ReactionNetworkCompartment compartment = s.getCompartment ();
-			
-			if(s.getLabel() != "EmptySet"){
-				
-				System.out.println(compartment);
+			String label = ""+s.getLabel();
+			if(!label.equals("EmptySet") && !label.equals("Empty Set") && !label.equals("emptyset") && !label.equals("empty set")){	
 				if(compartment != null && !compartment.equals("null") ) {
 					addNode(s.getId(), s.getLabel(), compartment.getId(), s.getModification(), s.getSBO());
 				}
-				else { 
+				else {
 					addNode(s.getId(), s.getLabel(), null, s.getModification(), s.getSBO());
 				}
 			}
@@ -197,6 +211,8 @@ public class GraphTranslatorSbgnJson
 		
 		//variable for sourceSink Id's
 		int sourceSink = 0;
+
+		//loop over reactions
 		for (ReactionNetworkReaction r : rn.getReactions ()){
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			Collection<ReactionNetworkSubstanceRef> inputs = r.getInputs();
@@ -220,10 +236,11 @@ public class GraphTranslatorSbgnJson
 			}
 				//check if its a creation or deletion
 				
+				//input is not empty	
 				if(!inputs.isEmpty()) { //creation
 					for(ReactionNetworkSubstanceRef s : inputs){
-						
-						if(s.getSubstance().getLabel() != "EmptySet"){
+						String label = "" + s.getSubstance().getLabel();
+						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
 							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", r.getModification());
 						} else {
 							//Empty set is target species in SBML
@@ -232,9 +249,9 @@ public class GraphTranslatorSbgnJson
 							sourceSink++;
 						}
 					}
-					
-				} else { //input is empty. it is a creation
-					LOGGER.info("should add an empty set");
+
+				//input is empty. it is a creation	
+				} else {
 					//add SourceSink node
 					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					//add edge between SourceSink and process node
@@ -242,10 +259,11 @@ public class GraphTranslatorSbgnJson
 					sourceSink++;
 				}
 				
+				//output is not empty
 				if(!outputs.isEmpty()){
 					for(ReactionNetworkSubstanceRef s : outputs){
-
-						if(s.getSubstance().getLabel() != "EmptySet"){
+						String label = ""+s.getSubstance().getLabel();
+						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
 							addEdge(processId, s.getSubstance().getId(), "SBO:0000393", r.getModification());
 						} else { 
 							//Empty set is target species in SBML 
@@ -254,8 +272,9 @@ public class GraphTranslatorSbgnJson
 								sourceSink++;
 						}						
 					}
+				
+				//output is empty. it is a deletion
 				} else {
-					//empty output
 					//add SourceSink node
 					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					//add edge between SourceSink and process node
@@ -263,6 +282,7 @@ public class GraphTranslatorSbgnJson
 					sourceSink++;
 				}
 				
+				//add modifiers
 				if(modifiers != null){
 					for (ReactionNetworkSubstanceRef s : r.getModifiers()){
 						addEdge(s.getSubstance().getId(), processId, s.getModTerm(), s.getModification());
