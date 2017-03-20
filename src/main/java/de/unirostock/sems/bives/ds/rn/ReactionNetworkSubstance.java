@@ -79,8 +79,10 @@ extends ReactionNetworkEntity
 	 */
 	public String getSBO ()
 	{
-		String a = docA.getAttributeValue ("sboTerm");
-		String b = docA.getAttributeValue ("sboTerm");
+		if(docA == null && docB == null) return "";
+		String a = null, b = null;
+		if(docA != null) a = docA.getAttributeValue ("sboTerm");
+		if(docB != null) b = docB.getAttributeValue ("sboTerm");
 		if (a == null || b == null || !a.equals (b))
 			return "";
 		return a;
