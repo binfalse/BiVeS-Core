@@ -224,20 +224,15 @@ public class GraphTranslatorSbgnJson
 			String processId = r.getId();
 			String compartmentId = null;
 			//check if the process assigned to a compartment
-			if (compartment != null){
-				compartmentId = compartment.getId();
-				if(r.getSBO() == null || r.getSBO() == ""){
-					addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
-				} else 	addNode(processId, null, compartmentId, r.getModification(), r.getSBO());
-			} else {
-				if(r.getSBO() == null || r.getSBO() == ""){
-					addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
-				} else 	addNode(processId, null, compartmentId, r.getModification(), r.getSBO());				
-			}
+			if (compartment != null) compartmentId = compartment.getId();
+			if(r.getSBO() == null || r.getSBO().equals("")){
+				addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
+			} else 	addNode(processId, null, compartmentId, r.getModification(), r.getSBO());
+			
 				//check if its a creation or deletion
 				
 				//input is not empty	
-				if(!inputs.isEmpty()) { //creation
+				if(!inputs.isEmpty()) {
 					for(ReactionNetworkSubstanceRef s : inputs){
 						String label = "" + s.getSubstance().getLabel();
 						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
@@ -284,8 +279,8 @@ public class GraphTranslatorSbgnJson
 				
 				//add modifiers
 				if(modifiers != null){
-					for (ReactionNetworkSubstanceRef s : r.getModifiers()){
-						addEdge(s.getSubstance().getId(), processId, s.getModTerm(), s.getModification());
+					for (ReactionNetworkSubstanceRef s : modifiers){
+						addEdge(s.getSubstance().getId(), processId, s.getSBO(), s.getModification());
 					}
 				}
 
