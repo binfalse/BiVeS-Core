@@ -1,4 +1,4 @@
-# BiVeS SBML module
+# BiVeS Core module
 
 ![bives logo](https://sems.uni-rostock.de/wp-content/uploads/2012/12/logo-icon-16.png) BiVeS is a library based on the XyDiff algorithm. It is able to detect differences between two versions of a computational model and to communicate these changes.
 
