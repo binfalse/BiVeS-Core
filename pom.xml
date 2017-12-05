@@ -3,7 +3,7 @@
     <groupId>de.uni-rostock.sbi</groupId>
     <artifactId>BiVeS-Core</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.4</version>
+    <version>1.8.5</version>
     <name>BiVeS-Core</name>
     <description>
         BiVeS - BioModel Version Control System
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>de.uni-rostock.sbi</groupId>
             <artifactId>xmlutils</artifactId>
-            <version>0.6.9</version>
+            <version>0.6.10</version>
         </dependency>
         <dependency>
             <groupId>de.uni-rostock.sbi</groupId>
