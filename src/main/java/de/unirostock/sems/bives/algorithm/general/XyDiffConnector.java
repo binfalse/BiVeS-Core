@@ -771,13 +771,14 @@ private CandidateResult getBestCandidate (TreeNode v1nodeID, String selfkey) thr
 
 
 /**
-* Gets the best candidate the other way around.
-*
-* @param v0nodeID the v0node id
-* @param selfkey the selfkey
-* @return the best candidate
-* @throws BivesConnectionException the bives connection exception
-*/
+ * Gets the best candidate the other way around.
+ *
+ * @param v0nodeID the v0node id
+ * @param selfkey the selfkey
+ * @param maxLevel the max level
+ * @return the best candidate
+ * @throws BivesConnectionException the bives connection exception
+ */
 private CandidateResult getBestCandidateOw (TreeNode v0nodeID, String selfkey, int maxLevel) throws BivesConnectionException
 {
 	LOGGER.debug (">>> starting other way around!!");
@@ -833,12 +834,12 @@ private CandidateResult getBestCandidateOw (TreeNode v0nodeID, String selfkey, i
 		{
 			/* For the lower levels, use precomputed index tables to acces candidates given the parent */
 			
-			if (false && candidateRelativeLevel<=MIN_CANDIDATEPARENT_LEVEL)
+			/*if (false && candidateRelativeLevel<=MIN_CANDIDATEPARENT_LEVEL)
 			{
-				// TODO: no idea...
-			}
+				
+			}*/
 			/* For higher levels, try every candidate and this if its ancestor is a match for us */
-			else
+			//else
 			{
 				List<TreeNode> theList = docB.getNodesByHash (selfkey);
 				if (theList == null || theList.size () < 1)

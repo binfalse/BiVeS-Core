@@ -91,6 +91,9 @@ public class TypesettingReStructuredText
 		for (MarkupElement e : subElements)
 			s += "    - " + typesetSubElement (e) + NL_TXT;
 		
+		if (element.hasInvisibleModifications ())
+			s += "(There are modifications (annotations/notes/..), which are not displayed in this report) + NL_TXT";
+		
 		return s;
 	}
 	
@@ -109,6 +112,9 @@ public class TypesettingReStructuredText
 		List<String> values = element.getValues ();
 		for (String v : values)
 			s += "        - " + v + "";
+		
+		if (element.hasInvisibleModifications ())
+			s += "    (There are modifications (annotations/notes/..), which are not displayed in this report)";
 		
 		return s;
 	}

@@ -65,6 +65,17 @@ public class Xhtml
 	
 	
 	/**
+	 * Gets the corresponding document node.
+	 *
+	 * @return the document node
+	 */
+	public DocumentNode getDocumentNode ()
+	{
+		return node;
+	}
+	
+	
+	/**
 	 * Adds an XHTML subtree.
 	 * 
 	 * @param node

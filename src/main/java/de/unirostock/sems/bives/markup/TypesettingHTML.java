@@ -109,6 +109,9 @@ public class TypesettingHTML
 		if (sub.length () > 0)
 			s += "<ul>" + sub + "</ul>";
 		
+		if (element.hasInvisibleModifications ())
+			s += "<small>There are modifications (annotations/notes/..), which are not displayed in this report</small>";
+		
 		return s + "</td></tr>";
 	}
 	
@@ -131,6 +134,9 @@ public class TypesettingHTML
 		
 		if (sub.length () > 0)
 			s += "<ul>" + sub + "</ul>";
+		
+		if (element.hasInvisibleModifications ())
+			s += "<small>There are modifications (annotations/notes/..), which are not displayed in this report</small>";
 		
 		return s;
 	}
