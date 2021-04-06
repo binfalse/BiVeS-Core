@@ -27,12 +27,12 @@ import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
  * which is SBGN PD sufficient. The needed form looks like:
  * {"nodes":
  * 	[
-		{"bivesClass":"...","compartment":"...","id":"...","label":"...","class":"..."},
+		{"bivesChange":"...","compartment":"...","id":"...","label":"...","sboTerm":"..."},
 		...
 	],
 	"links":
 	[
-		{"bivesClass":"...","source":"...","class":"...","target":"..."},
+		{"bivesChange":"...","source":"...","sboTerm":"...","target":"..."},
 		...
 	]
  * }
@@ -65,7 +65,7 @@ public class GraphTranslatorSbgnJson
 		node.put("label", label);
 		node.put("compartment", compartment);
 		
-		node.put("class", sbo);
+		node.put("sboTerm", sbo);
 		
 		String diff;
 		
@@ -84,7 +84,7 @@ public class GraphTranslatorSbgnJson
                  break;
 		}
 		
-		node.put("bivesClass", diff);
+		node.put("bivesChange", diff);
 		
 		nodes.add(node);
 	}
@@ -99,7 +99,7 @@ public class GraphTranslatorSbgnJson
 		node.put("label", label);
 		node.put("compartment", compartment);
 	
-		node.put("class", sbo);
+		node.put("sboTerm", sbo);
 		
 		String diff;
 		
@@ -119,7 +119,7 @@ public class GraphTranslatorSbgnJson
         		 break;
 		}
 		
-		node.put("bivesClass", diff);
+		node.put("bivesChange", diff);
 		
 		nodes.add(node);
 	}
@@ -133,7 +133,7 @@ public class GraphTranslatorSbgnJson
 		edge.put("source", source);
 		edge.put("target", target);
 		
-		edge.put("class", sbgnClass);
+		edge.put("sboTerm", sbgnClass);
 		
 		String diff;
 
@@ -149,11 +149,11 @@ public class GraphTranslatorSbgnJson
                  break;
         case 1:  diff = "insert";
                  break;
-        default: diff = "bivesClass"+diffClass;
+        default: diff = "bivesChange"+diffClass;
                  break;
 		}
 		
-		edge.put("bivesClass", diff);
+		edge.put("bivesChange", diff);
 		edges.add(edge);
 	}
 	

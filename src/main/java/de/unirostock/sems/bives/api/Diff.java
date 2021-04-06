@@ -6,6 +6,7 @@ package de.unirostock.sems.bives.api;
 import java.io.File;
 import java.io.IOException;
 
+import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
 import de.unirostock.sems.bives.algorithm.DiffAnnotator;
@@ -210,9 +211,9 @@ public abstract class Diff
 	 */
 	public String getDiff (boolean inclAnnotations)
 	{
+		
 		if (patch == null)
 			producePatch ();
-		
 		if (inclAnnotations && xmlPatchInclAnnotations == null)
 			xmlPatchInclAnnotations = XmlTools.prettyPrintDocument (patch.getDocument (true));
 		if (!inclAnnotations && xmlPatch == null)
