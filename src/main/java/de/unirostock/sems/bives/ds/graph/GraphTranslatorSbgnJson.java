@@ -128,8 +128,6 @@ public class GraphTranslatorSbgnJson
 	@SuppressWarnings("unchecked")
 	private void addEdge (String source, String target, String sbgnClass, int diffClass)
 	{
-		System.out.println("TEST");
-		LOGGER.info ("searching for reactions in B");
 		JSONObject edge = new JSONObject();
 		
 		edge.put("source", source);
@@ -187,7 +185,6 @@ public class GraphTranslatorSbgnJson
 	
 	public String translate (ReactionNetwork rn)
 	{
-		System.out.println("CHECK THIS OUT");
 		if (rn == null)
 			return null;
 		
@@ -248,9 +245,7 @@ public class GraphTranslatorSbgnJson
 							sourceSink++;
 						}
 					}
-
-				//input is empty. it is a creation	
-				} else {
+				} else { //input is empty. it is a creation	
 					//add SourceSink node
 					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
 					//add edge between SourceSink and process node
