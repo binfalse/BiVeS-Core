@@ -128,6 +128,8 @@ public class GraphTranslatorSbgnJson
 	@SuppressWarnings("unchecked")
 	private void addEdge (String source, String target, String sbgnClass, int diffClass)
 	{
+		System.out.println("TEST");
+		LOGGER.info ("searching for reactions in B");
 		JSONObject edge = new JSONObject();
 		
 		edge.put("source", source);
@@ -236,7 +238,7 @@ public class GraphTranslatorSbgnJson
 					for(ReactionNetworkSubstanceRef s : inputs){
 						String label = "" + s.getSubstance().getLabel();
 						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
-							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", r.getModification());
+							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", s.getModification());
 						} else {
 							//Empty set is target species in SBML
 							addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
