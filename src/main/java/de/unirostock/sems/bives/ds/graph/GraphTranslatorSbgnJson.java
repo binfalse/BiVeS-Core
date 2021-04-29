@@ -185,6 +185,7 @@ public class GraphTranslatorSbgnJson
 	
 	public String translate (ReactionNetwork rn)
 	{
+		System.out.println("CHECK THIS OUT");
 		if (rn == null)
 			return null;
 		
@@ -214,6 +215,7 @@ public class GraphTranslatorSbgnJson
 
 		//loop over reactions
 		for (ReactionNetworkReaction r : rn.getReactions ()){
+			System.out.println(r);
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			Collection<ReactionNetworkSubstanceRef> inputs = r.getInputs();
 			Collection<ReactionNetworkSubstanceRef> outputs = r.getOutputs();
