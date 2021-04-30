@@ -32,6 +32,9 @@ implements GraphEntity
 	/** The single doc flag if in single-doc-operation-mode. */
 	protected boolean singleDoc;
 	
+	/** The xPath to the DocumentNode */
+	protected String xPath;
+	
 	/**
 	 * Instantiates a new substance reference.
 	 *
@@ -42,7 +45,7 @@ implements GraphEntity
 	 * @param modTermB the modification type in the original version
 	 * @throws BivesUnsupportedException 
 	 */
-	public ReactionNetworkSubstanceRef (ReactionNetworkSubstance subst, boolean flagA, boolean flagB, SBOTerm modTermA, SBOTerm modTermB)
+	public ReactionNetworkSubstanceRef (ReactionNetworkSubstance subst, boolean flagA, boolean flagB, SBOTerm modTermA, SBOTerm modTermB, String xPath)
 		throws BivesUnsupportedException
 	{
 		this.subst = subst;
@@ -51,6 +54,7 @@ implements GraphEntity
 		this.modTermA = modTermA;
 		this.modTermB = modTermB;
 		this.singleDoc = false;
+		this.xPath = xPath;
 		// modifier terms have to be the same. otherwise this edge differs -> create two edges!
 		if (refA && refB && !SBOTerm.sameModifier (modTermA, modTermB))
 			throw new BivesUnsupportedException ("modifiers differ");
@@ -164,6 +168,15 @@ implements GraphEntity
 		if (refA)
 			return DELETE;
 		return INSERT;
+	}
+	
+	/**
+	 * Gets the modification.
+	 *
+	 * @return the modification
+	 */
+	public String getXPath() {
+		return xPath;
 	}
 
 	/**

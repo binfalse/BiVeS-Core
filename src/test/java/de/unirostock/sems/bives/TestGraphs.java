@@ -152,8 +152,8 @@ public class TestGraphs
 		
 		
 		
-		reaction1.addInputA (substrate1, null);
-		reaction1.addOutputA (substrate1, null);
+		reaction1.addInputA (substrate1, null, null);
+		reaction1.addOutputA (substrate1, null, null);
 		
 		assertEquals ("cannot retrieve compartment", crn.getCompartment (dummy), compartment1);
 		assertEquals ("cannot retrieve substrate", crn.getSubstance (dummy),substrate1 );
@@ -183,8 +183,8 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in A");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null);
-		reaction1.addOutputB (substrate1, null);
+		reaction1.addInputB (substrate1, null, null);
+		reaction1.addOutputB (substrate1, null, null);
 
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
@@ -209,8 +209,8 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in N");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null);
-		reaction1.addOutputB (substrate1, null);
+		reaction1.addInputB (substrate1, null, null);
+		reaction1.addOutputB (substrate1, null, null);
 
 
 		assertFalse ("unexpected label in compartment", "compartment in A".equals (compartment1.getLabel ()));
@@ -233,8 +233,8 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment2);
 		reaction1.setLabelB ("reaction in N");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null);
-		reaction1.addOutputB (substrate1, null);
+		reaction1.addInputB (substrate1, null, null);
+		reaction1.addOutputB (substrate1, null, null);
 
 
 		assertFalse ("unexpected label in substrate", "substrate in A".equals (substrate1.getLabel ()));
@@ -257,8 +257,8 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in A");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null);
-		reaction1.addOutputB (substrate1, null);
+		reaction1.addInputB (substrate1, null, null);
+		reaction1.addOutputB (substrate1, null, null);
 
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
@@ -274,8 +274,8 @@ public class TestGraphs
 		
 		
 		// different i/o?
-		reaction1.addInputB (substrate2, null);
-		reaction1.addOutputA (substrate2, null);
+		reaction1.addInputB (substrate2, null, null);
+		reaction1.addOutputA (substrate2, null, null);
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
 
@@ -308,10 +308,10 @@ public class TestGraphs
 		// test modifiers
 		try
 		{
-			reaction1.addModA (substrate1, null);
-			reaction1.addModB (substrate1, SBOTerm.createStimulator ());
-			reaction1.addModB (substrate2, null);
-			reaction1.addModA (substrate2, null);
+			reaction1.addModA (substrate1, null, null);
+			reaction1.addModB (substrate1, SBOTerm.createStimulator (), null);
+			reaction1.addModB (substrate2, null, null);
+			reaction1.addModA (substrate2, null, null);
 			assertEquals ("unexpected number of modifiers", 3, reaction1.getModifiers ().size ());
 		}
 		catch (BivesUnsupportedException e)

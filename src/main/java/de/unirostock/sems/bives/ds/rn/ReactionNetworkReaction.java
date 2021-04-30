@@ -153,12 +153,12 @@ extends ReactionNetworkEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addInputA (ReactionNetworkSubstance subst, SBOTerm sbo)
+	public void addInputA (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
 	{
 		ReactionNetworkSubstanceRef r = in.get (subst);
 		if (r == null)
 			try{
-				in.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
+				in.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null, xPath));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -172,12 +172,12 @@ extends ReactionNetworkEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addOutputA (ReactionNetworkSubstance subst, SBOTerm sbo)
+	public void addOutputA (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
 	{
 		ReactionNetworkSubstanceRef r = out.get (subst);
 		if (r == null)
 			try{
-				out.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
+				out.put (subst, new ReactionNetworkSubstanceRef (subst, true, false, sbo, null, xPath));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -192,7 +192,7 @@ extends ReactionNetworkEntity
 	 * @param sbo the SBOTerm describing the modification
 	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModA (ReactionNetworkSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
+	public void addModA (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath) throws BivesUnsupportedException
 	{
 		for (ReactionNetworkSubstanceRef sub : mod)
 			if (sub.subst == subst)
@@ -205,7 +205,7 @@ extends ReactionNetworkEntity
 				}
 			}
 		
-		mod.add (new ReactionNetworkSubstanceRef (subst, true, false, sbo, null));
+		mod.add (new ReactionNetworkSubstanceRef (subst, true, false, sbo, null, xPath));
 	}
 	
 	/**
@@ -214,12 +214,12 @@ extends ReactionNetworkEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addInputB (ReactionNetworkSubstance subst, SBOTerm sbo)
+	public void addInputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
 	{
 		ReactionNetworkSubstanceRef r = in.get (subst);
 		if (r == null)
 			try{
-				in.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
+				in.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo, xPath)); //checken
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -233,12 +233,12 @@ extends ReactionNetworkEntity
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
 	 */
-	public void addOutputB (ReactionNetworkSubstance subst, SBOTerm sbo)
+	public void addOutputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
 	{
 		ReactionNetworkSubstanceRef r = out.get (subst);
 		if (r == null)
 			try{
-				out.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
+				out.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo, xPath));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
@@ -253,7 +253,7 @@ extends ReactionNetworkEntity
 	 * @param sbo the SBOTerm describing the modification
 	 * @throws BivesUnsupportedException if one edges contains two types of modifications
 	 */
-	public void addModB (ReactionNetworkSubstance subst, SBOTerm sbo) throws BivesUnsupportedException
+	public void addModB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath) throws BivesUnsupportedException
 	{
 		for (ReactionNetworkSubstanceRef sub : mod)
 			if (sub.subst == subst)
@@ -266,7 +266,7 @@ extends ReactionNetworkEntity
 				}
 			}
 		
-		mod.add (new ReactionNetworkSubstanceRef (subst, false, true, null, sbo));
+		mod.add (new ReactionNetworkSubstanceRef (subst, false, true, null, sbo, xPath));
 	}
 	
 	/**
