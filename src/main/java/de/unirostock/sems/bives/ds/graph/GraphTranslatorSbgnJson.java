@@ -214,7 +214,6 @@ public class GraphTranslatorSbgnJson
 
 		//loop over reactions
 		for (ReactionNetworkReaction r : rn.getReactions ()){
-			System.out.println(r);
 			ReactionNetworkCompartment compartment = r.getCompartment ();
 			Collection<ReactionNetworkSubstanceRef> inputs = r.getInputs();
 			Collection<ReactionNetworkSubstanceRef> outputs = r.getOutputs();
@@ -240,8 +239,8 @@ public class GraphTranslatorSbgnJson
 							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", s.getModification());
 						} else {
 							//Empty set is target species in SBML
-							addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
-							addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification());
+							addNode("EmptySet" + sourceSink, null, compartmentId, s.getModification(), "SBO:0000291");
+							addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", s.getModification());
 							sourceSink++;
 						}
 					}
@@ -258,11 +257,11 @@ public class GraphTranslatorSbgnJson
 					for(ReactionNetworkSubstanceRef s : outputs){
 						String label = ""+s.getSubstance().getLabel();
 						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
-							addEdge(processId, s.getSubstance().getId(), "SBO:0000393", r.getModification());
+							addEdge(processId, s.getSubstance().getId(), "SBO:0000393", s.getModification());
 						} else { 
 							//Empty set is target species in SBML 
-								addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
-								addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", r.getModification());
+								addNode("EmptySet" + sourceSink, null, compartmentId, s.getModification(), "SBO:0000291");
+								addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", s.getModification());
 								sourceSink++;
 						}						
 					}
@@ -279,6 +278,7 @@ public class GraphTranslatorSbgnJson
 				//add modifiers
 				if(modifiers != null){
 					for (ReactionNetworkSubstanceRef s : modifiers){
+						System.out.println(s.getModification());
 						addEdge(s.getSubstance().getId(), processId, s.getSBO(), s.getModification());
 					}
 				}
