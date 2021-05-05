@@ -60,7 +60,6 @@ public class GraphTranslatorSbgnJson
 	//retrieve doc Path based on change for comodi connection
 
 	private String getPath(DocumentNode docNodeA, DocumentNode docNodeB, int mod) {
-		System.out.println(docNodeA);
 		if(mod == 1 || mod == 2 || mod == 0) return docNodeB.getXPath();
 		else return docNodeA.getXPath();
 		//return "";
@@ -300,7 +299,6 @@ public class GraphTranslatorSbgnJson
 				//add modifiers
 				if(modifiers != null){
 					for (ReactionNetworkSubstanceRef s : modifiers){
-						System.out.println(s.getModification());
 						addEdge(s.getSubstance().getId(), processId, s.getSBO(), s.getModification(), s.getXPath());
 					}
 				}
