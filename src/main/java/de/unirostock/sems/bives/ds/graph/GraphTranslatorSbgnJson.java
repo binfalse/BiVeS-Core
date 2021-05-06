@@ -21,18 +21,19 @@ import de.unirostock.sems.bives.ds.rn.ReactionNetworkCompartment;
 import de.unirostock.sems.bives.ds.rn.ReactionNetworkReaction;
 import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstance;
 import de.unirostock.sems.bives.ds.rn.ReactionNetworkSubstanceRef;
+import de.unirostock.sems.xmlutils.ds.DocumentNode;
 
 /**
  * The class GraphTranslatorSbgnJson translates the internal graph structure into a JSON
  * which is SBGN PD sufficient. The needed form looks like:
  * {"nodes":
  * 	[
-		{"bivesClass":"...","compartment":"...","id":"...","label":"...","class":"..."},
+		{"bivesChange":"...","compartment":"...","id":"...","label":"...","sboTerm":"..."},
 		...
 	],
 	"links":
 	[
-		{"bivesClass":"...","source":"...","class":"...","target":"..."},
+		{"bivesChange":"...","source":"...","sboTerm":"...","target":"..."},
 		...
 	]
  * }
@@ -55,9 +56,17 @@ public class GraphTranslatorSbgnJson
 	/** The graph. */
 	private JSONObject	graph;
 	
+	
+	//retrieve doc Path based on change for comodi connection
+
+	private String getPath(DocumentNode docNodeA, DocumentNode docNodeB, int mod) {
+		if(mod == 1 || mod == 2 || mod == 0) return docNodeB.getXPath();
+		else return docNodeA.getXPath();
+		//return "";
+	}
 	//add node
 	@SuppressWarnings("unchecked")
-	private void addNode (String id, String label, String compartment, int diffClass, String sbo)
+	private void addNode (String id, String label, String compartment, int diffClass, String sbo, String path)
 	{
 		JSONObject node = new JSONObject();
 		
@@ -65,7 +74,9 @@ public class GraphTranslatorSbgnJson
 		node.put("label", label);
 		node.put("compartment", compartment);
 		
-		node.put("class", sbo);
+		node.put("sboTerm", sbo);
+		
+		node.put("path", path);
 		
 		String diff;
 		
@@ -84,14 +95,14 @@ public class GraphTranslatorSbgnJson
                  break;
 		}
 		
-		node.put("bivesClass", diff);
+		node.put("bivesChange", diff);
 		
 		nodes.add(node);
 	}
 	
 	//add compartment
 	@SuppressWarnings("unchecked")
-	private void addCompartment (String id, String compartment, String label, int diffClass, String sbo)
+	private void addCompartment (String id, String compartment, String label, int diffClass, String sbo, String path)
 	{
 		JSONObject node = new JSONObject();
 		
@@ -99,7 +110,9 @@ public class GraphTranslatorSbgnJson
 		node.put("label", label);
 		node.put("compartment", compartment);
 	
-		node.put("class", sbo);
+		node.put("sboTerm", sbo);
+		
+		node.put("path", path);
 		
 		String diff;
 		
@@ -119,21 +132,23 @@ public class GraphTranslatorSbgnJson
         		 break;
 		}
 		
-		node.put("bivesClass", diff);
+		node.put("bivesChange", diff);
 		
 		nodes.add(node);
 	}
 	
 	//add edge
 	@SuppressWarnings("unchecked")
-	private void addEdge (String source, String target, String sbgnClass, int diffClass)
+	private void addEdge (String source, String target, String sbgnClass, int diffClass, String path)
 	{
 		JSONObject edge = new JSONObject();
 		
 		edge.put("source", source);
 		edge.put("target", target);
 		
-		edge.put("class", sbgnClass);
+		edge.put("sboTerm", sbgnClass);
+		
+		edge.put("path", path);
 		
 		String diff;
 
@@ -149,11 +164,11 @@ public class GraphTranslatorSbgnJson
                  break;
         case 1:  diff = "insert";
                  break;
-        default: diff = "bivesClass"+diffClass;
+        default: diff = "bivesChange"+diffClass;
                  break;
 		}
 		
-		edge.put("bivesClass", diff);
+		edge.put("bivesChange", diff);
 		edges.add(edge);
 	}
 	
@@ -192,19 +207,21 @@ public class GraphTranslatorSbgnJson
 		
 		//add compartments
 		for (ReactionNetworkCompartment c : rn.getCompartments ()){
-			addCompartment(c.getId(), "null", c.getLabel(), c.getModification(), "SBO:0000290");
+			String path = getPath(c.getA(), c.getB(), c.getModification());
+			addCompartment(c.getId(), "null", c.getLabel(), c.getModification(), "SBO:0000290", path);
 		}
 		
 		//add species 
 		for (ReactionNetworkSubstance s : rn.getSubstances ()){
+			String path = getPath(s.getA(), s.getB(), s.getModification());
 			ReactionNetworkCompartment compartment = s.getCompartment ();
 			String label = ""+s.getLabel();
 			if(!label.equals("EmptySet") && !label.equals("Empty Set") && !label.equals("emptyset") && !label.equals("empty set")){	
 				if(compartment != null && !compartment.equals("null") ) {
-					addNode(s.getId(), s.getLabel(), compartment.getId(), s.getModification(), s.getSBO());
+					addNode(s.getId(), s.getLabel(), compartment.getId(), s.getModification(), s.getSBO(), path);
 				}
 				else {
-					addNode(s.getId(), s.getLabel(), null, s.getModification(), s.getSBO());
+					addNode(s.getId(), s.getLabel(), null, s.getModification(), s.getSBO(), path);
 				}
 			}
 		}
@@ -219,6 +236,7 @@ public class GraphTranslatorSbgnJson
 			Collection<ReactionNetworkSubstanceRef> outputs = r.getOutputs();
 			Collection<ReactionNetworkSubstanceRef> modifiers = r.getModifiers();
 			
+			String rPath = getPath(r.getA(), r.getB(), r.getModification());
 			
 			//add process Node
 			String processId = r.getId();
@@ -226,31 +244,32 @@ public class GraphTranslatorSbgnJson
 			//check if the process assigned to a compartment
 			if (compartment != null) compartmentId = compartment.getId();
 			if(r.getSBO() == null || r.getSBO().equals("")){
-				addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205");
-			} else 	addNode(processId, null, compartmentId, r.getModification(), r.getSBO());
+				addNode(processId, null, compartmentId, r.getModification(), "SBO:0000205", rPath);
+			} else 	addNode(processId, null, compartmentId, r.getModification(), r.getSBO(), rPath);
 			
 				//check if its a creation or deletion
 				
 				//input is not empty	
 				if(!inputs.isEmpty()) {
 					for(ReactionNetworkSubstanceRef s : inputs){
+						
+						//String path = getPath(s.getA(), s.getB(), s.getModification());
 						String label = "" + s.getSubstance().getLabel();
+						//String path = getPath(s.getA(), s.getB(), s.getModification());
 						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
-							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", r.getModification());
+							addEdge(s.getSubstance().getId(), processId, "SBO:0000015", s.getModification(), s.getXPath());
 						} else {
 							//Empty set is target species in SBML
-							addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
-							addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification());
+							addNode("EmptySet" + sourceSink, null, compartmentId, s.getModification(), "SBO:0000291", rPath);
+							addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", s.getModification(), s.getXPath());
 							sourceSink++;
 						}
 					}
-
-				//input is empty. it is a creation	
-				} else {
+				} else { //input is empty. it is a creation	
 					//add SourceSink node
-					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
+					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291", rPath);
 					//add edge between SourceSink and process node
-					addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification());
+					addEdge("EmptySet" + sourceSink, processId, "SBO:0000015", r.getModification(), rPath);
 					sourceSink++;
 				}
 				
@@ -259,11 +278,11 @@ public class GraphTranslatorSbgnJson
 					for(ReactionNetworkSubstanceRef s : outputs){
 						String label = ""+s.getSubstance().getLabel();
 						if(!label.matches("(?i)^empty[ ,_,\\',^]?set")){
-							addEdge(processId, s.getSubstance().getId(), "SBO:0000393", r.getModification());
+							addEdge(processId, s.getSubstance().getId(), "SBO:0000393", s.getModification(), s.getXPath());
 						} else { 
 							//Empty set is target species in SBML 
-								addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
-								addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", r.getModification());
+								addNode("EmptySet" + sourceSink, null, compartmentId, s.getModification(), "SBO:0000291", s.getXPath());
+								addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", s.getModification(), s.getXPath());
 								sourceSink++;
 						}						
 					}
@@ -271,16 +290,16 @@ public class GraphTranslatorSbgnJson
 				//output is empty. it is a deletion
 				} else {
 					//add SourceSink node
-					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291");
+					addNode("EmptySet" + sourceSink, null, compartmentId, r.getModification(), "SBO:0000291", rPath);
 					//add edge between SourceSink and process node
-					addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", r.getModification());
+					addEdge(processId, "EmptySet" + sourceSink, "SBO:0000393", r.getModification(), rPath);
 					sourceSink++;
 				}
 				
 				//add modifiers
 				if(modifiers != null){
 					for (ReactionNetworkSubstanceRef s : modifiers){
-						addEdge(s.getSubstance().getId(), processId, s.getSBO(), s.getModification());
+						addEdge(s.getSubstance().getId(), processId, s.getSBO(), s.getModification(), s.getXPath());
 					}
 				}
 

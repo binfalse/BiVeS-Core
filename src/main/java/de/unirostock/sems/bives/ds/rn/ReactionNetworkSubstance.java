@@ -68,6 +68,10 @@ extends ReactionNetworkEntity
 	public ReactionNetworkCompartment getCompartment ()
 	{
 		if (compartmentA == compartmentB)
+			return compartmentB;
+		if(compartmentB != null) 
+			return compartmentB;
+		if(compartmentA != null)
 			return compartmentA;
 		return null;
 	}
