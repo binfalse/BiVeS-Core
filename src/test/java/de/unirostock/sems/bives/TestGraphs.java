@@ -242,12 +242,14 @@ public class TestGraphs
 		
 		//before a substrate with a changed compartment would have no compartment but now it has
 		//assertNull ("unexpected compartment in substrate", substrate1.getCompartment ());
+		assertEquals ("expected compartment in B", compartment2, substrate1.getCompartment());
 
 		assertFalse ("unexpected label in reaction", "reaction in A".equals (reaction1.getLabel ()));
 		assertEquals ("expected no modification", GraphEntity.MODIFIED, reaction1.getModification ());
 
 		//before a substrate with a changed compartment would have no compartment but now it has
 		//assertNull ("unexpected compartment in reaction", reaction1.getCompartment ());
+		assertEquals ("expected compartment in B", compartment2, reaction1.getCompartment());
 
 		
 		// reset?
