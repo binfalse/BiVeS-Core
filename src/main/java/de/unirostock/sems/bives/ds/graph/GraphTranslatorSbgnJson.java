@@ -238,6 +238,35 @@ public class GraphTranslatorSbgnJson
 			
 			String rPath = getPath(r.getA(), r.getB(), r.getModification());
 			
+			//handle phenotypes
+			//	no process node
+			// 	one or more modulation arcs
+			if (outputs.size() == 1) {
+				Collection<ReactionNetworkSubstanceRef> outs = outputs;
+				ReactionNetworkSubstanceRef o = outs.iterator().next();
+				
+				String sbo = "";
+				if(o.getSubstance().getB() != null) {
+					if(o.getSubstance().getB().getAttributeValue("sboTerm") != null)
+							sbo = o.getSubstance().getB().getAttributeValue("sboTerm");
+				} else if (o.getSubstance().getA() != null) {
+					if(o.getSubstance().getA().getAttributeValue("sboTerm") != null)
+					sbo = o.getSubstance().getA().getAttributeValue("sboTerm");
+				}
+
+			
+					if(sbo.equals("SBO:0000358")) {
+						for(ReactionNetworkSubstanceRef i : inputs) {
+							//allways nec. stim.
+							addEdge(i.getSubstance().getId(), o.getSubstance().getId(), "SBO:0000171", i.getModification(), i.getXPath());
+						}
+						continue;
+						
+					}
+				
+
+			}
+			
 			//add process Node
 			String processId = r.getId();
 			String compartmentId = null;
