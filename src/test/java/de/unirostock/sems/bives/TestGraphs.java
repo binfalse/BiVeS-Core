@@ -75,9 +75,9 @@ public class TestGraphs
 	{
 		ReactionNetworkCompartment compartment = null;
 		if (a)
-			compartment = new ReactionNetworkCompartment (crn, label, null, node, null);
+			compartment = new ReactionNetworkCompartment (crn, label, null, node, null, null, null);
 		else
-			compartment = new ReactionNetworkCompartment (crn, null, label, null, node);
+			compartment = new ReactionNetworkCompartment (crn, null, label, null, node, null, null);
 		
 		crn.setCompartment (node, compartment);
 		return compartment;

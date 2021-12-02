@@ -32,6 +32,12 @@ implements GraphEntity
 	/** The single doc flag if in single-doc-operation-mode. */
 	protected boolean singleDoc;
 
+	/** Id of the containing compartment in original document **/
+	protected ReactionNetworkCompartment outsideA;
+	
+	/** Id of the containing compartment in original document **/
+	protected ReactionNetworkCompartment outsideB;
+
 	/**
 	 * Instantiates a new entity.
 	 *
@@ -40,8 +46,10 @@ implements GraphEntity
 	 * @param labelB the label of that entity in the modified document
 	 * @param docA the original document
 	 * @param docB the modified document
+	 * @param outsideB 
+	 * @param outsideA 
 	 */
-	public ReactionNetworkEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
+	public ReactionNetworkEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment outsideA, ReactionNetworkCompartment outsideB)
 	{
 		this.id = entityId;
 		this.labelA = labelA;
@@ -49,6 +57,8 @@ implements GraphEntity
 		this.docA = docA;
 		this.docB = docB;
 		singleDoc = false;
+		this.outsideA = outsideA;
+		this.outsideB = outsideB;
 	}
 	
 	/**

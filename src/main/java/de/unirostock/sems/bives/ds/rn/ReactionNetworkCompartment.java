@@ -24,9 +24,9 @@ extends ReactionNetworkEntity
 	 * @param docA the original document
 	 * @param docB the modified document
 	 */
-	public ReactionNetworkCompartment (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB)
+	public ReactionNetworkCompartment (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment outsideA, ReactionNetworkCompartment outsideB)
 	{
-		super ("c" + rn.getNextCompartmentID (), labelA, labelB, docA, docB);
+		super ("c" + rn.getNextCompartmentID (), labelA, labelB, docA, docB, outsideA, outsideB);
 	}
 	
 }
