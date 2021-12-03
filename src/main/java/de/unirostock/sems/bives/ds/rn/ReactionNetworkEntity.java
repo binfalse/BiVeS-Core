@@ -46,10 +46,10 @@ implements GraphEntity
 	 * @param labelB the label of that entity in the modified document
 	 * @param docA the original document
 	 * @param docB the modified document
-	 * @param outsideB 
-	 * @param outsideA 
+	 * @param compartmentB 
+	 * @param compartmentA 
 	 */
-	public ReactionNetworkEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment outsideA, ReactionNetworkCompartment outsideB)
+	public ReactionNetworkEntity (String entityId, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB)
 	{
 		this.id = entityId;
 		this.labelA = labelA;
@@ -57,8 +57,8 @@ implements GraphEntity
 		this.docA = docA;
 		this.docB = docB;
 		singleDoc = false;
-		this.outsideA = outsideA;
-		this.outsideB = outsideB;
+		this.outsideA = compartmentA;
+		this.outsideB = compartmentB;
 	}
 	
 	/**
@@ -100,6 +100,16 @@ implements GraphEntity
 	{
 		this.labelB = labelB;
 	}
+	
+	public void setOutsideA(ReactionNetworkCompartment compartmentA) {
+		this.outsideA = compartmentA;
+		
+	}
+	
+	public void setOutsideB(ReactionNetworkCompartment compartmentB) {
+		this.outsideB = compartmentB;
+	}
+	
 	
 	/**
 	 * Gets the original document node.
@@ -166,6 +176,20 @@ implements GraphEntity
 			|| docB.hasModification (TreeNode.MODIFIED|TreeNode.SUB_MODIFIED))
 			return MODIFIED;
 		return UNMODIFIED;
+	}
+	
+	public String getOutsideCompartment() {
+		if(outsideA == outsideB) {
+			if(outsideA == null) return null;
+			return outsideB.getId();
+		}
+		if(outsideA != null && outsideB != null)
+			return outsideB.getId();
+		if(outsideA == null && outsideB != null)
+			return outsideB.getId();
+		if(outsideA != null)
+			return outsideA.getId();
+		return null;
 	}
 
 	/**

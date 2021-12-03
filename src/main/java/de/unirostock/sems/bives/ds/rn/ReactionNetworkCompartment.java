@@ -23,6 +23,8 @@ extends ReactionNetworkEntity
 	 * @param labelB the label of that compartment in the modified document
 	 * @param docA the original document
 	 * @param docB the modified document
+	 * @param outisdeA the compartment id of the containing compartment in the original document
+	 * @param outisdeB the compartment id of the containing compartment in the modified document
 	 */
 	public ReactionNetworkCompartment (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment outsideA, ReactionNetworkCompartment outsideB)
 	{

@@ -208,7 +208,7 @@ public class GraphTranslatorSbgnJson
 		//add compartments
 		for (ReactionNetworkCompartment c : rn.getCompartments ()){
 			String path = getPath(c.getA(), c.getB(), c.getModification());
-			addCompartment(c.getId(), "null", c.getLabel(), c.getModification(), "SBO:0000290", path);
+			addCompartment(c.getId(), c.getOutsideCompartment(), c.getLabel(), c.getModification(), "SBO:0000290", path);
 		}
 		
 		//add species 
