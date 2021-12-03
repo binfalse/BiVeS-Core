@@ -30,7 +30,7 @@ extends ReactionNetworkEntity
 	 */
 	public ReactionNetworkSubstance (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB)
 	{
-		super ("s" + rn.getNextSubstanceID (), labelA, labelB, docA, docB);
+		super ("s" + rn.getNextSubstanceID (), labelA, labelB, docA, docB, compartmentA, compartmentB);
 		this.compartmentA = compartmentA;
 		this.compartmentB = compartmentB;
 		singleDoc = false;

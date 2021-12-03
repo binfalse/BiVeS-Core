@@ -51,7 +51,7 @@ extends ReactionNetworkEntity
 	 */
 	public ReactionNetworkReaction (ReactionNetwork rn, String labelA, String labelB, DocumentNode docA, DocumentNode docB, ReactionNetworkCompartment compartmentA, ReactionNetworkCompartment compartmentB, boolean reversible)
 	{
-		super ("r" + rn.getNextReactionID (), labelA, labelB, docA, docB);
+		super ("r" + rn.getNextReactionID (), labelA, labelB, docA, docB, compartmentA, compartmentB);
 		in = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
 		out = new HashMap<ReactionNetworkSubstance, ReactionNetworkSubstanceRef> ();
 		mod = new Vector<ReactionNetworkSubstanceRef> ();
