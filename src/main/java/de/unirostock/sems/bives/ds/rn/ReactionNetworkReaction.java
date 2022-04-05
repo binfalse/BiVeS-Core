@@ -213,17 +213,19 @@ extends ReactionNetworkEntity
 	 *
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
+	 * @throws BivesUnsupportedException when SBO terms don't match
 	 */
-	public void addInputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
+	public void addInputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath) throws BivesUnsupportedException
 	{
 		ReactionNetworkSubstanceRef r = in.get (subst);
 		if (r == null)
 			try{
-				in.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo, xPath)); //checken
+				in.put (subst, new ReactionNetworkSubstanceRef (subst, false, true, null, sbo, xPath));
 			}catch (BivesUnsupportedException e){}
 		else
 		{
 			r.setFlagB (true);
+			r.setSboB(sbo);
 		}
 	}
 	
@@ -232,8 +234,9 @@ extends ReactionNetworkEntity
 	 *
 	 * @param subst the substance
 	 * @param sbo the SBOTerm describing the interaction
+	 * @throws BivesUnsupportedException when sbo terms don't match
 	 */
-	public void addOutputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath)
+	public void addOutputB (ReactionNetworkSubstance subst, SBOTerm sbo, String xPath) throws BivesUnsupportedException
 	{
 		ReactionNetworkSubstanceRef r = out.get (subst);
 		if (r == null)
@@ -243,6 +246,7 @@ extends ReactionNetworkEntity
 		else
 		{
 			r.setFlagB (true);
+			r.setSboB(sbo);
 		}
 	}
 	

@@ -183,8 +183,16 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in A");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null, null);
-		reaction1.addOutputB (substrate1, null, null);
+		try {
+			reaction1.addInputB (substrate1, null, null);
+			reaction1.addOutputB (substrate1, null, null);
+		} 		
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
+		
 
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
@@ -209,8 +217,17 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in N");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null, null);
-		reaction1.addOutputB (substrate1, null, null);
+		
+		try 
+		{
+			reaction1.addInputB (substrate1, null, null);
+			reaction1.addOutputB (substrate1, null, null);
+		} 		
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
 
 
 		assertFalse ("unexpected label in compartment", "compartment in A".equals (compartment1.getLabel ()));
@@ -233,8 +250,17 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment2);
 		reaction1.setLabelB ("reaction in N");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null, null);
-		reaction1.addOutputB (substrate1, null, null);
+		
+		try
+		{
+			reaction1.addInputB (substrate1, null, null);
+			reaction1.addOutputB (substrate1, null, null);
+		} 		
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
 
 
 		assertFalse ("unexpected label in substrate", "substrate in A".equals (substrate1.getLabel ()));
@@ -263,8 +289,17 @@ public class TestGraphs
 		reaction1.setCompartmentB (compartment1);
 		reaction1.setLabelB ("reaction in A");
 		reaction1.setDocB (dummy);
-		reaction1.addInputB (substrate1, null, null);
-		reaction1.addOutputB (substrate1, null, null);
+		
+		try
+		{
+			reaction1.addInputB (substrate1, null, null);
+			reaction1.addOutputB (substrate1, null, null);
+		}		
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
 
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
@@ -280,7 +315,16 @@ public class TestGraphs
 		
 		
 		// different i/o?
-		reaction1.addInputB (substrate2, null, null);
+		try
+		{
+			reaction1.addInputB (substrate2, null, null);
+		} 		
+		catch (BivesUnsupportedException e)
+		{
+			LOGGER.error (e, "this error wasn't expected!?");
+			fail ("this error wasn't expected!?");
+		}
+		
 		reaction1.addOutputA (substrate2, null, null);
 		assertEquals ("unexpected label in compartment", "compartment in A", compartment1.getLabel ());
 		assertEquals ("expected no modification", GraphEntity.UNMODIFIED, compartment1.getModification ());
